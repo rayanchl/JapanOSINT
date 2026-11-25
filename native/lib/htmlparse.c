@@ -5,6 +5,7 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
+#include "jocore.h"
 
 /* Case-insensitive (ASCII) strstr, local so this file stays free-standing
  * (tests/htmlparse_test.c links it alone). strcasestr() is a GNU extension:
@@ -350,9 +351,21 @@ static char *ht_text(const char *s, size_t n) {
       if (semi) {
         const char *e = s + i + 1; size_t el = (size_t)(semi - e);
         if (el > 1 && e[0] == '#') {
-          char *endp = NULL;
-          cp = (e[1] == 'x' || e[1] == 'X') ? strtoul(e + 2, &endp, 16) : strtoul(e + 1, &endp, 10);
-          ok = endp == semi && cp > 0;
+          /* Digits only: strtoul alone accepts "-5" (wrapping to a huge
+           * value) and leading blanks. A well-formed reference naming no
+           * character (past U+10FFFF, or a surrogate) is U+FFFD, never a
+           * silent drop; a malformed one stays as the text it was. */
+          int hx = e[1] == 'x' || e[1] == 'X';
+          const char *d = e + 1 + hx;
+          int digits = d < semi;
+          for (const char *q = d; q < semi; q++)
+            if (!(hx ? isxdigit((unsigned char)*q) : isdigit((unsigned char)*q))) { digits = 0; break; }
+          if (digits) {
+            char *endp = NULL;
+            cp = strtoul(d, &endp, hx ? 16 : 10);
+            ok = endp == semi && cp > 0;
+            if (ok && (cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF))) cp = 0xFFFD;
+          }
         } else if (el == 3 && !strncmp(e, "amp", 3)) { cp = '&'; ok = 1; }
         else if (el == 2 && !strncmp(e, "lt", 2))  { cp = '<'; ok = 1; }
         else if (el == 2 && !strncmp(e, "gt", 2))  { cp = '>'; ok = 1; }
@@ -431,23 +444,79 @@ static int ht_row_grow(html_row *row, int *cap, int need, int hardcap) {
   return nc;
 }
 
+/* Every <table> of the document with the end ITS close tag gives it, in one
+ * pass with a stack. The old reader called ht_table_end() per candidate, which
+ * runs to the end of the document when tables are unclosed or nested, so N
+ * repeated "<table>" cost O(N^2) (140 KB: 3.4 s, 560 KB: 60 s). A close tag
+ * closes the most recent unclosed open, which is exactly what ht_table_end's
+ * depth counter computes from each open; an open that is never closed runs to
+ * the end of the document, as before. */
+typedef struct { const char *open, *end; } ht_tbl;
+
+static ht_tbl *ht_scan_tables(const char *html, size_t *n_out) {
+  size_t n = 0, cap = 0, sp = 0, scap = 0;
+  ht_tbl *t = NULL; size_t *stk = NULL;
+  const char *docend = html + strlen(html);
+  int no_gt = 0;                         /* no '>' remains past this point */
+  *n_out = 0;
+  for (const char *p = html; (p = strchr(p, '<')); p++) {
+    if (ht_open_at(p, "table")) {
+      if (n == cap) {
+        size_t nc = cap ? cap * 2 : 64;
+        ht_tbl *nt = realloc(t, nc * sizeof *nt); if (!nt) goto fail; t = nt; cap = nc;
+      }
+      if (sp == scap) {
+        size_t nc = scap ? scap * 2 : 64;
+        size_t *ns = realloc(stk, nc * sizeof *ns); if (!ns) goto fail; stk = ns; scap = nc;
+      }
+      t[n].open = p; t[n].end = docend;
+      stk[sp++] = n++;
+    } else if (sp && ht_close_at(p, "table")) {
+      const char *gt = no_gt ? NULL : strchr(p, '>');
+      if (!gt) no_gt = 1;
+      t[stk[--sp]].end = gt ? gt + 1 : docend;
+    }
+  }
+  free(stk);
+  *n_out = n;
+  return t;
+fail:
+  free(t); free(stk);
+  return NULL;
+}
+
 int html_table_parse(const char *html, const char *must, int table_index,
                      html_table *out) {
   memset(out, 0, sizeof *out);
   if (!html) return 0;
   const char *tb = NULL, *te = NULL;
   int seen = 0;
-  for (const char *p = html; (p = strchr(p, '<')); p++) {
-    if (!ht_open_at(p, "table")) continue;
-    const char *end = ht_table_end(p);
+  size_t ntbl = 0;
+  ht_tbl *tbls = ht_scan_tables(html, &ntbl);
+  if (!tbls && ntbl == 0) {
+    /* Either no table at all or out of memory: the first scan cannot tell
+     * them apart, and "none found" is the honest answer to both. */
+    return 0;
+  }
+  size_t ml = (must && *must) ? strlen(must) : 0;
+  const char *hdoc_end = html + strlen(html);
+  const char *nq = NULL;                 /* next occurrence of `must` at or after the candidate */
+  int nq_done = 0;
+  for (size_t i = 0; i < ntbl; i++) {
+    const char *p = tbls[i].open, *end = tbls[i].end;
     int hit = 1;
-    if (must && *must) {
-      size_t ml = strlen(must);
-      hit = 0;
-      for (const char *q = p; q + ml <= end; q++) if (!memcmp(q, must, ml)) { hit = 1; break; }
+    if (ml) {
+      /* Candidates ascend, so the next occurrence only ever moves forward:
+       * one memmem sweep over the document in all, not one per table. */
+      if (!nq_done && (!nq || nq < p)) {
+        nq = jo_memmem(p, (size_t)(hdoc_end - p), must, ml);
+        if (!nq) nq_done = 1;
+      }
+      hit = nq && !nq_done && nq + ml <= end;
     }
     if (hit && seen++ == table_index) { tb = p; te = end; break; }
   }
+  free(tbls);
   if (!tb) return 0;
 
   /* Pass 1: raw rows of raw cells, nested tables folded into their cell. */

@@ -91,9 +91,28 @@ jobs:
         # then the Japanese FTS path is never exercised at all, which is the
         # half most likely to break.
 
+      # ccache (audit OPS-12). The Makefile uses $(CC) for every recipe, so
+      # CC="ccache cc" reaches all 1,889 objects and the vendored ones. Keyed on
+      # the compiler version and a hash of the Makefile (flags live there); the
+      # restore-key lets a PR start from main's objects.
+      - name: Install ccache
+        run: sudo apt-get install -y --no-install-recommends ccache
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/ccache
+          key: ccache-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-
       - name: Build
         working-directory: native
-        run: make -j"$(nproc)"
+        env:
+          CC: ccache cc
+          CCACHE_DIR: ${{ runner.temp }}/ccache
+          CCACHE_MAXSIZE: 1G
+        run: |
+          make -j"$(nproc)"
+          ccache -s | head -8
 
       - name: Selftest
         working-directory: native
@@ -139,6 +158,23 @@ jobs:
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
+
+      # Python tools: every one must at least compile without a SyntaxWarning
+      # (an invalid escape in build_feed_manifest.py went unseen for months), and
+      # the ones with a self-test run it. -W error turns the warning into a
+      # failure. cleanup_stale_uids and measure_thresholds self-tests already run
+      # inside `make unit`; audit_page_two's does not, so it is here.
+      - name: Python tools compile and self-test
+        working-directory: native
+        run: |
+          python3 -W error -m py_compile tools/*.py
+          python3 tools/audit_page_two.py --self-test
+
+      # docs/ENVIRONMENT.md is generated from the getenv() calls (OPS-06): a new
+      # variable without a regenerated table fails here.
+      - name: Environment-variable doc is current
+        working-directory: native
+        run: make env-doc-check
 
       # A collector that moves out of the build glob stops registering with no
       # error: the build succeeds, the binary links, and only the source count
@@ -206,7 +242,18 @@ jobs:
       - name: Manifest pagination (report only — 104 rows untriaged)
         working-directory: native
         continue-on-error: true
-        run: python3 tools/audit_batch_pagination.py ../docs/candidate-sources-batch*.txt
+        run: |
+          rc=0
+          python3 tools/audit_batch_pagination.py ../docs/candidate-sources-batch*.txt || rc=$?
+          # continue-on-error hides a failure from the checks list; say it on the
+          # run summary page so it is seen every time (OPS-09).
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning::Manifest pagination audit reported findings (exit $rc) - report-only, not gating"
+            echo "**Manifest pagination (report only, non-gating):** exit $rc - findings printed in the step log; 104 rows were untriaged when this was made non-gating." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "**Manifest pagination (report only):** clean." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$rc"
 
       # THE SERVER MUST STAY ANSWERABLE WHILE IT IS BUSY.
       #
@@ -329,9 +376,15 @@ jobs:
   # declared sources, and test_service_vec indexes all 58,055 source cards
   # five times at ~65 s each. Those are O(registry) by design, so making them
   # cheap is a question about what they should cover, not a build fix.
+  #
+  # 2026-11-23: the registry is 109,801 sources, nearly twice what the figures
+  # above were measured on, and those O(registry) tests scaled with it. Main's
+  # own run for batch 68 took 83.6 min; the next run on the same tree was
+  # cancelled at 90 inside test_source_category. The ceiling is 150 so the job
+  # reports a result; the real fix is still what those two tests cover.
   thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -440,9 +493,52 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
             mecab-ipadic-utf8
+      - name: Install ccache
+        run: sudo apt-get install -y --no-install-recommends ccache
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/ccache
+          key: ccache-asan-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-${{ github.sha }}
+          restore-keys: |
+            ccache-asan-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-
       - name: Unit tests under AddressSanitizer
         working-directory: native
+        env:
+          CC: ccache cc
+          CCACHE_DIR: ${{ runner.temp }}/ccache
+          CCACHE_MAXSIZE: 1G
         run: make asan-test
+
+  # libFuzzer smoke (audit OPS-07b): zipread, xlsx, csv, htmlparse and rss_atom
+  # for 20 s each under ASan+UBSan. Not a campaign, a tripwire: it catches a
+  # parser that crashes on the first few million random inputs. A crash fails the
+  # job and the crashing input is uploaded.
+  fuzz-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang libclang-rt-dev libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev
+      - name: Fuzz smoke (20 s per target)
+        working-directory: native
+        run: make fuzz-smoke FUZZ_CC=clang FUZZ_SECS=20
+      - name: Upload crash inputs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-crashes
+          path: |
+            native/crash-*
+            native/timeout-*
+            native/oom-*
+          if-no-files-found: ignore
 
   # The Makefile's entire second half is macOS-only and, until this job, was
   # never once executed by CI: BREW_SSL (Homebrew openssl@3 when pkg-config

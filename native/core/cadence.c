@@ -1,5 +1,7 @@
 /* core/cadence.c — see cadence.h. */
 #include "cadence.h"
+#include "scheduler.h"         /* sched_is_pod: pods are exempt from the policy */
+#include "source_interval.h"   /* a per-source interval outranks the policy */
 #include "../source.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -68,6 +70,8 @@ static int read_key(db_handle *db, const char *key, long *out, char *at, size_t 
   return hit;
 }
 
+static const char *validate(const cadence_policy *p);
+
 void cadence_init(db_handle *db) {
   cadence_policy p = {0, 0, 0}; const char *src = "default";
   char at[32] = {0}, by[128] = {0};
@@ -77,11 +81,23 @@ void cadence_init(db_handle *db) {
     n += read_key(db, K_MIN,    &p.min_sec,    at, sizeof at, by, sizeof by);
     n += read_key(db, K_MAX,    &p.max_sec,    at, sizeof at, by, sizeof by);
     if (n) src = "db";
+    /* A row written by an older build or by hand gets the same check a PUT
+     * gets: an invalid stored policy is not honoured, the next source is. */
+    const char *e = n ? validate(&p) : NULL;
+    if (e) {
+      fprintf(stderr, "[cadence] ignoring the stored policy (global=%ld min=%ld max=%ld): %s\n", p.global_sec, p.min_sec, p.max_sec, e);
+      p = (cadence_policy){0, 0, 0}; src = "default"; at[0] = 0; by[0] = 0;
+    }
   }
   if (!strcmp(src, "default")) {
     p.global_sec = env_long("JO_SCHED_INTERVAL_SEC");
     p.min_sec    = env_long("JO_SCHED_MIN_INTERVAL_SEC");
     p.max_sec    = env_long("JO_SCHED_MAX_INTERVAL_SEC");
+    const char *e = validate(&p);
+    if (e) {
+      fprintf(stderr, "[cadence] ignoring JO_SCHED_*INTERVAL_SEC (global=%ld min=%ld max=%ld): %s\n", p.global_sec, p.min_sec, p.max_sec, e);
+      p = (cadence_policy){0, 0, 0};
+    }
     if (p.global_sec || p.min_sec || p.max_sec) src = "env";
     else p.global_sec = CAD_DEFAULT_GLOBAL_SEC;   /* the compiled default: global 6 h */
   }
@@ -104,8 +120,16 @@ const char *cadence_source(void) {
 }
 unsigned cadence_generation(void) { return atomic_load(&g_gen); }
 
+int cadence_is_realtime(long declared) {
+  return declared > 0 && declared < CAD_REALTIME_SEC;
+}
+
 static long apply(const cadence_policy *p, long declared) {
   if (declared <= 0) return declared;
+  /* A real-time feed is outside the policy (cadence.h, CAD_REALTIME_SEC): an
+   * earthquake early warning read every six hours is not a slower feed, it
+   * is a different and useless one. */
+  if (cadence_is_realtime(declared)) return declared;
   if (p->global_sec > 0) return p->global_sec;
   long v = declared;
   if (p->min_sec > 0 && v < p->min_sec) v = p->min_sec;
@@ -119,7 +143,7 @@ long cadence_apply(long declared) {
 }
 
 const char *cadence_mode_for(long declared) {
-  if (declared <= 0) return "declared";
+  if (declared <= 0 || cadence_is_realtime(declared)) return "declared";
   cadence_policy p = cadence_get();
   if (p.global_sec > 0) return "global";
   return apply(&p, declared) != declared ? "clamped" : "declared";
@@ -129,6 +153,7 @@ static const char *validate(const cadence_policy *p) {
   if (p->global_sec < 0 || p->min_sec < 0 || p->max_sec < 0) return "an interval cannot be negative";
   if (p->global_sec > CAD_MAX_SEC || p->min_sec > CAD_MAX_SEC || p->max_sec > CAD_MAX_SEC) return "an interval longer than a year is a typo";
   if (p->global_sec > 0 && p->global_sec < 10) return "global_interval_sec under 10 s would run every scheduled row continuously";
+  if (p->max_sec > 0 && p->max_sec < 10) return "max_interval_sec under 10 s would run every scheduled row continuously";
   if (p->min_sec > 0 && p->max_sec > 0 && p->min_sec > p->max_sec) return "min_interval_sec exceeds max_interval_sec";
   return NULL;
 }
@@ -175,7 +200,12 @@ static int take(cJSON *j, const char *k, long *out, const char **err) {
   cJSON *v = cJSON_GetObjectItemCaseSensitive(j, k);
   if (!v || cJSON_IsNull(v)) return 0;
   if (!cJSON_IsNumber(v)) { if (err) *err = "intervals are numbers of seconds"; return -1; }
-  *out = (long)v->valuedouble;
+  /* Range first (NaN fails both comparisons, 1e999 parses to inf), so the
+   * cast below is defined; then a fraction is refused, not truncated to 0. */
+  double x = v->valuedouble;
+  if (!(x >= -(double)CAD_MAX_SEC && x <= (double)CAD_MAX_SEC)) { if (err) *err = "an interval is out of range: at most a year of seconds"; return -1; }
+  if ((double)(long)x != x) { if (err) *err = "intervals are whole numbers of seconds"; return -1; }
+  *out = (long)x;
   return 0;
 }
 
@@ -199,6 +229,7 @@ char *cadence_json(db_handle *db) {
   cJSON_AddNumberToObject(pj, "global_interval_sec", (double)p.global_sec);
   cJSON_AddNumberToObject(pj, "min_interval_sec", (double)p.min_sec);
   cJSON_AddNumberToObject(pj, "max_interval_sec", (double)p.max_sec);
+  cJSON_AddNumberToObject(pj, "realtime_below_sec", (double)CAD_REALTIME_SEC);
   cJSON_AddStringToObject(pj, "mode", p.global_sec > 0 ? "global" : (p.min_sec > 0 || p.max_sec > 0) ? "clamped" : "declared");
   cJSON_AddItemToObject(o, "policy", pj);
   pthread_mutex_lock(&g_mu);
@@ -212,7 +243,10 @@ char *cadence_json(db_handle *db) {
   for (int i = 0; i < n; i++) {
     long d = a[i]->update_interval_sec;
     if (d <= 0) continue;
-    long e = apply(&p, d);
+    /* as sched_row_interval composes it, minus the one input that needs a
+     * per-row DB read (the adaptive measurement) */
+    long ov = source_interval_for(a[i]->id);
+    long e = ov > 0 ? ov : sched_is_pod(a[i]) ? d : apply(&p, d);
     rows++; decl += 86400.0 / (double)d; eff += 86400.0 / (double)e;
     if (!fastest || e < fastest) fastest = e;
     if (e > slowest) slowest = e;
@@ -223,7 +257,7 @@ char *cadence_json(db_handle *db) {
   cJSON_AddNumberToObject(est, "runs_per_day_effective", (double)(long)(eff + 0.5));
   cJSON_AddNumberToObject(est, "fastest_effective_sec", (double)fastest);
   cJSON_AddNumberToObject(est, "slowest_effective_sec", (double)slowest);
-  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval, with the policy applied; pivots excluded");
+  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval with the policy applied, except rows with a per-source interval (that interval) and maintenance pods (exempt: as declared); pivots excluded; adaptive re-measurement, backoff and quarantine not counted");
   cJSON_AddItemToObject(o, "estimate", est);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);

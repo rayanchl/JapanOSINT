@@ -1,0 +1,641 @@
+id	host	reason
+JO64_CKANDS_02A69D52CE	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_0EDE2AADDC	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_118D1343A0	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_14BAD540D1	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_17087BBC8D	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_191089EBE5	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_19285E7A65	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_1A90327FB2	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_20291518C4	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_21E766A127	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_2353B8853F	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_24250CDB2C	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_249B5C220B	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_27EC1951E0	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_27FE15AB38	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_30562BAA9A	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_32F2D6B9B3	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_3CABBA3A50	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_488AF65AEA	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_48A728FB01	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_504D86E51C	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_50873666D2	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_519AFABDCB	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_58ABFE8EE2	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_5AF813793B	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_5E054E9E9F	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_63F17D5141	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_69344E059A	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_69513E876F	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_6BFF961A69	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_6CB9D05B13	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_72917A826D	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_73F8613F93	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_76E4FB82BB	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_7820E92ACC	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_7B0E049FC5	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_7D99E815AC	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_7E7C6F0DE1	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_7FC0E4FC73	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_80D6529BF4	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_82C0C8B6F1	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_858721DB15	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_85A52C5CB3	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_888BCC23D0	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_9106C8ECB0	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_9B106BE585	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_A2ECD7A7BF	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_A48161E387	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_A62B89E42A	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_A6FFE4D854	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_A710182412	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_A795383E13	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_A8665B8D38	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_AB975FC95E	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_AC02E9910B	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_AE3E54209A	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_AE5E632B1E	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_AEBD20BE9F	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_B22FF80351	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_B381F4218C	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_B49F0E7CEA	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_B4B2AD7BFA	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_B706A52CE3	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_BF68B00E2A	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_C08DF36B63	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_C65242FE20	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_C751CAAC88	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_C754BCCFBF	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_C7B300E425	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_CADAD7289A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_CC69FF92C0	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_CCE3A21527	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_D1A5723546	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_D1C91F237A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_D86D9F9182	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_D8D59233B6	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_DAF2BF21A9	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_DB0631B6F3	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_E1DAA05697	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_E453211DF0	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_E50FDE68F6	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_E7C65269A4	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_E880C4D9B1	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_E9BAAF39F4	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO64_CKANDS_EC0B45730E	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_EE543991E7	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_F22D70A16C	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_CKANDS_FE2834ED99	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO64_EUODS_01EC5CC414	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_04EA6132AD	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_0557C9E3DF	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_05A1DCFDA9	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_0A682887BB	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_0D0D45E08D	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_0D6A1DE075	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_0F112EDAE1	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_10B920FE97	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_17F0FCD71D	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_1909A79109	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_19AB78F29A	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_1DB87183DE	openenergyhub.ornl.gov	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_1E5315B870	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_1F889B43D4	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_210A00BE91	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_2258F68FD5	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_22B7F63795	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_2571165969	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_2899511ECA	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_2E21C90768	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_30AB6F11EF	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_405A390B60	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_4087FC4457	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_430D095B19	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_43153BFDD7	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_43E6E8D3D6	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_44C406009C	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_4632AC1F7D	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5024EE7A93	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_502D65B999	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_511CC9223A	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5299895808	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_52BF9294C3	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_53F9E9CD34	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_54061BE3E8	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_54B1C3AEDC	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5514833F04	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_55A786CDDA	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_57FA78C526	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5A811B2F41	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5B912B7EE7	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_5B97240C37	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_61937EC9FE	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_62297F92C3	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_64D440C214	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_651B3FCCEF	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_673FFDC10F	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_67CDF2F5BB	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_6863C66088	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_68EEC6E443	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_69A98E22ED	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_69D3812652	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_6BB49320F3	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_6CBC54828F	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_6DA99665B1	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_6F17CE93B2	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_717E82E790	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_76186BF2CB	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7B4FAE028F	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7C2E74A1A5	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7DCB1D7B28	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7DE3E1FBB1	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7ED2DB60C2	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7EECBF7416	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_7F7DC8EF92	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_801F827FB2	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_835981851A	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_83C639E312	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_83E84AFA21	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_85789F7F0C	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_86D637C5C7	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_87427C8284	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_88FD069E44	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8A98E3FD75	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8C08F9935C	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8C1A8DBFB6	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8C7C272C60	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8D3E5B836C	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8D6C8334DA	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_8D9AAF5C1B	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9218E0555F	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_92BA282679	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_95336206B3	openenergyhub.ornl.gov	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_95C08C0ABE	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9784F3C842	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9785FCE3BF	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_98ADE560A7	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_99F3D604CC	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9A783983C3	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9BB940CACD	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9BC1201CCA	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9D8024B9DA	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9E44964C0E	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9E4B60E4CE	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_9E84010859	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A01DD3EB8B	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A21D93BEC3	openenergyhub.ornl.gov	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A243EC79BE	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A26A581E82	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A81B7D4AF9	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_A9E33DD844	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AA5FFCB715	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AC2D357D1D	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AD3423AABB	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AF371E5E41	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AF478CA283	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_AFB99C4D35	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B368005FDC	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B39F215943	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B4EF4E2ACE	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B50FD5A5CC	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B6E1FBEA01	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_B72D909ED1	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_BA4AF96363	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C0EA735B2E	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C119750F7D	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C17574E96E	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C2F2F32F5E	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C429CA09FF	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C56BA0526C	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C776645FB4	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C7E1683600	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_C891178C28	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_CA63D22007	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_CC6FDEF142	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_CE115423E8	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_CEFA79AC79	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_CF909392CD	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_D057A3AFCC	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_D14288BAB6	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_D1B7F22E28	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_DA9FBE2598	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_DC39C1D678	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_DC9D23DDBC	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_DF32CE72F4	openenergyhub.ornl.gov	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_DF5B4EB24F	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E05112B53D	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E051645BF5	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E117FBB1FF	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E442C76954	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E616A3A7FB	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E7ECBAC3A6	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_E978E5BBDE	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_EB6802B137	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_EE8DDEF27B	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F255EDB1D7	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F4B3FEECD9	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F528B695CA	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F7008B1EFE	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F8628C9667	openenergyhub.ornl.gov	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F90D6151F5	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_F964B45170	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FBFA141E7C	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FC048BCEA5	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FC2412CB35	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FC35D6DF25	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FC73ADDA7C	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FDC35970BF	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FDFC0C76B5	cadentgas.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FF11F86EA6	electricitynorthwest.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FF38EE7497	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO64_EUODS_FF994C7510	spenergynetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_CKANDS_02ED02C929	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_053CAAC4D8	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_0B3340D22F	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_0E3CFAFEDA	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_101305CF51	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_122F55AB5B	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_1335694CCE	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_159A70AB15	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_17D31413B5	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_2780DCA3F2	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_2BDDA52D4F	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_2C59DB4CEF	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_304A09CCCD	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_3256B54B32	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_33A8793059	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_39E6418D57	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_40CA1D70CE	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_44862E0F36	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_47361DF5DD	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_4B111FEB7B	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_52BBA81B4D	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_536DAA09CA	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_551922041A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_55B37CA79B	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_56811DE0AF	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_5AD49BB992	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_5D75718A34	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_602E618E0A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_62F137358C	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_6BF30729F0	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_6E456E9E0F	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_7039E22A5A	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_7474490DB1	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_78070EA4D0	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_7A3D86FAE9	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_80A0550791	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_8693815F20	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_890422E17F	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_8F2C5194DA	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_92115052EC	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_924D381DEA	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_930611ED5A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_99969EECAC	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_999ACE5872	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_9AB932CF4B	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_9D22579363	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_A66A3F02B8	datos.transporte.gob.ar	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_A9D58D4333	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_AAAAAD6E16	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_AD93399A80	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_AF5A345045	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_B52737AA41	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_C102F245D3	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_C2E6C37514	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_C36AC2222A	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_CB27A2C3E4	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_CE4A152A62	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_CEB32606E8	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_D41B114744	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_D6613E57A3	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_D723E537AA	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_DB03D41A97	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_DDF73E9474	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_F107BE5FE3	ckan.opendata.swiss	CKAN resource not found (JSON 404): withdrawn upstream
+JO65_CKANDS_F2094FB8F9	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_F70E51C1EB	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_F87879072D	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_F8CF022EE7	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_F8EB60F92D	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_FBF30FD783	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_CKANDS_FF8C3A7F7B	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO65_EUODS_011E2BC72B	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_0AD105F710	dev-hydroquebec.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_0EA124AD30	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_1099B59C45	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_154C4B588D	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_1BF40359D4	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_2065D65BAC	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_2086170601	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_29262B0916	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_2A269C702A	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_31948B381D	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_32A9BF7751	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_336969F75D	opendata.datainfogreffe.fr	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_3FB0AB50B3	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_53138B1280	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_53C029F048	opendata.datainfogreffe.fr	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_53FBABF791	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_58F90C64FA	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_5B3B250532	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_64E61F1AF9	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_672CF96566	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_6EC6CDEE5A	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_73A59DFE34	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_7DD77C99D8	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_825D819EFD	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_825E9E947B	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_8AE887E515	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_8FF6C0B653	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_93E7136721	dev-hydroquebec.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_95806DBA99	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_9E8F817E51	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_9FC5543392	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_A09209BEEB	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_A309FB2048	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_A98D02748C	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_AD97155CC4	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_B3AB2DF266	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_B5EC104A45	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_BA8BF4CD52	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_BAB2872F1C	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_BE1038BE52	opendata.datainfogreffe.fr	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_C601B6ED5B	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_CA1F5E9BBE	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_D1018E2BB6	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_D83E9A438B	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_DA23CFF48E	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_E5F613D1A9	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_EC8BE4895D	nienetworks.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_ED5787489D	northernpowergrid.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO65_EUODS_F9E381172A	ssentransmission.opendatasoft.com	records restricted to domain members (ODS ForbiddenAccess; anonymous 403 under every agent)
+JO66_CKANDS_0023BC06D9	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_03F0049083	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_0437D6DED7	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_055D1408F2	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_06B6044543	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_0A91D86ED3	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_0E1E393554	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_11583D837E	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_1BE6662439	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_271B6766FC	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_2753A1DBE6	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_28E2E2A70D	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_2C5502EB99	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_3157758D4F	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_32DBDE056C	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_34CB3A07D7	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_37135910EF	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_42C3B78A38	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_458A45728E	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_56B8C317D8	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_596702AA40	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_599364594A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_5DC6E75A47	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_6055D3D5FF	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_629508525C	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_6EB5135F1F	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_6FE98933D3	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_739AEA1789	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_7AE099312A	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_827CE4A8E4	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_88FFD4E4DC	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_8D8CE5AD5C	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_90B2E8FC44	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_90DA3B5198	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_9554C77947	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_9DFEBFDF39	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_9E2A331653	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_A163C82BE5	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_A6D3566B2F	data.kyivcity.gov.ua	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_A8D3ABD96B	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_A906D4F72A	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_AEB4517AA5	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_B46C3D6FAF	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_B706E8D91E	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C24A941FC4	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C5188610D7	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C6D306ABEC	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C8207D90F7	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C8536727E6	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_C86F9CF021	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_CBF562CF74	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_CCEAEA46C0	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_D09B5C3F27	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_D0DE8D137B	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_D5089E7F99	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_E28B270D73	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_E28F73377C	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_E3BF83F88E	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_E9F6248103	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_F7DB45F248	admin.opendata.az	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO66_CKANDS_FC734679AF	ckan.publishing.service.gov.uk	datastore path answers 403 to every agent while the catalogue answers 200 (authorisation, not an agent wall)
+JO67_CKANDS_5EFA5854CF	data.chhs.ca.gov	resource 404 or empty after the agent fix
+JO67_CKANDS_6BDD3EE102	data.chhs.ca.gov	resource 404 or empty after the agent fix
+JO67_CKANDS_7409DEE7BF	data.chhs.ca.gov	resource 404 or empty after the agent fix
+JO67_CKANDS_C951288CD0	data.chhs.ca.gov	resource 404 or empty after the agent fix
+JO67_CKANDS_D03D810160	data.chhs.ca.gov	resource 404 or empty after the agent fix
+JO67_SOCRATA_04E2D1F8E5	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_06A732A565	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_08580E0760	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_0B00869D79	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_0B52F30812	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_17BC134C67	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_1F2747516F	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_214FBA7DFD	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_34C215DEF7	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_36F19042BF	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_3788B544D5	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_40D774B302	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_40FFF7E1E7	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_44585BB0B5	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_4B009ACFBD	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_50AF3DF345	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_5C5CBA67C4	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_606A6C1905	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_66D6287AE7	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_753EB9F1BB	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_782E761378	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_7F9410ECDC	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_7FA76C6D6F	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_804F874A50	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_857B086465	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_8B51035945	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_8E5CBD689D	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_97AE4BC93B	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_9B6BA2FD54	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_9DE86743FF	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_A1F212E32E	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_A250E96062	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_A2D9CFB60A	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_A661F29C4B	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_B550F62095	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_B644A1C1EF	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_B7CB6EE7F2	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_C0F9A02320	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_C16EF495F7	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_D32CEDF1AD	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_D4D34904DD	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_D816F20FB9	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_DA11F2A794	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_E8A85AC308	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_EB93130F80	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_EDBD32D2D1	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO67_SOCRATA_F0188F8F02	opendata.fcgov.com	portal retired: 503 "THIS SITE HAS MOVED" page under every agent
+JO63_EUODS_0CD8D5FDA9	public.opendatasoft.com	same dataset as ods-public-geonames (od_ods_geonames.c), which reads it whole via the export
+JO67_SOCRATA_DEE943A07B	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3D894E0E51	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_39471C453C	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_79A7EDB7B8	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F715DF8151	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0232C201C6	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_882316C4EB	data.nhitc.org	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_10B2A64D8A	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_92F45779AD	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_10B9D487A6	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_B4FFCC9A38	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0FD5C60750	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0F64F6E6A3	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0A28907076	data.nhitc.org	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_93DB7CBF4E	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_18EBA61152	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_4A7CBFB909	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_466CDC031E	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C85F0FA0B2	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_E2581E9523	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_E15E9EE5BC	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_1D9C16F279	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_2B988115D9	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0B478EF23E	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7229808583	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0CCB7F3E73	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C459692E5C	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_330E816B02	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_B0AF2CDEDC	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_A47E8556D8	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C3C34E9227	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_A52F69A161	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_98407362BD	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D36769B383	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_55D3DD84AB	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_668B2086A6	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_AA9AA442EB	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6EA2A1848A	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_879609EED8	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F562164EF6	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_9DF4ABDE1E	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_73C15FA4BC	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D2DD9B9F81	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0C369AFF00	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D970C49190	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C194667712	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_26CC0E2FE0	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_1A137D44F6	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_838F73808C	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_2A2BD2BB75	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D1B671B114	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_33C75D069C	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C04A527163	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_9FA7262F11	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_67578FF61D	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_CD83AADCA9	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_EDCFA0443A	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3DB3E30DA7	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_E9DA3B1C36	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_5C7523212C	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D89A6466A9	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_E6D254F224	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D5187E03A3	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_A3BBCAF471	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D42D2AB187	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_77D67AE090	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_AA505778AC	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_23101E9DC9	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_227D6B35F3	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C24AFDC4A2	data.miamigov.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_B9BC287590	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F2E6906D23	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_B6F01DA3F0	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_87DE018F40	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_9A95D6FBC0	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_E94C6E9B7E	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3784134CCE	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C0267FD8C2	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F2A7BDB1D3	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3C0C25DED2	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6D576CD38E	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C34A4C52A8	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_5B3C3309FA	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F0324FF1E9	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_DEC0C1B2D6	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8A67611AD8	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C6379628FD	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_9C541567DA	data.urbanaillinois.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_415522D1F3	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_CBAC6CDFB2	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D088C500FA	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_70AE604889	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_FE1EF7241A	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F721BFA5CB	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7A1B90EDD8	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_0BDB776725	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_358FAC95B0	priv-data.ojp.usdoj.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6CDBDD25BB	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_DE607FAA9A	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_BC41B7DC84	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D0F0AF886C	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3B8F09BDEA	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_AFF2238A8D	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7397C4331D	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_CB06697C91	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_B813BB76D2	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_1B92BB62F9	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8DCC023C1D	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_BD81A6A9E6	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3BC4B51C1E	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3DCAF81701	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8B93184CC1	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C256CF3AA5	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8B062453AB	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7934D7B474	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D5A00D9209	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8DFCD52527	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D3441254CB	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_1383368DB8	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6694B3EB17	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_997C6C886B	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_1B1C6A49F6	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_74ACACFF35	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_4DF5B2A9DF	performance.providenceri.gov	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_A443D60801	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_DF8955879E	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6D55934847	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_2169AE1CA5	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_D53DC6A060	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C47D7073A7	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_DE8FF0B6E0	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_46B7F1344A	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3D2209D29C	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F67CD4406C	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_6DE20088D4	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_51B7BFEC83	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_2E1800BEB2	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C40A1F0517	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_CE53BD5E73	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8A4D44477F	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_F6C7DD284C	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_681D9DD2C7	performance.cityofrc.us	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8BC28EDD68	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_387D456496	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7F558429CE	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_7C28A8842A	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_3D1AB9CF22	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_C9200F8AEB	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_8930005F1D	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_085FF6148E	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_4465FB2E23	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_26358154B5	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_658D83729E	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect
+JO67_SOCRATA_687B91E4F3	performance.cityofdavenportiowa.com	host has no address in public DNS (NXDOMAIN or no A/AAAA/CNAME at dns.google and cloudflare-dns, 2026-11-24); three engine readings 2026-11-16..24 all failed to connect

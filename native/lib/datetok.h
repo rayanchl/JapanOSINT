@@ -3,8 +3,8 @@
  * `{date}` is today (YYYY-MM-DD); `{date-1d}`, `{date+2w}`, `{date-3m}`,
  * `{date-1y}` shift it (months clamp: March 31 - 1m = Feb 28/29);
  * `{date-1d:%Y%m%d}` formats it with strftime; `{date:@s}` / `{date:@ms}` is
- * the epoch instant. The engine's first spelling, `{date:FORMAT:±N}` (a day
- * offset after the last ':'), renders identically here, and `{ago:N}` is
+ * the epoch instant. The engine's first spelling, `{date:FORMAT:±N}` (a SIGNED
+ * day offset after the last ':'), renders identically here, and `{ago:N}` is
  * RFC 3339 UTC of now minus N seconds. Rendered in UTC+tz_min, then stepped back `shift` units
  * of `shift_unit` ('d' 'w' 'm' 'y') -- the date_back walk.
  *
@@ -28,7 +28,8 @@ int datetok_render_any(const char *spec, size_t n, time_t now_in, int tz_min,
 /* Does `s` contain a {date…} token? */
 int datetok_present(const char *s);
 /* `tmpl` with every {date…} token rendered; malloc'd, or NULL when `tmpl`
- * holds none. A malformed token is left verbatim. */
+ * holds none. A malformed token is left verbatim, as is one that was never
+ * closed (its body would reach into the next token's braces). */
 char *datetok_expand(const char *tmpl, time_t now_in, int tz_min,
                      int shift, char shift_unit);
 

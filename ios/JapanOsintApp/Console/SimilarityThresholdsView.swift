@@ -46,7 +46,7 @@ struct SimilarityThresholdsView: View {
     private var content: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.lg) {
-                Text("Every embedding cut-off the server judges a vector comparison against. Resolution is \(order ?? "db > env > default"); a saved value applies on the next comparison, with no restart, and is recorded in the audit log. None has been measured on the production model.")
+                Text("Every embedding cut-off the server judges a vector comparison against. Resolution is \(order ?? "db > env > default"); a saved value applies on the next comparison, with no restart, and is recorded in the audit log. The defaults were measured on the production embedding model on 2026-10-23 (the unrelated band starts near 0.69, so a cosine cut-off must sit above about 0.85 to reject anything); each is operator-tunable here.")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                 if let errorText {

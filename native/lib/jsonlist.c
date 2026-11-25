@@ -1235,6 +1235,12 @@ static char *resolve_link(const char *base, const char *href) {
     snprintf(out + head, cap - head, "%s", href);
     return out;
   }
+  if (href[0] == '/' && href[1] == '/') {     /* protocol-relative: "//host/p" */
+    const char *p = strstr(base, "://");
+    if (!p) { free(out); return NULL; }
+    snprintf(out, cap, "%.*s%s", (int)(p - base) + 1, base, href);
+    return out;
+  }
   if (href[0] == '/') {                       /* same origin, new path */
     const char *p = strstr(base, "://");
     const char *slash = p ? strchr(p + 3, '/') : NULL;

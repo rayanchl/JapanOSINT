@@ -168,17 +168,31 @@ export function installFetchInterceptor() {
   window.fetch = async function joFetch(input, init) {
     if (!isApiRequest(input)) return raw(input, init);
 
+    let sentToken = false;
     const build = () => {
       const headers = new Headers(init?.headers || (input instanceof Request ? input.headers : undefined));
       const tok = sessionStore.accessToken;
-      if (tok && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${tok}`);
+      if (tok && !headers.has('Authorization')) { headers.set('Authorization', `Bearer ${tok}`); sentToken = true; }
       const tid = sessionStore.tenantId;
       if (tid && !headers.has('X-Tenant-Id')) headers.set('X-Tenant-Id', tid);
       return { ...init, headers };
     };
 
     let res = await raw(input, build());
-    if (res.status !== 401 || !sessionStore.refreshToken) return res;
+    if (res.status !== 401) return res;
+    if (!sessionStore.refreshToken) {
+      // A 401 with nothing to refresh with (an expired break-glass / API
+      // token, or tokens cleared in another tab) is the end of the session
+      // too: say so, so the app can ask for a sign-in instead of every page
+      // showing "HTTP 401". Only when this request actually carried a token
+      // of ours — an anonymous request answered 401 says nothing about a
+      // session. (The check is on what WE attached, not a caller header.)
+      if (sentToken) {
+        sessionStore.clearTokens();
+        deathListeners.forEach((fn) => { try { fn(); } catch { /* listener error */ } });
+      }
+      return res;
+    }
     // Retry exactly once after a coalesced refresh. Only bodies that can be
     // re-sent are retried; a consumed stream is returned as the 401 it got.
     const bodyReplayable = !init?.body || typeof init.body === 'string' || init.body instanceof URLSearchParams

@@ -698,6 +698,29 @@ static const hp_source T[] = {
     .id_keys = "id", .title_keys = "name", .interval = 3600, .page_max = 3,
     .record_type = "t-numcur", .free_tier = 1, .description = "d" },
 
+  /* LIB-03: an upstream-supplied URL on another host is followed without the
+   * row's credentials; a relative next link is resolved against the page. */
+  { .id = "T_XHOST", .name = "next link to another host",
+    .url = "https://x.test/xh?per_page=2", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .next_path = "next", .id_keys = "id", .title_keys = "name",
+    .page_max = 3, .record_type = "t-xhost", .free_tier = 1, .description = "d" },
+  { .id = "T_RELNEXT", .name = "relative next link",
+    .url = "https://x.test/rel/list?p=1", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .next_path = "next", .id_keys = "id", .title_keys = "name",
+    .page_max = 3, .record_type = "t-relnext", .free_tier = 1, .description = "d" },
+  { .id = "T_WHOLEDET", .name = "whole-URL detail hop on another host",
+    .url = "https://x.test/wd", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .id_keys = "id", .title_keys = "name",
+    .detail_url = "{v}", .detail_key = "u", .detail_max = 2,
+    .record_type = "t-wholedet", .free_tier = 1, .description = "d" },
+  /* LIB-08: ids beyond 2^53 are distinct records. */
+  { .id = "T_BIGID", .name = "int64 ids", .url = "https://x.test/big", .interval = 3600,
+    .array_path = "items", .id_keys = "id", .title_keys = "name",
+    .record_type = "t-bigid", .free_tier = 1, .description = "d" },
+
   /* `comma` is the obvious spelling of the default and nothing accepted it:
    * the engine took the first character of an unrecognised value, so 87 rows
    * split their files on the letter **c**. Both fixture bodies below contain
@@ -4095,11 +4118,62 @@ int main(void) {
     fx_reset();
     fx_add("/wt?d=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
     rc = run_source_resume("T_WINDOW_TAIL", NULL, tok);
-    char tail[16], want[32];
+    /* What it READS is the trailing window; what it STORES is today (41d-iii
+     * below says why that is not the tail's own start, as it used to be). */
+    char tail[16], hi[16], want[32], wurl[64];
     datetok_iso_from_day(today - 2, tail, sizeof tail);
-    snprintf(want, sizeof want, "w=%s", tail);
-    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+    datetok_iso_from_day(today, hi, sizeof hi);
+    snprintf(wurl, sizeof wurl, "d=%.4s%.2s%.2s-%.4s%.2s%.2s",
+             tail, tail + 5, tail + 8, hi, hi + 5, hi + 8);
+    snprintf(want, sizeof want, "w=%s", hi);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
        "41d: a caught-up row pins to the trailing window and stays there");
+
+    /* 41d-iii. THE NEXT DAY's first run reads the window ending TODAY. The
+     *          stored position used to be clamped to the run's own tail, which
+     *          is a day behind by the next morning — and on a row with a
+     *          window_from (so the floor does not lift it) that run re-read
+     *          yesterday's window: a daily row never saw the current day.
+     *          A caught-up run now stores its own TODAY; fed yesterday's such
+     *          token, this run must land on today's tail. */
+    char d6[16], d1[16], d7[16];
+    datetok_iso_from_day(today - 6, d6, sizeof d6);   /* T_WINDOW: 7 days */
+    datetok_iso_from_day(today - 1, d1, sizeof d1);
+    datetok_iso_from_day(today - 7, d7, sizeof d7);
+    snprintf(tok, sizeof tok, "w=%s", d6);            /* at the tail */
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iii: a caught-up run stores TODAY, not its own tail's start");
+    snprintf(tok, sizeof tok, "w=%s", d1);            /* yesterday's "today" */
+    snprintf(wurl, sizeof wurl, "from=%s&to=%s", d6, hi);
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iii: a caught-up row reads the window ending TODAY on the next day");
+
+    /* 41d-iv. A position stored BEFORE that fix (yesterday's tail start) is
+     *         still followed, not skipped: one lagging read, then caught up. */
+    snprintf(tok, sizeof tok, "w=%s", d7);
+    snprintf(wurl, sizeof wurl, "from=%s&to=%s", d7, d1);
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iv: a pre-fix stored tail is read once more, then stores today");
+
+    /* 41d-v. NOT SERVED at the tail: the position does not move. */
+    snprintf(tok, sizeof tok, "w=%s", d6);
+    fx_reset();
+    fx_add("/wz?from=", 500, NULL);
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(g_res_set && strcmp(g_res_out, tok) == 0,
+       "41d-v: an unserved trailing window is not advanced");
   }
 
   /* 41d-ii. A token the engine does not recognise is treated as ABSENT — the
@@ -5606,6 +5680,57 @@ int main(void) {
        "62b: a 200 that did not parse still says so — only the unmeasured "
        "case is dropped");
     (void)rc; }
+
+  /* LIB-03a. A next link naming ANOTHER host is followed, but without the
+   * row's Authorization header. */
+  fx_reset();
+  fx_add("evil.test/steal", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("x.test/xh", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"http://evil.test/steal\"}");
+  g_ncap = 0;
+  rc = run_source("T_XHOST", NULL);
+  ok(g_ncalls == 2 && strstr(g_call_hdrs[0], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03a: page 1 carries the row's Authorization header");
+  ok(g_ncalls == 2 && !strstr(g_call_hdrs[1], "SECRET") && !strstr(g_call_hdrs[1], "Authorization"),
+     "LIB-03a: the cross-host next page is fetched WITHOUT the row's credentials");
+  ok(strstr(g_last_url, "evil.test/steal") != NULL && g_ncap == 2,
+     "LIB-03a: the cross-host page is still followed (no data is dropped)");
+  /* control: a same-host absolute next link keeps the credentials */
+  fx_reset();
+  fx_add("/xh2", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("x.test/xh?", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"https://X.test/xh2\"}");
+  rc = run_source("T_XHOST", NULL);
+  ok(g_ncalls == 2 && strstr(g_call_hdrs[1], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03b control: a same-host next link (case-insensitive) keeps the credentials");
+
+  /* LIB-03c. A relative next link is resolved against the page URL. */
+  fx_reset();
+  fx_add("/rel/list?p=2", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("/rel/list?p=1", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"/rel/list?p=2\"}");
+  g_ncap = 0;
+  rc = run_source("T_RELNEXT", NULL);
+  ok(g_ncalls == 2 && strstr(g_last_url, "https://x.test/rel/list?p=2") != NULL && g_ncap == 2 &&
+     strstr(g_call_hdrs[1], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03c: a relative next link resolves to the same origin (and keeps credentials there)");
+
+  /* LIB-03d. A "{v}"-whole detail URL on another host gets no credentials. */
+  fx_reset();
+  fx_add("http://evil.test/x", 200, "{\"role\":\"r\"}");
+  fx_add("x.test/wd", 200, "{\"items\":[{\"id\":1,\"name\":\"a\",\"u\":\"http://evil.test/x\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_WHOLEDET", NULL);
+  ok(g_ncalls == 2 && !strstr(g_call_hdrs[1], "SECRET"),
+     "LIB-03d: a record-supplied detail URL on another host is fetched without the row's headers");
+
+  /* LIB-08. Two int64 ids that differ in the last digit are two records. */
+  fx_reset();
+  fx_add("x.test/big", 200,
+         "{\"items\":[{\"id\":1234567890123456781,\"name\":\"a\"},{\"id\":1234567890123456782,\"name\":\"b\"},"
+         "{\"id\":\"1234567890123456783\",\"name\":\"c\"},{\"id\":42,\"name\":\"d\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_BIGID", NULL);
+  ok(rc == 0 && cap_count("t-bigid", NULL) == 4 &&
+     g_cap_ids_has("1234567890123456781") && g_cap_ids_has("1234567890123456782") && g_cap_ids_has("42"),
+     "LIB-08: ids beyond 2^53 keep their exact digits and stay distinct records");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -158,8 +158,12 @@ final class WebAuthRunner: NSObject, ASWebAuthenticationPresentationContextProvi
         // `init(windowScene:)` is the only non-deprecated path. A
         // foreground-active UIWindowScene is always present while
         // ASWebAuthenticationSession is being presented, so `scenes.first`
-        // is non-nil here.
-        return ASPresentationAnchor(windowScene: scenes.first!)
+        // is normally non-nil here; if it ever is not, fall back to a bare
+        // window (deprecated, but better than a crash on a force unwrap).
+        if let scene = scenes.first {
+            return ASPresentationAnchor(windowScene: scene)
+        }
+        return ASPresentationAnchor()
         #else
         // On macOS `ASPresentationAnchor` is an `NSWindow`. Prefer the key
         // window, then the app's main window, falling back to a transient

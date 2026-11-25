@@ -475,12 +475,26 @@ struct BreachCorpusView: View {
 
     // MARK: - Actions
 
+    /// Counts come from `/api/status?summary=1` (no rows built). The picker's
+    /// breach rows are not in the searchable registry — the operator-only
+    /// breach catalog is appended AFTER the registry rows of `/api/status` —
+    /// so they are read as one bounded window at the end of that list
+    /// (`view.total`, `summary.breachTotal`), never the whole status dump.
+    private static let pickerMax = 500
+
     private func loadContext() async {
         do {
-            let env = try await api.status()
+            let env = try await api.statusSummary()
             catalogCount = env.summary?.breachTotal ?? 0
             materializedCount = env.summary?.breachMaterialized ?? 0
-            breachSources = env.apis.filter { $0.category == "breach" }
+            let total = env.view?.total ?? env.summary?.total ?? 0
+            if catalogCount > 0, total >= catalogCount {
+                let win = try await api.statusWindow(limit: min(catalogCount, Self.pickerMax),
+                                                     offset: total - catalogCount)
+                breachSources = win.apis.filter { $0.category == "breach" }
+            } else {
+                breachSources = []
+            }
         } catch {
             errorText = API.breachErrorMessage(error)
         }

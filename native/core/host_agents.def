@@ -303,6 +303,18 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
   HOST_AGENT("www.ville-grasse.fr", HA_NOCOLLECTOR)
   HOST_AGENT("www.ville-petitbourg.fr", HA_NOCOLLECTOR)
   HOST_AGENT("www.ville-viroflay.fr", HA_NOCOLLECTOR)
+  /* California HHS open data (CKAN, batch 67: 151 rows — the package_search
+   * catalogue row and 150 datastore_search rows). Measured 2026-11-16, three
+   * URLs (package_search and two datastore resources), each agent asked 2-3
+   * times ~2 s apart, by curl through the session proxy:
+   *     engine agent ("feed collector")   502, a 6,415-byte HTML error page, every time
+   *     HA_NOCOLLECTOR                    200, CKAN JSON ("success": true), every time
+   *     HA_CONTACT / bare / HA_COMPAT     200 (two single connection resets, not repeated)
+   * So the batch-67 sweep's "HTTP 502 under the sweep's own burst" was this
+   * token filter wearing a gateway status: the engine re-run paced one row at
+   * a time still read 502 on 149 of 151. Unmeasured through the ENGINE until
+   * the binary is rebuilt with this line. */
+  HOST_AGENT("data.chhs.ca.gov", HA_NOCOLLECTOR)
 
   /* registry.faa.gov refuses every self-identifying agent (engine UA 403, the
    * agent above 403, no User-Agent 200). It is now in BROWSER_HOSTS below. */

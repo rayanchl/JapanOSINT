@@ -19,14 +19,15 @@ struct IntelItemRow: View {
         }
     }
 
-    /// A collector's disclosure about itself — a truncated walk or a missing
-    /// credential — styled as a notice, not a finding: neutral icon, no
-    /// source-coloured badge, and a label saying what kind of notice it is.
+    /// A collector's disclosure about itself — a truncated walk, a missing
+    /// credential, a refused fetch, an unexpected shape — styled as a notice,
+    /// not a finding: neutral icon, no source-coloured badge, a label saying
+    /// what kind of notice it is, and the reason / remedy the server wrote.
     /// See `IntelItem.isCollectorNotice` for why this must never fall through
     /// to the finding layout.
     private var noticeRow: some View {
         HStack(alignment: .top, spacing: Space.md) {
-            Image(systemName: item.isStatusNotice ? "key.slash" : "text.badge.minus")
+            Image(systemName: noticeIcon)
                 .font(.callout)
                 .foregroundStyle(theme.textMuted)
                 .frame(width: 26, height: 26)
@@ -34,8 +35,8 @@ struct IntelItemRow: View {
                             in: RoundedRectangle(cornerRadius: Radius.sm))
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: Space.xs) {
-                    Pill(text: item.isStatusNotice ? "needs credential" : "truncated",
-                         tone: .info, maxWidth: 140)
+                    Pill(text: item.noticeLabel,
+                         tone: item.isFetchFailure ? .warning : .info, maxWidth: 140)
                     Text(item.source_id)
                         .font(Typography.monoSmall)
                         .foregroundStyle(theme.textMuted)
@@ -45,9 +46,21 @@ struct IntelItemRow: View {
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
                     .lineLimit(2)
+                ForEach(Array(item.noticeDetail.enumerated()), id: \.offset) { _, d in
+                    Text("\(d.label): \(d.text)")
+                        .font(.caption2)
+                        .foregroundStyle(theme.textMuted)
+                        .lineLimit(3)
+                }
             }
         }
         .padding(.vertical, 2)
+    }
+
+    private var noticeIcon: String {
+        if item.isStatusNotice { return "key.slash" }
+        if item.isFetchFailure { return "exclamationmark.triangle" }
+        return "text.badge.minus"
     }
 
     private var findingRow: some View {

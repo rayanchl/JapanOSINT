@@ -96,32 +96,39 @@ static char *match_cls(const char *block, const char *cls) {
   return strndup(s, (size_t)(te - s));
 }
 
-static const char *SLUGS[] = {
-  "tokyo","kanagawa","osaka","aichi","hokkaido","fukuoka","hyogo",
-  "chiba","saitama","kyoto","hiroshima","miyagi","shizuoka",
+/* SUUMO's list URL takes the region (ar) and the 2-digit JIS prefecture code
+ * (ta). The old `ta=tokyo` slugs stopped being accepted: SUUMO answers them
+ * HTTP 200 with an "エラー｜SUUMO" page of 12,438 bytes and no listing, which
+ * is why this row fetched 13 pages and stored nothing at rc=0 (measured
+ * 2026-11-14). ta=13 with ar=030 returns 30 cassetteitems a page. The region
+ * code must match the prefecture (ta=27 under ar=030 is empty): measured per
+ * prefecture below — hiroshima is ar=080, not 070. */
+struct slug { const char *ar, *ta; };
+static const struct slug SLUGS[] = {
+  {"030","13"},{"030","14"},{"060","27"},{"050","23"},{"010","01"},{"090","40"},
+  {"060","28"},{"030","12"},{"030","11"},{"060","26"},{"080","34"},{"020","04"},
+  {"050","22"},
 };
 #define NSLUG ((int)(sizeof SLUGS / sizeof SLUGS[0]))
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  /* Which of the two breaks below ended each slug: a body that never arrived,
-   * or a body that arrived and carried no listing grid. The old code could not
-   * tell them apart at the return, and neither could the database. */
-  int nofetch = 0, nogrid = 0;
+  int bodies = 0, page1_empty = 0;
 
   for (int si = 0; si < NSLUG; si++) {
     for (int page = 1; page <= 5; page++) {
       char url[256];
       snprintf(url, sizeof url,
-        "https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ta=%s&page=%d",
-        SLUGS[si], page);
+        "https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=%s&bs=040&ta=%s&page=%d",
+        SLUGS[si].ar, SLUGS[si].ta, page);
       char *html = feed_get_text(ctx->http, url, 12000);
-      if (!html) { nofetch++; break; }         /* if (!html) break (next slug) */
+      if (!html) break;                       /* if (!html) break (next slug) */
+      bodies++;
 
       /* items = html.split(/cassetteitem"/).slice(1) — iterate occurrences
        * of `cassetteitem"`; block = text up to next occurrence. */
       const char *first = strstr(html, "cassetteitem\"");
-      if (!first) { nogrid++; free(html); break; }  /* items.length===0 → break */
+      if (!first) { free(html); if (page == 1) page1_empty++; break; }  /* items.length===0 → break */
       int page_matched = 0;
       const char *bs = first + strlen("cassetteitem\"");
       while (bs) {
@@ -204,37 +211,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
   }
 
-  int n = geojson_emit_features(sink, ctx->source_id, features);
-  cJSON_Delete(features);
-  fprintf(stderr, "[real-estate] emitted %d (%d/%d slugs unreachable, "
-                  "%d served a body with no listing grid)\n",
-          n, nofetch, NSLUG, nogrid);
-  /* `return n >= 0 ? 0 : -1` CANNOT BE -1: n comes from geojson_emit_features,
-   * which starts at 0 and only increments. So this was the only return in the
-   * function and it was always 0 — all thirteen slugs could be refused and the
-   * run still read `rc=0 records=0 stored=0`, byte for byte what a quiet
-   * rental market would look like.
-   *
-   * The header of this file is where the reasoning went stale: "When the live
-   * scrape yields 0 rows JS falls back to SEED; we emit 0
-   * (correctness-neutral)". That was a true and important statement about NOT
-   * fabricating the seed rows, and it was then read as a licence for rc=0 —
-   * two different questions. Rule 1 asks for the shortfall as DATA, and until
-   * sched_disclose_fetch_failure (2026-10-22) there was nowhere to put it.
-   *
-   * Measured 2026-11-07: 13 requests, 161,694 bytes, 0 records — one request
-   * per slug, every one breaking at the `cassetteitem"` test, so SUUMO serves
-   * ~12.4 kB that no longer contains the server-rendered listing grid. Tokyo,
-   * Osaka and Kanagawa rentals are never empty, so zero here is a parse or
-   * access defect and never an honest empty, and the discriminator is the
-   * PARSE rather than the record count: a slug that yields one listing proves
-   * the grid is still there and leaves the run honest at 0. */
-  if (n == 0) {
-    fprintf(stderr, "[real-estate] no slug yielded a single listing — "
-                    "reporting a failed fetch, not an empty rental market\n");
+  if (cJSON_GetArraySize(features) == 0 && bodies > 0) {
+    /* Bodies came back and none held a listing: an error page served as 200
+     * (the failure above), not an empty rental market. Disclose it. */
+    cJSON_Delete(features);
+    fprintf(stderr, "[real-estate] fetched %d page(s), %d first pages without listings — SUUMO error/changed layout\n", bodies, page1_empty);
     return -1;
   }
-  return 0;
+  int n = geojson_emit_features(sink, ctx->source_id, features);
+  cJSON_Delete(features);
+  fprintf(stderr, "[real-estate] emitted %d\n", n);
+  return n >= 0 ? 0 : -1;
 }
 
 static const source_def real_estate_def = {

@@ -57,16 +57,42 @@ static void catrust_load(void) {
   const char *path = catrust_extra_path();
   FILE *f = fopen(path, "rb");
   if (!f) {
-    /* No bundle is the ordinary case for a deployment that does not need one;
-     * say nothing, behave as before. */
+    /* Behaves as before (no extra intermediates), but SAYS SO once: a
+     * relocated binary or container that sets neither $JO_REPO_ROOT nor
+     * $JO_CA_EXTRA resolves the compiled-in path, loses the nine-host fix and
+     * would otherwise report `no_local_issuer` for hosts that were fixed with
+     * no line anywhere explaining why. */
+    fprintf(stderr, "[catrust] extra-intermediates bundle %s does not resolve "
+                    "— no extra intermediates loaded (set JO_REPO_ROOT or "
+                    "JO_CA_EXTRA if hosts that omit their intermediate fail "
+                    "with no_local_issuer)\n", path);
     g_n = 0;
     return;
   }
-  int cap = 16, n = 0, refused = 0;
+  int cap = 16, n = 0, refused = 0, bad = 0;
   X509 **v = calloc((size_t)cap, sizeof *v);
   if (!v) { fclose(f); g_n = -1; return; }
   X509 *x;
-  while ((x = PEM_read_X509(f, NULL, NULL, NULL)) != NULL) {
+  for (;;) {
+    x = PEM_read_X509(f, NULL, NULL, NULL);
+    if (!x) {
+      /* NULL is both the end of the file and a block that would not parse.
+       * Only the end stops the load: one corrupt entry must not silently drop
+       * every certificate after it. PEM_read_X509 consumes the whole bad
+       * block, so reading on resumes at the next one; a failure that makes no
+       * progress (or a long run of them) ends the loop. */
+      unsigned long err = ERR_peek_last_error();
+      ERR_clear_error();
+      if (feof(f) || ferror(f) ||
+          (ERR_GET_LIB(err) == ERR_LIB_PEM &&
+           ERR_GET_REASON(err) == PEM_R_NO_START_LINE) || err == 0 ||
+          bad >= 64)
+        break;
+      bad++;
+      fprintf(stderr, "[catrust] skipping an unparseable certificate block in "
+                      "%s\n", path);
+      continue;
+    }
     /* THE SELF-SIGNED CHECK IS HERE, at load, not at every handshake: a
      * deployment that edits this file cannot introduce a trust anchor, and the
      * refusal is said once rather than once per connection per certificate.
@@ -86,8 +112,11 @@ static void catrust_load(void) {
     }
     v[n++] = x;
   }
-  ERR_clear_error();                 /* the loop ends on a parse error by design */
+  ERR_clear_error();
   fclose(f);
+  fprintf(stderr, "[catrust] loaded %d extra intermediate(s) from %s%s%s\n", n,
+          path, refused ? " (self-signed refused)" : "",
+          bad ? " (unparseable block(s) skipped)" : "");
   if (!n) {
     free(v);
     fprintf(stderr, "[catrust] %s holds no usable certificate%s\n", path,

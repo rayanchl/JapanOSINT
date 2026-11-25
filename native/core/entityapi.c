@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
@@ -64,17 +65,6 @@ static long count1_t(sqlite3 *h, const char *sql, const char *tenant) {
  * breaks. Only /api/sources/:id/logs had to change shape, because a bare JSON
  * array has nowhere to put any of this — see miscapi.c. */
 
-/* Node's new Date().toISOString(), the modulo-clamped spelling used across
- * this tree so -Wformat-truncation can prove the 24 chars fit. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* Step-and-finalize a prepared COUNT(*). -1 when the count could not be taken,
  * which the envelope must render as null: rule 1 forbids reporting a number we
@@ -97,7 +87,7 @@ static void add_page_meta(cJSON *o, int limit, int offset, long total,
   else           cJSON_AddNumberToObject(page, "total", (double)total);
   cJSON_AddItemToObject(o, "page", page);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters ? filters : cJSON_CreateObject());

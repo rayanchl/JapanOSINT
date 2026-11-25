@@ -5,6 +5,7 @@
 #include <string.h>
 #include <iconv.h>
 #include <errno.h>
+#include <strings.h>
 
 cJSON *csv_parse(const char *text, int headers) {
   return csv_parse_d(text, headers, ',');
@@ -245,44 +246,88 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
   return rows;
 }
 
-/* Row 0 names the columns; every later row becomes an object. Consumes `rows`. */
+/* Row 0 names the columns; every later row becomes an object. Consumes `rows`.
+ *
+ * Linear in the cells: the rows and cells are walked through their ->next
+ * links. cJSON_GetArrayItem(x, i) is O(i), and calling it per cell made a
+ * 160 KB header of 80,000 columns cost 17 s (quadratic, per data row too).
+ *
+ * A header name that repeats keeps its first spelling and the later columns
+ * get ".1", ".2" … — the convention hpengine's XML path uses for repeated
+ * children. Two JSON keys of one name made the second column unreachable
+ * (cJSON_GetObjectItem returns the first), a silent discard of a column. The
+ * suffix is found by looking for a name nobody else holds, so it can never
+ * collide with a header that genuinely reads "a.1". */
+static size_t csv_name_slot(char **names, const int *tab, size_t cap, const char *str) {
+  unsigned long x = 5381;
+  for (const unsigned char *q = (const unsigned char *)str; *q; q++) x = x * 33 + *q;
+  size_t k = x & (cap - 1);
+  while (tab[k] >= 0 && strcmp(names[tab[k]], str)) k = (k + 1) & (cap - 1);
+  return k;                                     /* the slot holding it, or the empty one */
+}
+
 static cJSON *csv_name_rows(cJSON *rows) {
-  int nrows = cJSON_GetArraySize(rows);
-  if (nrows == 0) { cJSON_Delete(rows); return cJSON_CreateArray(); }
-  cJSON *head = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: header row, not a record */
+  cJSON *head = rows ? rows->child : NULL;      /* header row, not a record */
+  if (!head) { cJSON_Delete(rows); return cJSON_CreateArray(); }
   int nh = cJSON_GetArraySize(head);
   char **names = calloc((size_t)nh + 1, sizeof(char *));
   if (!names) return rows;                      /* keep the positional rows */
-  for (int i = 0; i < nh; i++) {
-    const char *h = cJSON_GetArrayItem(head, i)->valuestring;
+  int ni = 0;
+  for (cJSON *hc = head->child; hc && ni < nh; hc = hc->next, ni++) {
+    const char *h = hc->valuestring ? hc->valuestring : "";
     while (*h == ' ' || *h == '\t') h++;        /* trim() */
     char *t = strdup(h);
-    if (!t) { nh = i; break; }
+    if (!t) break;
     size_t L = strlen(t);
     while (L && (t[L-1]==' '||t[L-1]=='\t'||t[L-1]=='\n'||t[L-1]=='\r')) t[--L]=0;
-    names[i] = t;
+    names[ni] = t;
+  }
+  nh = ni;
+  /* Disambiguate repeated names through an open-addressing table, so a header
+   * of 80,000 columns stays linear. */
+  {
+    size_t cap = 16;
+    while (cap < (size_t)nh * 2 + 2) cap <<= 1;
+    int *tab = malloc(cap * sizeof *tab);
+    int *cnt = calloc((size_t)nh + 1, sizeof *cnt);   /* repeats seen, per first column */
+    if (tab && cnt) {
+      for (size_t i = 0; i < cap; i++) tab[i] = -1;
+      for (int i = 0; i < nh; i++) {
+        size_t k = csv_name_slot(names, tab, cap, names[i]);
+        if (tab[k] < 0) { tab[k] = i; continue; }     /* first of its name */
+        int first = tab[k];
+        size_t base = strlen(names[first]);
+        char *nn = malloc(base + 24);
+        if (!nn) continue;                            /* keep the repeat as it was */
+        size_t k2;
+        do {
+          snprintf(nn, base + 24, "%s.%d", names[first], ++cnt[first]);
+          k2 = csv_name_slot(names, tab, cap, nn);
+        } while (tab[k2] >= 0);
+        free(names[i]); names[i] = nn;
+        tab[k2] = i;
+      }
+    }
+    free(tab); free(cnt);
   }
   cJSON *out = cJSON_CreateArray();
-  for (int r = 1; r < nrows; r++) {
-    cJSON *row = cJSON_GetArrayItem(rows, r);
+  for (cJSON *row = head->next; row; row = row->next) {
     cJSON *o = cJSON_CreateObject();
-    for (int i = 0; i < nh; i++) {
-      cJSON *cell = cJSON_GetArrayItem(row, i);
-      cJSON_AddStringToObject(o, names[i],
-                              cell && cell->valuestring ? cell->valuestring : "");
-    }
+    int i = 0;
+    for (cJSON *cell = row->child; cell && i < nh; cell = cell->next, i++)
+      cJSON_AddStringToObject(o, names[i], cell->valuestring ? cell->valuestring : "");
+    for (; i < nh; i++) cJSON_AddStringToObject(o, names[i], "");
     /* Ragged rows: a data row with MORE cells than the header had was cut off
      * at nh and the surplus vanished — a silent discard of real bytes we
      * already paid a request for (docs/SOURCE_EXHAUSTIVENESS.md). There is no
      * name for those columns, so they keep the positional one the headerless
      * mode already uses; nothing is invented and nothing is dropped. */
-    int ncells = cJSON_GetArraySize(row);
-    for (int i = nh; i < ncells; i++) {
-      cJSON *cell = cJSON_GetArrayItem(row, i);
+    cJSON *extra = row->child;
+    for (int k = 0; extra && k < nh; k++) extra = extra->next;
+    for (int k = nh; extra; extra = extra->next, k++) {
       char key[24];
-      snprintf(key, sizeof key, "col%d", i);
-      cJSON_AddStringToObject(o, key,
-                              cell && cell->valuestring ? cell->valuestring : "");
+      snprintf(key, sizeof key, "col%d", k);
+      cJSON_AddStringToObject(o, key, extra->valuestring ? extra->valuestring : "");
     }
     cJSON_AddItemToArray(out, o);
   }
@@ -575,13 +620,21 @@ int csv_is_utf8(const char *s, size_t n) {
     unsigned char c = p[i];
     size_t need;
     if (c < 0x80) { i++; continue; }
+    else if (c < 0xC2) return 0;          /* stray continuation, or C0/C1: overlong */
     else if ((c & 0xE0) == 0xC0) need = 1;
     else if ((c & 0xF0) == 0xE0) need = 2;
-    else if ((c & 0xF8) == 0xF0) need = 3;
+    else if (c <= 0xF4) need = 3;         /* F5..FF would pass U+10FFFF */
     else return 0;
     if (i + need >= n) return 0;          /* truncated sequence */
     for (size_t k = 1; k <= need; k++)
       if ((p[i + k] & 0xC0) != 0x80) return 0;
+    /* The second byte narrows three lead bytes: E0 80..9F is an overlong,
+     * ED A0..BF is a UTF-16 surrogate, F0 80..8F is an overlong and F4 90..
+     * is past U+10FFFF. Such "text" is not UTF-8, so it must not pass for it. */
+    if (c == 0xE0 && p[i + 1] < 0xA0) return 0;
+    if (c == 0xED && p[i + 1] > 0x9F) return 0;
+    if (c == 0xF0 && p[i + 1] < 0x90) return 0;
+    if (c == 0xF4 && p[i + 1] > 0x8F) return 0;
     i += need + 1;
   }
   return 1;
@@ -594,7 +647,15 @@ int csv_is_utf8(const char *s, size_t n) {
  * so the source encoding is a parameter. */
 char *csv_decode_charset(const char *buf, size_t len, const char *from) {
   if (!buf) return NULL;
-  iconv_t cd = iconv_open("UTF-8", (from && from[0]) ? from : "SHIFT_JIS");
+  /* Every spelling of "Shift_JIS" is read as CP932. glibc's SHIFT_JIS is
+   * strict JIS X 0208 and REJECTS the NEC/IBM extensions Japanese content is
+   * full of (㈱ ① 髙 﨑), after which this function fails closed and the whole
+   * document comes back undecoded. CP932 is a strict superset, so it can only
+   * turn a failure into a success. */
+  if (!from || !from[0] || !strcasecmp(from, "SHIFT_JIS") || !strcasecmp(from, "SHIFT-JIS") ||
+      !strcasecmp(from, "SJIS") || !strcasecmp(from, "MS_KANJI") || !strcasecmp(from, "CSSHIFTJIS"))
+    from = "CP932";
+  iconv_t cd = iconv_open("UTF-8", from);
   if (cd == (iconv_t)-1) {
     char *c = malloc(len + 1);
     if (!c) return NULL;
@@ -604,7 +665,7 @@ char *csv_decode_charset(const char *buf, size_t len, const char *from) {
   char *out = malloc(out_cap);
   if (!out) { iconv_close(cd); return NULL; }
   char *in_p = (char *)buf, *out_p = out;
-  int failed = 0;
+  int failed = 0, truncated_tail = 0;
   while (in_left > 0) {
     size_t r = iconv(cd, &in_p, &in_left, &out_p, &out_left);
     if (r == (size_t)-1) {
@@ -616,7 +677,13 @@ char *csv_decode_charset(const char *buf, size_t len, const char *from) {
         out_p = out + used; out_left = out_cap - used;
         continue;
       }
-      failed = 1; break;          /* invalid/incomplete → JS catch → utf8 */
+      /* EINVAL is ONE incomplete multibyte sequence at the very end of the
+       * input (a body cut at a byte boundary). Everything before it decoded
+       * fine; throwing the whole document away for one trailing byte was the
+       * old behaviour. Keep the prefix and mark where the cut was with U+FFFD
+       * rather than dropping the byte unannounced. */
+      if (errno == EINVAL) { truncated_tail = 1; break; }
+      failed = 1; break;          /* invalid → JS catch → utf8 */
     }
   }
   iconv_close(cd);
@@ -626,10 +693,19 @@ char *csv_decode_charset(const char *buf, size_t len, const char *from) {
     if (!c) return NULL;
     memcpy(c, buf, len); c[len] = 0; return c;
   }
+  if (truncated_tail) {
+    if (out_left < 4) {                        /* room for U+FFFD + NUL */
+      size_t used = (size_t)(out_p - out);
+      char *no = realloc(out, used + 4);
+      if (!no) { free(out); return NULL; }
+      out = no; out_p = out + used;
+    }
+    memcpy(out_p, "\xEF\xBF\xBD", 3); out_p += 3;
+  }
   *out_p = 0;
   return out;
 }
 
 char *csv_decode_sjis(const char *buf, size_t len) {
-  return csv_decode_charset(buf, len, "SHIFT_JIS");
+  return csv_decode_charset(buf, len, "CP932");
 }

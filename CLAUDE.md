@@ -1606,7 +1606,40 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 60,603** (2026-11-24, `make source-count`, the
+**The registered count is 108,722** (2026-11-25, `make source-count`, the
+binary's registry agreeing with 0 duplicates, 0 dropped and 0 never-runs, both
+floors re-recorded from that build): the merge of main's 109,647 (batches 58 to
+68) with this branch, which had retired 924 rows since the base the two share
+(698 feed-format twins, 209 double feed reads, 17 ignored-filter and duplicate
+rows), less ONE more the merge itself found. `feed-format-twin` — a check this
+branch wrote and main had not yet got — reported `JO68_ASIA_KR_NRC_RE_KR_BB004`
+the moment the trees met: `www.nrc.re.kr` beside `nrc.re.kr`, both rows storing
+the same 129 records from the same 151,451 bytes
+(`docs/removed-sources-2026-11-25-merge-twin.tsv`). **Two branches that each
+pass their own gates can fail the other's on the merge; run every gate on the
+merged tree, not on either parent.** Four bespoke collectors
+(`flightradar_jp`, `odpt_bus`, `phone_scam_hotspots`, `real_estate`) had been
+repaired on both sides; main's later rewrites are kept.
+
+**Main's count was 109,647** (2026-11-24): 109,801 less 154 Socrata
+rows on seven domains that no longer resolve in public DNS. The same pass found
+that **all 8,282 Socrata rows of batches 66 and 67 failed on page 2**: the URL
+spelt the offset `%24offset` and the row declared `page_param = "$offset"`, so
+the engine appended a second offset instead of replacing the first and Socrata
+answered 400. **`page_param` must be spelt exactly as the URL spells it**, and a
+sweep braked at `JO_PAGE_MAX=2` reads such a row as OK because page 1 stores —
+read the truncation notice, or run `audit_cycle_advance.py`.
+
+**The registered count was 109,801** (2026-11-23, `make source-count`, both
+floors re-recorded): batches 58–67 took it to 105,229, and batch 68 added 5,058
+and removed 486 (`native/collectors/OSINT_SOURCES_BATCH_68_REPAIRS_JPDISASTER_ASIA.md`).
+One lesson from it belongs here: **on an hpengine row with no `id_keys`, the
+TITLE is the identity, so a title-key change is an identity change.** Giving
+4,862 OpenDataSoft rows real titles collapsed records that share one (109 of
+200 stored) until the rows were keyed on a tuple measured unique. Re-run a row
+through the engine after a title pass, exactly as after a URL change.
+
+**This branch's count was 60,603** (2026-11-24, before the merge with main, `make source-count`, the
 binary's registry agreeing, both floors re-recorded) — the same number as the
 day before by coincidence: `unpaywall-doi` left (a scheduled row frozen on one
 DOI, the authoring probe of the `UNPAYWALL_DOI` lookup) and
@@ -4114,6 +4147,59 @@ an entity pivot, and the same `PUT /api/sources/:id/settings` the body ceiling
 uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.c`
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
+
+**WHEN a row is next due is ONE function too: `sched_next_due()`**
+(2026-11-14, audit and report in `docs/source-scheduling-audit-2026-11-14.md`).
+The dispatcher, the boot plan and the source pages all read it, and
+`./bin/japanosint --schedule` prints the result for every source as TSV — the
+interval that runs, what decided it, health and next due. What the audit found
+by reading the dispatcher rather than the interval arithmetic, each fixed and
+pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
+
+* **A maintenance pod is exempt from the cadence policy.** The policy is about
+  collection; under the compiled global 6 h the WAL checkpoint, the embedding
+  backfill and anomaly triage ran once at boot and then every six hours.
+* **The plan is corrected from a run's OUTCOME** (`sched_publish`). The next
+  run used to be fixed at dispatch from the state before the run, so every
+  change landed a cycle late: a released quarantine waited 7 more days, a
+  recovered source its last backoff.
+* **A row the queue has no room for STAYS DUE.** It used to lose the cycle —
+  and with 83,511 scheduled rows against a 2,048 queue, the same rows lost
+  every cycle. The heartbeat's `deferred=N` is the standing backlog.
+* **A restart does not re-fetch the fleet**: a source whose last run is less
+  than one interval old keeps its own time.
+* **A health hold survives a cadence edit**, and a healthy row's stored
+  interval is not a floor (6 h → 1 h used to run once and then wait 6 h).
+
+Two numbers it measured that are decisions rather than defects: at a mean run
+of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
+18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
+scheduled rows main held by the time this merged) — and **24 is the default since 2026-11-16**, measured on the full registry
+(8 / 24 / 48 workers: 1.38 / 2.09 / 2.50 runs/s over 180 s, no refused write at
+any of them; the 6 h policy needs ~4.5, which no setting reached from the
+measuring container). The dispatcher also walks the registry on a stride
+(`sched_walk_index`) so one host's rows do not fill the queue together, and a
+wall-clock step shifts the whole plan (`sched_clock_step`); and the policy held
+the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours.
+
+**A REAL-TIME FEED IS OUTSIDE THE POLICY** (the owner's decision of
+2026-11-14, `CAD_REALTIME_SEC` in `core/cadence.h`): a row that DECLARES an
+interval under 300 s runs as declared under any policy — global, floor or
+ceiling — because an earthquake early warning read every six hours is not a
+slower feed, it is a useless one. The rule is in `cadence.c`'s `apply()`, so
+the scheduler, the pages and the runs-per-day estimate all see it, and such a
+row's mode reads `declared`. To slow one down, set its own interval from its
+page. Two things in the dispatcher make the interval real under a backlog,
+which is the normal state at 96,472 scheduled rows: the last
+`SCHED_RT_RESERVE` (64) slots of the queue are theirs alone, and a healthy
+real-time row's key sits below every priority band — a failing one keeps its
+band, so backoff is not bypassed. Measured on a live boot at the default 8
+workers with the queue pinned full and 17,187 rows deferred: `wolfx-eew` ran
+21 times in 240 s, the 60 s feeds 4 times, `odpt-train` (30 s) 8 times. Run
+one by one the same day, 16 of the 22 store records; `odpt-train` needs its
+ODPT key and says so, and `certstream-jp`, `odpt-bus`, `flightradar-jp`,
+`airplanes-live-mil` and `nerv-feed` returned nothing or were refused from
+the measuring container — one reading each, nothing changed on it.
 
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against

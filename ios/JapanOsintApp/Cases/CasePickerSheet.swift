@@ -47,6 +47,8 @@ struct CasePickerSheet: View {
     @State private var creating = false
     @FocusState private var newFieldFocused: Bool
 
+    @State private var moreCasesExist = false
+
     private var trimmedNewName: String {
         newName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -65,6 +67,13 @@ struct CasePickerSheet: View {
                     .listRowBackground(theme.surface)
                 }
                 casesSection
+                if moreCasesExist {
+                    Section {
+                        Text("Showing the \(rows.count) most recently updated cases; older cases are not listed here.")
+                            .font(.caption2)
+                            .foregroundStyle(theme.textMuted)
+                    }
+                }
             }
             .compatInsetGroupedListStyle()
             .themedScreenBackground(theme)
@@ -294,6 +303,7 @@ struct CasePickerSheet: View {
         do {
             let env = try await apiClient.api.cases(status: nil, limit: 200, cursor: nil)
             rows = env.data.sorted { $0.updated_at > $1.updated_at }
+            moreCasesExist = env.page?.has_more == true
             error = nil
         } catch let e {
             error = e.localizedDescription

@@ -113,6 +113,80 @@ static cJSON *get_mx_records(http_client *http, const char *domain) {
   return mx;
 }
 
+/* Resolve ONCE and judge the address we will connect to (LIB-11). The old
+ * path called hostgate_host_check() (one getaddrinfo) and then
+ * gethostbyname() (a second, IPv4-only, not thread-safe) for the connect, so a
+ * name answering public to the first and 127.0.0.1 to the second walked past
+ * the strict gate. One getaddrinfo answer is judged address by address with
+ * the same strict ruleset and connect() goes to that judged sockaddr; any
+ * blocked address refuses the whole name, as hostgate_host_check does. */
+static int resolve_judged(const char *host, struct sockaddr_storage *ss,
+                          socklen_t *sl) {
+  struct addrinfo hints, *res = NULL, *ai;
+  memset(&hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  if (getaddrinfo(host, NULL, &hints, &res) != 0 || !res) return 0;
+  int have = 0;
+  for (ai = res; ai; ai = ai->ai_next) {
+    char ip[INET6_ADDRSTRLEN] = "";
+    if (ai->ai_family == AF_INET)
+      inet_ntop(AF_INET, &((struct sockaddr_in *)ai->ai_addr)->sin_addr, ip, sizeof ip);
+    else if (ai->ai_family == AF_INET6)
+      inet_ntop(AF_INET6, &((struct sockaddr_in6 *)ai->ai_addr)->sin6_addr, ip, sizeof ip);
+    else continue;
+    if (hostgate_addr_check(ip, 1) != HG_URL_OK) { freeaddrinfo(res); return 0; }
+    if (!have && ai->ai_addrlen <= sizeof *ss) {
+      memcpy(ss, ai->ai_addr, ai->ai_addrlen);
+      *sl = (socklen_t)ai->ai_addrlen;
+      have = 1;
+    }
+  }
+  freeaddrinfo(res);
+  return have;
+}
+
+/* Read ONE complete SMTP reply, including every continuation line. A multi-
+ * line reply is "250-first\r\n250-second\r\n250 last\r\n": the final line is the
+ * one whose fourth character is a space (or a bare "250"). One recv() per
+ * reply returned only the first segment, so the EHLO capability list desynced
+ * every later read and the RCPT verdict could come from an EHLO line. Returns
+ * the three-digit code, or -1 on a closed/timed-out connection or a malformed
+ * line. Bounded at 64 KB of reply. */
+static int smtp_reply(int sock) {
+  char line[1024]; size_t ll = 0;
+  size_t total = 0;
+  for (;;) {
+    char c;
+    ssize_t n = recv(sock, &c, 1, 0);
+    if (n <= 0) return -1;
+    if (++total > 65536) return -1;
+    if (c == '\r') continue;
+    if (c != '\n') { if (ll < sizeof line - 1) line[ll++] = c; continue; }
+    line[ll] = 0;
+    int ok = ll >= 3 && isdigit((unsigned char)line[0]) &&
+             isdigit((unsigned char)line[1]) && isdigit((unsigned char)line[2]);
+    if (!ok) return -1;
+    if (ll == 3 || line[3] == ' ')                 /* final line of the reply */
+      return (line[0] - '0') * 100 + (line[1] - '0') * 10 + (line[2] - '0');
+    if (line[3] != '-') return -1;
+    ll = 0;                                         /* continuation: next line */
+  }
+}
+
+static int smtp_connect(const struct sockaddr_storage *base, socklen_t salen,
+                        int port, const struct timeval *to) {
+  struct sockaddr_storage a = *base;
+  if (a.ss_family == AF_INET) ((struct sockaddr_in *)&a)->sin_port = htons((uint16_t)port);
+  else ((struct sockaddr_in6 *)&a)->sin6_port = htons((uint16_t)port);
+  int sock = socket(a.ss_family, SOCK_STREAM, 0);
+  if (sock < 0) return -1;
+  setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, to, sizeof *to);
+  setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, to, sizeof *to);
+  if (connect(sock, (struct sockaddr *)&a, salen) < 0) { close(sock); return -1; }
+  return sock;
+}
+
 /* verify_smtp: raw socket EHLO/MAIL FROM/RCPT TO on 25 then 587.
  * 1=valid, 0=invalid, -1=unable. */
 static int verify_smtp(const char *email, const char *mx_host) {
@@ -127,62 +201,57 @@ static int verify_smtp(const char *email, const char *mx_host) {
             mx_host, hostgate_url_reason(hg));
     return -1;
   }
-  struct hostent *he = gethostbyname(mx_host);
-  if (!he) return -1;
+  struct sockaddr_storage target; socklen_t tlen = 0;
+  if (!resolve_judged(mx_host, &target, &tlen)) return -1;
   struct timeval to = { 10, 0 };
 
-  int sock = socket(AF_INET, SOCK_STREAM, 0);
+  int sock = smtp_connect(&target, tlen, 25, &to);
+  if (sock < 0) sock = smtp_connect(&target, tlen, 587, &to);
   if (sock < 0) return -1;
-  setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof to);
-  setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &to, sizeof to);
-  struct sockaddr_in srv;
-  memset(&srv, 0, sizeof srv);
-  srv.sin_family = AF_INET;
-  srv.sin_port = htons(25);
-  memcpy(&srv.sin_addr, he->h_addr_list[0], he->h_length);
-  if (connect(sock, (struct sockaddr *)&srv, sizeof srv) < 0) {
-    close(sock);
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) return -1;
-    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof to);
-    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &to, sizeof to);
-    srv.sin_port = htons(587);
-    if (connect(sock, (struct sockaddr *)&srv, sizeof srv) < 0) {
-      close(sock);
-      return -1;
-    }
-  }
+
   char buf[1024];
   int result = -1;
-  if (recv(sock, buf, sizeof buf - 1, 0) <= 0) { close(sock); return -1; }
+  if (smtp_reply(sock) < 0) { close(sock); return -1; }          /* 220 greeting */
   snprintf(buf, sizeof buf, "EHLO osint-validator.local\r\n");
   send(sock, buf, strlen(buf), 0);
-  if (recv(sock, buf, sizeof buf - 1, 0) <= 0) { close(sock); return -1; }
+  if (smtp_reply(sock) < 0) { close(sock); return -1; }          /* 250- ... 250 */
   snprintf(buf, sizeof buf, "MAIL FROM:<validator@osint-validator.local>\r\n");
   send(sock, buf, strlen(buf), 0);
-  if (recv(sock, buf, sizeof buf - 1, 0) <= 0) { close(sock); return -1; }
+  if (smtp_reply(sock) < 0) { close(sock); return -1; }
   snprintf(buf, sizeof buf, "RCPT TO:<%s>\r\n", email);
   send(sock, buf, strlen(buf), 0);
-  int n = recv(sock, buf, sizeof buf - 1, 0);
-  if (n > 0) {
-    buf[n] = '\0';
-    if (buf[0] == '2') result = 1;
-    else if (buf[0] == '5') result = 0;
-  }
+  int code = smtp_reply(sock);
+  if (code >= 200 && code < 300) result = 1;
+  else if (code >= 500 && code < 600) result = 0;
   snprintf(buf, sizeof buf, "QUIT\r\n");
   send(sock, buf, strlen(buf), 0);
   close(sock);
   return result;
 }
 
+/* Percent-encode everything outside RFC 3986's unreserved set. An address like
+ * "a+b@x.com" put into a query string raw reads as "a b@x.com", and one
+ * holding %26 injected a parameter. */
+static void url_encode(const char *s, char *out, size_t cap) {
+  static const char hex[] = "0123456789ABCDEF";
+  size_t w = 0;
+  for (; *s && w + 4 < cap; s++) {
+    unsigned char c = (unsigned char)*s;
+    if (isalnum(c) || c == '-' || c == '.' || c == '_' || c == '~') out[w++] = (char)c;
+    else { out[w++] = '%'; out[w++] = hex[c >> 4]; out[w++] = hex[c & 15]; }
+  }
+  out[w] = 0;
+}
+
 /* query_hunter_io: key-gated on HUNTER_API_KEY → NULL without it. */
 static cJSON *query_hunter_io(http_client *http, const char *email) {
   const char *api_key = getenv("HUNTER_API_KEY");
   if (!api_key || !*api_key) return NULL;
-  char url[1024];
+  char url[1024], enc[3 * 256 + 4];
+  url_encode(email, enc, sizeof enc);
   snprintf(url, sizeof url,
     "https://api.hunter.io/v2/email-verifier?email=%s&api_key=%s",
-    email, api_key);
+    enc, api_key);
   http_response hr = {0};
   int hc = http_request(http, "GET", url, NULL, NULL, 0, 30000, 1, &hr);
   if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }

@@ -49,6 +49,11 @@
  * caller MUST pair it with hostgate_release), 0 if it timed out or the host
  * is exempt/unparseable (the caller must NOT release). */
 int  hostgate_acquire(const char *url, int max_wait_ms);
+/* The calling thread's run-cancel flag (NULL clears it). While it reads
+ * non-zero, hostgate_acquire returns 0 at once instead of waiting, and the
+ * HTTP client makes no request; see hostgate_cancelled(). */
+void hostgate_set_cancel(volatile int *flag);
+int hostgate_cancelled(void);
 
 /* Releases the slot taken by a hostgate_acquire that returned 1. */
 void hostgate_release(const char *url);
