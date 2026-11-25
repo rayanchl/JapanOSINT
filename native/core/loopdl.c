@@ -23,8 +23,30 @@ static int progress_cb(void *unused) {
   return 0;
 }
 
+/* Lock waits (API-07): a writer holding the lock is not a VM-step overrun, so
+ * the progress handler never sees it. The busy handler gives up at the SAME
+ * deadline. Not armed (startup, timers, migrations) it behaves as the busy
+ * timeout it replaces. */
+static __thread long long t_busy_start_ms;
+
+static int busy_cb(void *unused, int count) {
+  (void) unused;
+  long long now = mono_ms();
+  if (count == 0) t_busy_start_ms = now;
+  if (t_deadline_ms) {
+    if (t_tripped || now >= t_deadline_ms) { t_tripped = 1; return 0; }
+  } else if (now - t_busy_start_ms >= LOOPDL_BUSY_FALLBACK_MS) {
+    return 0;
+  }
+  struct timespec nap = { 0, (count < 5 ? 1 : 5) * 1000000L };
+  nanosleep(&nap, NULL);
+  return 1;
+}
+
 void loopdl_install(sqlite3 *h) {
-  if (h) sqlite3_progress_handler(h, LOOPDL_STRIDE, progress_cb, NULL);
+  if (!h) return;
+  sqlite3_progress_handler(h, LOOPDL_STRIDE, progress_cb, NULL);
+  sqlite3_busy_handler(h, busy_cb, NULL);
 }
 
 long loopdl_ms(void) {
