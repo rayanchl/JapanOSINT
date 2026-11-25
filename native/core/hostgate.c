@@ -1,4 +1,5 @@
 #include "hostgate.h"
+#include "../lib/joclock.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -218,11 +219,7 @@ static void cfg_once(void) { pthread_once(&g_cfg_once, cfg_init_all); }
  * sleeping. */
 static long long g_clock_skew_ms;
 
-static long long mono_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000LL + g_clock_skew_ms;
-}
+static long long mono_ms(void) { return jo_mono_ms() + g_clock_skew_ms; }
 
 /* Lowercased hostname of `url` into out[]. Returns 0 if there is nothing to
  * gate: unparseable, over-long, or loopback (see header). Mirrors the host

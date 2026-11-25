@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-464 variables. A first-boot subset, with example values, is in `.env.example`.
+465 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -289,6 +289,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_STORY_MAX_MEMBERS` |  | `core/story.c` |
 | `JO_SVEC_MAX_PER_RUN` |  | `core/service_vec.c` |
 | `JO_SWEEP_LIMIT` |  | `core/sweepapi.c` |
+| `JO_TEST_REGISTRY_STRIDE` |  | `registry.c` |
 | `JO_TOTAL_CAP` | `10000` | `core/intelapi.c` |
 | `JO_TRADINGECON_PAGES` |  | `collectors/sources/finance_markets_crypto.c` |
 | `JO_TRANSLATE_NARROW` |  | `core/translate.c` |

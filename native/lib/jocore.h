@@ -36,6 +36,7 @@
 #include <strings.h>        /* strncasecmp — POSIX puts it here, not string.h */
 #include <time.h>
 #include <sys/time.h>
+#include "joclock.h"
 
 /* ---------------------------------------------------------------- cJSON get */
 

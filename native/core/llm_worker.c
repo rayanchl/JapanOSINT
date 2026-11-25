@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "../lib/joclock.h"
 
 typedef struct llm_job {
   const llm_worker_req *req;  /* borrowed: the caller blocks until done */
@@ -43,11 +44,6 @@ static llm_worker g_workers[MAX_WORKERS];
 static int g_nworkers = 0;
 static pthread_mutex_t g_reg_mu = PTHREAD_MUTEX_INITIALIZER;
 
-static long long mono_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000L;
-}
 
 static long env_long(const char *k, long dflt, long lo) {
   const char *v = getenv(k);
@@ -82,21 +78,21 @@ static int run_job(llm_job *j, http_client *http) {
      * again: the time it spent queued was part of what the caller allowed. */
     int tmo = base;
     if (j->deadline_ms > 0) {
-      long long left = j->deadline_ms - mono_ms();
+      long long left = j->deadline_ms - jo_mono_ms();
       tmo = left < 1000 ? 1000 : (left < (long long)tmo ? (int)left : tmo);
     }
     http_response r = {0};
-    long long t0 = mono_ms();
+    long long t0 = jo_mono_ms();
     rc = http_request(http, q->method, q->url, q->headers, q->body,
                       q->body_len, tmo, 0, &r);
-    j->http_ms += (long)(mono_ms() - t0);
+    j->http_ms += (long)(jo_mono_ms() - t0);
     j->attempts++;
     j->transport = rc ? http_last_transport_error() : HTTP_TE_NONE;
     int again = q->retry && attempt == 0 &&
                 ((rc && j->transport == HTTP_TE_CONNECT) ||
                  (!rc && (r.status == 429 || (r.status >= 500 && r.status <= 599))));
     /* A bounded job retries only if a retry still fits its budget. */
-    if (again && j->deadline_ms > 0 && j->deadline_ms - mono_ms() < 1250)
+    if (again && j->deadline_ms > 0 && j->deadline_ms - jo_mono_ms() < 1250)
       again = 0;
     if (!again) { j->out = r; break; }
     http_response_free(&r);
@@ -121,7 +117,7 @@ static void *worker_main(void *vp) {
       w->n_lo--;
     }
     j->started = 1;             /* under w->mu: the caller's withdraw checks it */
-    j->pick_ms = mono_ms();
+    j->pick_ms = jo_mono_ms();
     pthread_mutex_unlock(&w->mu);
 
     /* the one and only generation call for this server, run serially */
@@ -205,7 +201,7 @@ int llm_worker_call(const char *base_url, const llm_worker_req *req,
     http_client *tmp = http_client_new();
     llm_job j = {0};
     j.req = req;
-    if (req->max_wait_ms > 0) j.deadline_ms = mono_ms() + req->max_wait_ms;
+    if (req->max_wait_ms > 0) j.deadline_ms = jo_mono_ms() + req->max_wait_ms;
     int rc = run_job(&j, tmp);
     http_client_free(tmp);
     *out = j.out;
@@ -218,7 +214,7 @@ int llm_worker_call(const char *base_url, const llm_worker_req *req,
 
   llm_job j = {0};
   j.req = req;
-  j.enq_ms = mono_ms();
+  j.enq_ms = jo_mono_ms();
   if (req->max_wait_ms > 0) j.deadline_ms = j.enq_ms + req->max_wait_ms;
   /* When the job is withdrawn if still queued: the whole-call bound for a
    * bounded caller, its derived queue deadline for everyone else. */
@@ -264,7 +260,7 @@ int llm_worker_call(const char *base_url, const llm_worker_req *req,
    * started cannot be withdrawn (its stack frame is in use), so that case
    * waits for completion, which the exchange's own timeout bounds. */
   struct timespec abs;
-  abs_after(&abs, queue_deadline - mono_ms());
+  abs_after(&abs, queue_deadline - jo_mono_ms());
   pthread_mutex_lock(&j.mu);
   int to = 0;
   while (!j.done && !to)
@@ -279,7 +275,7 @@ int llm_worker_call(const char *base_url, const llm_worker_req *req,
       pthread_mutex_destroy(&j.mu);
       pthread_cond_destroy(&j.cv);
       info->verdict = LLM_Q_TIMEOUT;
-      info->queued_ms = (long)(mono_ms() - j.enq_ms);
+      info->queued_ms = (long)(jo_mono_ms() - j.enq_ms);
       return 1;                   /* never sent: nothing to free */
     }
   }

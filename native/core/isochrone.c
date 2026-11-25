@@ -45,6 +45,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/joclock.h"
 
 /* ── tunables ──────────────────────────────────────────────────────────── */
 #define ISO_WALK_KMH_DEF   4.8
@@ -125,11 +126,6 @@ static double hav_m(double la1, double lo1, double la2, double lo2) {
              cos(p1) * cos(p2) * sin(dl / 2) * sin(dl / 2);
   if (a > 1.0) a = 1.0;
   return 2.0 * R * asin(sqrt(a));
-}
-static long long now_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long) t.tv_sec * 1000LL + t.tv_nsec / 1000000LL;
 }
 
 /* ── stop table ────────────────────────────────────────────────────────── */
@@ -500,7 +496,7 @@ static void ring_simplify(iso_ring *r, double tol) {
 
 /* ── main entry ────────────────────────────────────────────────────────── */
 char *isochrone_run(db_handle *db, const char *qs, int *status) {
-  long long t_start = now_ms();
+  long long t_start = jo_mono_ms();
   *status = 200;
 
   char v[128];
@@ -1055,7 +1051,7 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
     cJSON_AddStringToObject(meta, "note",
       "no scheduled service departs within the budget from this origin at "
       "this time; the polygon shown is walking reach only");
-  cJSON_AddNumberToObject(meta, "elapsed_ms", (double) (now_ms() - t_start));
+  cJSON_AddNumberToObject(meta, "elapsed_ms", (double) (jo_mono_ms() - t_start));
   cJSON_AddItemToObject(fc, "meta", meta);
 
   set_free(&S);

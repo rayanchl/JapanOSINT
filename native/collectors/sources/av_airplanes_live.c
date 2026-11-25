@@ -1,8 +1,10 @@
 /* collectors/sources/av_airplanes_live.c
- * airplanes.live unfiltered ADS-B/MLAT aggregation — three net-new endpoints.
+ * airplanes.live unfiltered ADS-B/MLAT aggregation — two net-new endpoints.
  *
- *   airplanes-live-mil   GET https://api.airplanes.live/v2/mil
- *                        every aircraft currently flagged MILITARY, worldwide.
+ *   (airplanes-live-mil, /v2/mil, was removed on 2026-11-25: the host answers
+ *   403 "Please contact us at contact@airplanes.live" to every client tried;
+ *   docs/removed-sources-2026-11-25-realtime.tsv. The two below read the SAME
+ *   host and were refused the same way that day.)
  *   airplanes-live-ladd  GET https://api.airplanes.live/v2/ladd
  *                        aircraft whose owners hold an FAA LADD suppression but
  *                        which are still broadcasting ADS-B in the clear.
@@ -149,11 +151,6 @@ static int al_fetch(const source_ctx *ctx, intel_sink *sink, const char *url,
   return 0;                       /* fetched fine; empty sky is honest (R3) */
 }
 
-static int run_mil(const source_ctx *ctx, intel_sink *sink) {
-  return al_fetch(ctx, sink, "https://api.airplanes.live/v2/mil",
-                  "airplanes-live-mil", "airplanes-live-mil");
-}
-
 static int run_ladd(const source_ctx *ctx, intel_sink *sink) {
   return al_fetch(ctx, sink, "https://api.airplanes.live/v2/ladd",
                   "airplanes-live-ladd", "airplanes-live-ladd");
@@ -170,17 +167,6 @@ static int run_point(const source_ctx *ctx, intel_sink *sink) {
            lat, lon, (int)radius);
   return al_fetch(ctx, sink, url, "AIRCRAFT_NEARBY", "AIRCRAFT_NEARBY");
 }
-
-static const source_def av_al_mil_def = {
-  .id = "airplanes-live-mil", .collector = "transport",
-  .name = "airplanes.live Military Aircraft (global)",
-  .update_interval_sec = 120, .run = run_mil,
-  .category = "transport", .type = "api",
-  .url = "https://api.airplanes.live/v2/mil",
-  .description = "Every aircraft currently flagged military in the airplanes.live unfiltered ADS-B/MLAT aggregation, worldwide: live position (only when a fix was decoded), altitude, ground speed, squawk, tail number, ICAO type and type description.",
-  .license = AL_LICENSE, .layer = NULL, .free_tier = 1,
-};
-REGISTER_SOURCE(av_al_mil_def)
 
 static const source_def av_al_ladd_def = {
   .id = "airplanes-live-ladd", .collector = "transport",

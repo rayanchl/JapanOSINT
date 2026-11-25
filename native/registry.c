@@ -157,10 +157,39 @@ static void index_build(void) {
   g_built = 1;
 }
 
-void registry_freeze(void) { pthread_once(&g_once, index_build); }
+static int g_stride, g_skipped;   /* defined with registry_add() below */
+static void registry_freeze_once(void) {
+  index_build();
+  if (g_skipped)
+    fprintf(stderr, "[registry] TEST SAMPLE: JO_TEST_REGISTRY_STRIDE=%d kept %d "
+                    "source(s) and left %d out — not a production registry\n",
+            g_stride, g_n, g_skipped);
+}
+void registry_freeze(void) { pthread_once(&g_once, registry_freeze_once); }
+
+/* JO_TEST_REGISTRY_STRIDE=N keeps every Nth registration (and every `_` pod),
+ * for the two unit tests whose cost is O(registry) under a sanitizer. It is a
+ * TEST knob: a binary run with it collects from a fraction of the sources, so
+ * registry_freeze() says so on stderr. Read here, in the registration path,
+ * so every consumer sees one consistent smaller registry. */
+static int g_stride = -1, g_offered, g_skipped;
+static int registry_sampled_out(const source_def *def) {
+  if (g_stride < 0) {
+    const char *e = getenv("JO_TEST_REGISTRY_STRIDE");
+    long v = e && *e ? strtol(e, NULL, 10) : 0;
+    g_stride = v > 1 && v <= 1000 ? (int)v : 0;
+  }
+  if (!g_stride) return 0;
+  int k = g_offered++;
+  if (def->collector && def->collector[0] == '_') return 0;
+  if (k % g_stride == 0) return 0;
+  g_skipped++;
+  return 1;
+}
 
 void registry_add(const source_def *def) {
   if (!def) return;
+  if (registry_sampled_out(def)) return;
   if (g_n < MAX_SOURCES) {
     g_srcs[g_n++] = def;
     if (g_built) index_insert(g_n - 1);

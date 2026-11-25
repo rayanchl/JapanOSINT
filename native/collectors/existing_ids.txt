@@ -630,7 +630,6 @@ afr-zm-mwebantu
 afr-zw-zimeye
 agoop-flow
 airplanes-live-ladd
-airplanes-live-mil
 airport-infra
 alienvault-otx-jp
 almalinux-errata-full
@@ -4805,7 +4804,6 @@ navitime-api
 ncei-multibeam
 ndbc-active-stations
 ndbc-buoy-latest
-nerv-feed
 netherlands-rdw-carpool-sites
 netherlands-rdw-parking-garages
 netlas-jp

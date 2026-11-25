@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
+#include "../lib/joclock.h"
 
 static void iso_epoch(long long t, char *buf, size_t n) {
   time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
@@ -204,10 +205,6 @@ typedef struct {
 static snapshot g_snap;
 static pthread_mutex_t g_snap_mu = PTHREAD_MUTEX_INITIALIZER;
 
-static long long now_ms(void) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
 static int id_cmp_agg(const void *a, const void *b)   { return strcmp(((const agg_t *)a)->id, ((const agg_t *)b)->id); }
 static int id_cmp_srow(const void *a, const void *b)  { return strcmp(((const srow_t *)a)->id, ((const srow_t *)b)->id); }
 static int id_cmp_sched(const void *a, const void *b) { return strcmp(((const sched_t *)a)->id, ((const sched_t *)b)->id); }
@@ -376,7 +373,7 @@ static void snap_load(db_handle *db, snapshot *s) {
   }
   s->trust = source_trust_load(db, &s->ntrust);
   if (s->trust) qsort(s->trust, (size_t)s->ntrust, sizeof *s->trust, id_cmp_trust);
-  s->built_ms = now_ms();
+  s->built_ms = jo_wall_ms();
   jo_iso_now(s->built_at, sizeof s->built_at);
 }
 
@@ -400,7 +397,7 @@ static snapshot *snap_lock(db_handle *db) {
    * before the write and the health assertion failed there while passing on
    * Linux. An operator who disables the cache gets the same surprise, quietly.
    * At the default 10 s the change is one millisecond of staleness. */
-  if (!g_snap.built_ms || now_ms() - g_snap.built_ms >= snap_ttl_ms()) {
+  if (!g_snap.built_ms || jo_wall_ms() - g_snap.built_ms >= snap_ttl_ms()) {
     snapshot fresh;
     snap_load(db, &fresh);
     snap_free(&g_snap);

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <pthread.h>
+#include "../lib/joclock.h"
 
 #define RL_SLOTS  512            /* open-addressed; recycled, never grown */
 #define RL_KEYLEN 64             /* an IPv6 text form is 45 bytes worst case */
@@ -24,11 +25,6 @@ static long            g_denials;
 
 /* CLOCK_MONOTONIC, not time(): a wall-clock step (NTP, container resume) must
  * not hand out a free window or freeze one shut. Same clock hostgate.c uses. */
-static long long mono_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000LL;
-}
 
 static unsigned rl_hash(const char *s, int cls) {
   unsigned h = 2166136261u;                    /* FNV-1a                    */
@@ -76,7 +72,7 @@ int ratelimit_allow(rl_class cls, const char *key, int limit, int window_sec,
    * limiter: "unknown peer" is exactly the shape an abusive client wants. */
   const char *k = (key && *key) ? key : "-";
 
-  const long long now = mono_ms();
+  const long long now = jo_mono_ms();
   const long long win = (long long)window_sec * 1000LL;
   int allowed;
 

@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include <poll.h>
 #include <strings.h>
+#include "joclock.h"
 
 /* One reassembled message may not grow past this (LIB-18). The buffer used to
  * grow without limit until the window closed, so a peer streaming one endless
@@ -37,10 +38,6 @@ static int ws_http_form(const char *url, char *out, size_t cap) {
   return snprintf(out, cap, "%s%s", scheme, rest) < (int)cap ? 0 : -1;
 }
 
-static long now_ms(void) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  return (long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
 
 int ws_collect(const char *url, const char *const *headers,
                 int window_ms, int max_msgs, ws_on_msg cb, void *ud) {
@@ -95,7 +92,7 @@ int ws_collect(const char *url, const char *const *headers,
   curl_socket_t sock = CURL_SOCKET_BAD;
   curl_easy_getinfo(c, CURLINFO_ACTIVESOCKET, &sock);
 
-  long deadline = now_ms() + window_ms;
+  long deadline = jo_wall_ms() + window_ms;
   int delivered = 0;
   char *msg = NULL; size_t mlen = 0, mcap = 0;            /* reassembly buf */
   char buf[16384];
@@ -103,7 +100,7 @@ int ws_collect(const char *url, const char *const *headers,
   int discarding = 0;                                     /* inside an over-size message */
 
   while (delivered < (max_msgs > 0 ? max_msgs : 0x7fffffff)) {
-    long remain = deadline - now_ms();
+    long remain = deadline - jo_wall_ms();
     if (remain <= 0) break;
 
     size_t got = 0;

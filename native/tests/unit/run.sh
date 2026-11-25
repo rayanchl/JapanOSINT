@@ -190,8 +190,25 @@ for src in tests/unit/test_*.c; do
   # -shm are NOT copied: the template was closed cleanly, so its WAL is already
   # folded in, and copying a stale sidecar is how a copied SQLite database goes
   # wrong.
-  [ -n "$TEMPLATE" ] && cp "$TEMPLATE" "$SCRATCH/$name.db"
-  JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
+  # Two tests index or vote over EVERY registered source, by design, and under
+  # a sanitizer that is most of the job: at 109,801 sources the thread-sanitizer
+  # job was cancelled at 90 minutes inside test_source_category. In a sanitizer
+  # tree they run on every 8th registration instead (JO_TEST_REGISTRY_STRIDE,
+  # registry.c). The plain tree keeps the whole registry, so full-size coverage
+  # still runs on every PR in build-and-test. A sampled registry does not match
+  # the template's seed stamp, so those runs start from an empty database.
+  stride=""
+  case "$OBJDIR:$name" in
+    *san*:test_source_category|*san*:test_service_vec)
+      stride="${JO_UNIT_SAN_STRIDE:-8}" ;;
+  esac
+  if [ -n "$stride" ] && [ "$stride" != 0 ]; then
+    echo "    (sanitizer tree: registry sampled 1 in $stride)"
+    JO_TEST_REGISTRY_STRIDE="$stride" JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
+  else
+    [ -n "$TEMPLATE" ] && cp "$TEMPLATE" "$SCRATCH/$name.db"
+    JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
+  fi
   rc=$?
   [ $rc -eq 0 ] || { echo "FAILED (exit $rc)"; fail=1; }
   rm -f "$SCRATCH/$name" "$SCRATCH/$name.db"*   # the -wal/-shm sidecars too

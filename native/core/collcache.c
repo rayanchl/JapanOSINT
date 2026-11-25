@@ -3,11 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include "../lib/joclock.h"
 
-static long long now_ms(void) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
 /* collectorCache.js clampTtl: <=0 → 15min default; else [1min, 24h]. */
 static long long clamp_ttl(long long ms) {
   const long long DEF = 15LL*60*1000, MIN = 60LL*1000, MAX = 24LL*60*60*1000;
@@ -27,7 +24,7 @@ char *collcache_get(db_handle *db, const char *key, long long *age_out) {
       const char *fc = (const char *)sqlite3_column_text(s, 0);
       long long fetched = sqlite3_column_int64(s, 1);
       long long ttl = sqlite3_column_int64(s, 2);
-      long long age = now_ms() - fetched;
+      long long age = jo_wall_ms() - fetched;
       if (fc && age <= ttl) { out = strdup(fc); if (age_out) *age_out = age; }
     }
   }
@@ -45,7 +42,7 @@ void collcache_set(db_handle *db, const char *key, const char *fc_json,
         "ttl_ms=excluded.ttl_ms", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, key, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, fc_json, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(s, 3, now_ms());
+    sqlite3_bind_int64(s, 3, jo_wall_ms());
     sqlite3_bind_int64(s, 4, clamp_ttl(ttl_ms));
     sqlite3_step(s);
   }

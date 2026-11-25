@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/joclock.h"
 
 /* Pending rows drained per hook call, at most (each costs two KNNs). */
 #define STORY_DRAIN_MAX 64
@@ -41,11 +42,6 @@ void story_id_for(const char *seed_uid, char *out, size_t cap) {
   snprintf(out, cap, "st-%016llx", vecindex_hash(seed_uid ? seed_uid : ""));
 }
 
-static long long mono_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000;
-}
 
 /* Exact cosine to a stored neighbour (no unit-norm assumption). -2 if the
  * neighbour's vector cannot be read. */
@@ -243,20 +239,20 @@ void story_process_batch(db_handle *db, int n, const char *const *uids,
                          const float *vectors, int dim, const char *const *tenants,
                          const long long *ts) {
   if (!db || n < 0 || dim <= 0) return;      /* n == 0: drain pending only */
-  long long deadline = mono_ms() + budget_ms();
+  long long deadline = jo_mono_ms() + budget_ms();
   if (vecindex_begin(db) != 0) {
     /* could not take the write lock: nothing is lost, it waits in pending */
     return;
   }
   int done = 0, joined = 0, queued = 0;
   for (int i = 0; i < n; i++) {
-    if (mono_ms() >= deadline) { enqueue(db, uids[i], tenants[i], ts[i]); queued++; continue; }
+    if (jo_mono_ms() >= deadline) { enqueue(db, uids[i], tenants[i], ts[i]); queued++; continue; }
     joined += process_row(db, uids[i], tenants[i], ts[i], vectors + (size_t)i * dim, dim);
     done++;
   }
   /* drain the backlog with what is left of the budget */
   int drained = 0;
-  while (mono_ms() < deadline && drained < STORY_DRAIN_MAX) {
+  while (jo_mono_ms() < deadline && drained < STORY_DRAIN_MAX) {
     sqlite3_stmt *s;
     char *puid = NULL, *pten = NULL; long long pts = 0;
     if (sqlite3_prepare_v2(db->h, "SELECT uid,tenant_id,ts FROM story_pending"
