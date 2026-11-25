@@ -30,7 +30,7 @@ static const hp_source T[] = {
     .collector = "ng_aid", .category = "aid",
     .description = "Activity rows joined to their individual transactions for Nigeria — adds trans_ref and trans_description on top of the activity fields. Detail hop by aid returns the full transaction ledger for that activity: trans_day, trans_currency, trans_value, USD/EUR/GBP/CAD equivalents, trans_code, trans_flow_code, trans_finance_code, trans_sector, trans_id.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://d-portal.org/q?from=act,trans&trans_country_code=NG&limit=5000&form=json",
+    .url = "https://d-portal.org/q?from=act,trans&trans_country=NG&orderby=aid,trans_id&limit=5000&form=json",
     .array_path = "rows",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,

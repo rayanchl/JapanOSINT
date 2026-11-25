@@ -30,7 +30,7 @@ static const hp_source T[] = {
     .collector = "bw_aid", .category = "aid",
     .description = "Botswana activity-plus-transaction rows with trans_ref and trans_description; detail by aid returns per-transaction values and codes.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "aid-record", .tags = "\"bw\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://d-portal.org/q?from=act,trans&trans_country_code=BW&limit=5000&form=json",
+    .url = "https://d-portal.org/q?from=act,trans&trans_country=BW&orderby=aid,trans_id&limit=5000&form=json",
     .array_path = "rows",
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
