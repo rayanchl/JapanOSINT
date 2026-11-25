@@ -1,5 +1,6 @@
 #include "httpd.h"
 #include "loopdl.h"
+#include "authcookie.h"
 #include "auth.h"
 #include "intelapi.h"
 #include "respcache.h"
@@ -118,7 +119,14 @@ static const char *reply_reason(int code) {
   switch (code) {
     case 200: return "OK";
     case 400: return "Bad Request";
+    case 401: return "Unauthorized";
+    case 403: return "Forbidden";
     case 404: return "Not Found";
+    case 405: return "Method Not Allowed";
+    case 413: return "Content Too Large";
+    case 422: return "Unprocessable Content";
+    case 429: return "Too Many Requests";
+    case 501: return "Not Implemented";
     case 414: return "URI Too Long";
     case 499: return "Client Closed Request";
     case 500: return "Internal Server Error";
@@ -885,7 +893,7 @@ static void wakeup_reply_big(struct mg_mgr *mgr, unsigned long cid,
  * proxy, so many in flight at once is already pathological — and the worker
  * admission cap (16) bounds it from the other side. */
 #define WRAW_SLOTS 8
-#define WRAW_HDR_MAX 512
+#define WRAW_HDR_MAX 1024
 static pthread_mutex_t g_wraw_mu = PTHREAD_MUTEX_INITIALIZER;
 static struct {
   unsigned char *buf; size_t len; char hdr[WRAW_HDR_MAX];
@@ -936,12 +944,12 @@ static unsigned char *wraw_take(unsigned tick, size_t *len, char *hdr,
 
 /* Hand parked BYTES to the loop with their own header block. "\x02<ticket>",
  * the binary sibling of the "\x01<ticket>" the JSON path uses. */
-static void wakeup_reply_hdr(struct mg_mgr *mgr, unsigned long cid,
-                             unsigned char *buf, size_t len, const char *hdr) {
+static void wakeup_reply_hdr_status(struct mg_mgr *mgr, unsigned long cid, int status,
+                                    unsigned char *buf, size_t len, const char *hdr) {
   if (!buf) { wakeup_reply(mgr, cid, 500, "{\"error\":\"empty_reply\"}"); return; }
   unsigned tick = wraw_park(buf, len, hdr);
   char tok[32];
-  int n = snprintf(tok, sizeof tok, "200 \x02%u", tick);
+  int n = snprintf(tok, sizeof tok, "%03d \x02%u", status, tick);
   /* Through the same door as every other wakeup (wake_enter/wake_leave).
    * This was the one path that called mg_wakeup() bare, so a camera-proxy or
    * export worker finishing during shutdown dereferenced `mgr` after
@@ -957,6 +965,11 @@ static void wakeup_reply_hdr(struct mg_mgr *mgr, unsigned long cid,
     unsigned char *drop = wraw_take(tick, &dl, dh, sizeof dh);
     free(drop);                        /* connection gone: do not leak it */
   }
+}
+
+static void wakeup_reply_hdr(struct mg_mgr *mgr, unsigned long cid,
+                             unsigned char *buf, size_t len, const char *hdr) {
+  wakeup_reply_hdr_status(mgr, cid, 200, buf, len, hdr);
 }
 
 /* The camera proxy's flavour: the upstream's content type, never sniffed, and
@@ -2506,6 +2519,118 @@ static int route_gate_enforce(struct mg_connection *c, struct mg_http_message *h
   return 1;
 }
 
+/* ── /api/auth/...: refresh token as an httpOnly cookie (WEB-13) ───────────── */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  ac_kind kind; int secure; unsigned char verdict;
+  char cookie_tok[AC_TOKEN_MAX + 1];
+  char bearer[2048];
+  char *body;
+} acx_arg;
+
+/* Immediate answers (guard refusals, throttle, 405, 501): same header shape as
+ * the deferred one — no-store, credentialed CORS for a listed origin only. */
+static void reply_auth(struct mg_connection *c, int code, const char *body,
+                       const char *extra) {
+  char hb[CORS_HDR_MAX + 512];
+  snprintf(hb, sizeof hb,
+    "Content-Type: application/json\r\nCache-Control: no-store\r\n%s%s%s",
+    extra ? extra : "", cors_h(c),
+    cors_credentials_headers((unsigned char) c->data[JO_CONN_CORS]));
+  mg_http_reply(c, code, hb, "%s", body);
+}
+
+static void *acx_thread(void *vp) {
+  acx_arg *a = vp;
+  ac_result r;
+  ac_run(a->kind, a->body, a->cookie_tok[0] ? a->cookie_tok : NULL,
+         a->bearer[0] ? a->bearer : NULL, a->secure, &r);
+  char hdr[WRAW_HDR_MAX];
+  int n = snprintf(hdr, sizeof hdr, "Content-Type: application/json\r\nCache-Control: no-store\r\n%s",
+                   cors_credentials_headers(a->verdict));
+  if (r.set_cookie[0] && n > 0 && (size_t) n < sizeof hdr)
+    snprintf(hdr + n, sizeof hdr - (size_t) n, "Set-Cookie: %s\r\n", r.set_cookie);
+  wakeup_reply_hdr_status(a->mgr, a->cid, r.status, (unsigned char *) r.body,
+                          strlen(r.body), hdr);                /* takes r.body */
+  free(a->body); free(a);
+  worker_release();
+  return NULL;
+}
+
+static void hdr_copy(struct mg_http_message *hm, const char *name, char *dst, size_t cap) {
+  dst[0] = 0;
+  struct mg_str *h = mg_http_get_header(hm, name);
+  if (h && h->len < cap) { memcpy(dst, h->buf, h->len); dst[h->len] = 0; }
+}
+
+static void auth_cookie_route(struct mg_connection *c, struct mg_http_message *hm,
+                              struct mg_str u) {
+  ac_kind kind = ac_kind_of(u.buf, u.len);
+  if (kind == AC_NONE) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+  if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
+    reply_auth(c, 405, "{\"error\":\"method_not_allowed\"}", "Allow: POST\r\n");
+    return;
+  }
+  char origin[CORS_ORIGIN_MAX + 8], host[256], sfs[32], csrf[16], cookie[2048], xfp[64], xff[512];
+  hdr_copy(hm, "Origin", origin, sizeof origin);
+  hdr_copy(hm, "Host", host, sizeof host);
+  hdr_copy(hm, "Sec-Fetch-Site", sfs, sizeof sfs);
+  hdr_copy(hm, AC_CSRF_HEADER, csrf, sizeof csrf);
+  hdr_copy(hm, "Cookie", cookie, sizeof cookie);
+  hdr_copy(hm, "X-Forwarded-Proto", xfp, sizeof xfp);
+  hdr_copy(hm, "X-Forwarded-For", xff, sizeof xff);
+  char ip[64] = {0};
+  mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+
+  acx_arg *a = calloc(1, sizeof *a);
+  if (!a) { reply_auth(c, 500, "{\"error\":\"out_of_memory\"}", NULL); return; }
+  a->mgr = c->mgr; a->cid = c->id; a->kind = kind;
+  a->verdict = (unsigned char) c->data[JO_CONN_CORS];
+  a->secure = ac_secure(ip, xfp, c->is_tls);
+  if (hm->body.len > 8192) { free(a); reply_auth(c, 413, "{\"error\":\"body_too_large\"}", NULL); return; }
+  a->body = malloc(hm->body.len + 1);
+  if (!a->body) { free(a); reply_auth(c, 500, "{\"error\":\"out_of_memory\"}", NULL); return; }
+  memcpy(a->body, hm->body.buf, hm->body.len); a->body[hm->body.len] = 0;
+  int has_cookie = ac_cookie_get(cookie, a->cookie_tok, sizeof a->cookie_tok);
+
+  /* A refresh that presents no cookie is a native client's body-token refresh:
+   * nothing ambient, so no CSRF defence applies. Everything else is guarded. */
+  if (kind != AC_REFRESH || has_cookie || ac_wants_cookie(a->body)) {
+    ac_req rq = { origin[0] ? origin : NULL, host, sfs[0] ? sfs : NULL, csrf[0] ? csrf : NULL };
+    const char *why = NULL;
+    if (ac_guard(&rq, &why)) {
+      char b[128];
+      snprintf(b, sizeof b, "{\"error\":\"%s\"}", why);
+      free(a->body); free(a);
+      reply_auth(c, 403, b, NULL);
+      return;
+    }
+  }
+  { const int cred = kind == AC_LOGIN || kind == AC_SIGNUP || kind == AC_OAUTH;
+    char key[64], k2[68];
+    ratelimit_client_key(ip, xff[0] ? xff : NULL, key, sizeof key);
+    snprintf(k2, sizeof k2, "%s%s", cred ? "c:" : "r:", key);
+    int retry = 0;
+    if (!ratelimit_allow(RL_AUTH_EXCHANGE, k2, cred ? 20 : 120, 60, &retry)) {
+      char b[96], rh[48];
+      snprintf(b, sizeof b, "{\"error\":\"too_many_attempts\",\"retry_after_sec\":%d}", retry);
+      snprintf(rh, sizeof rh, "Retry-After: %d\r\n", retry);
+      free(a->body); free(a);
+      reply_auth(c, 429, b, rh);
+      return;
+    } }
+  { struct mg_str *ah = mg_http_get_header(hm, "Authorization");
+    if (ah && ah->len > 7 && !strncasecmp(ah->buf, "Bearer ", 7) && ah->len - 7 < sizeof a->bearer) {
+      memcpy(a->bearer, ah->buf + 7, ah->len - 7); a->bearer[ah->len - 7] = 0; } }
+
+  if (!worker_admit()) { free(a->body); free(a); reply_busy(c); return; }
+  pthread_t th;
+  if (worker_spawn(&th, acx_thread, a) == 0) { pthread_detach(th); return; }
+  worker_release();
+  free(a->body); free(a);
+  reply_busy(c);
+}
+
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { search_stream_poll(c); xs_on_io(c); return; }
   if (ev == MG_EV_WRITE) { xs_on_io(c); return; }   /* a streamed export drained */
@@ -2564,8 +2689,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!img) { reply_json(c, 500, "{\"error\":\"reply_lost\"}"); return; }
       /* Content-Length is added here, not parked: only the loop knows what it
        * is about to send. */
-      mg_printf(c, "HTTP/1.1 200 OK\r\n%s%sContent-Length: %lu\r\n\r\n",
-                ihdr, cors_h(c), (unsigned long) ilen);
+      mg_printf(c, "HTTP/1.1 %d %s\r\n%s%sContent-Length: %lu\r\n\r\n",
+                status, reply_reason(status), ihdr, cors_h(c), (unsigned long) ilen);
       mg_send(c, img, ilen);
       c->is_resp = 0;
       free(img);
@@ -2612,6 +2737,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     const char *pr = cors_preflight_response(
       (unsigned char) c->data[JO_CONN_CORS],
       mg_http_get_header(hm, "Origin") != NULL, &pst);
+    /* /api/auth/...: the refresh cookie is credentialed CORS, listed origin only. */
+    if (starts(u, "/api/auth/"))
+      pr = cors_preflight_response_creds((unsigned char) c->data[JO_CONN_CORS],
+             mg_http_get_header(hm, "Origin") != NULL, &pst);
     mg_printf(c, "%s", pr);
     c->is_resp = 0;
     return;
@@ -2702,6 +2831,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     free(body);
     return;
   }
+
+  /* /api/auth/...: the httpOnly refresh-cookie token exchange (authcookie.h).
+   * Pre-auth by nature; guarded by ac_guard instead of a bearer token. */
+  if (pub && starts(u, "/api/auth/")) { auth_cookie_route(c, hm, u); return; }
 
   /* ---- everything else under /api/\* passes the auth gate ---- */
   if (starts(u, "/api/")) {

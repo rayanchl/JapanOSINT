@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the typed reader `lib/joenv.h` (`jo_env_ll`/`jo_env_long`/`jo_env_int`/`jo_env_double`, their `_strict` forms, `jo_env_bool`, `jo_env_str`) and `jo_env`. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). **Range** is the reader's min..max as spelled at the call site: unset/empty gives the default, garbage gives the default with one stderr line, and out of range is clamped (or, for `_strict` readers, gives the default). Names assembled at runtime are not seen by a text scan.
 
-478 variables. A first-boot subset, with example values, is in `.env.example`.
+480 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Range | Read in |
 | --- | --- | --- | --- |
@@ -246,6 +246,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_REFFRAME_MAX_AGE_SEC` | `604800` | `1..LONG_MAX` | `core/camera_refframe.c` |
 | `JO_REFFRAME_MAX_WALK` | `2000` | `1..LONG_MAX` | `core/camera_refframe.c` |
 | `JO_REFFRAME_PER_TICK` | `20` | `1..LONG_MAX` | `core/camera_refframe.c` |
+| `JO_REFRESH_COOKIE_MAX_AGE_SEC` |  | `60..400L * 24 * 3600` | `core/authcookie.c` |
 | `JO_RELEVANCE_CHECK` |  |  | `core/relevance.c` |
 | `JO_REPO_ROOT` |  |  | `core/breach_index.c`, `core/catrust.c` |
 | `JO_RERANK_DECAY_FLOOR` | `0.10` | `-DBL_MAX..DBL_MAX` | `core/intelapi.c` |
@@ -438,9 +439,10 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `SOFTBANK_CROWD_API_KEY` |  |  | `collectors/sources/softbank_crowd.c` |
 | `SPACETRACK_PASS` |  |  | `collectors/sources/space_world.c` |
 | `SPACETRACK_USER` |  |  | `collectors/sources/space_world.c` |
+| `SUPABASE_ANON_KEY` |  |  | `core/authcookie.c` |
 | `SUPABASE_AUD` |  |  | `core/auth.c` |
 | `SUPABASE_JWT_SECRET` |  |  | `core/auth.c`, `core/keysapi.c` |
-| `SUPABASE_URL` |  |  | `core/auth.c` |
+| `SUPABASE_URL` |  |  | `core/auth.c`, `core/authcookie.c` |
 | `TDB_TSR_API_KEY` |  |  | `collectors/sources/people_finder.c` |
 | `TELEGRAM_API_HASH` |  |  | `collectors/sources/telegram_jp_channels.c` |
 | `TELEGRAM_API_ID` |  |  | `collectors/sources/telegram_jp_channels.c` |

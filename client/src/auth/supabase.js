@@ -1,9 +1,10 @@
 /**
- * Thin Supabase GoTrue (auth) REST client — a port of the iOS app's
- * `SupabaseAuth.swift`. No SDK: the server only needs a valid access token in
- * `Authorization: Bearer`, and password / refresh / PKCE grants are plain
- * POSTs straight to the Supabase project (never through the backend, so the
- * 401→refresh path in the fetch interceptor cannot recurse).
+ * The parts of Supabase GoTrue the browser still touches itself: the PUBLIC
+ * project settings, the social-provider authorize URL (PKCE), and parsing of
+ * the provider callback. Everything that carries or yields a token — password,
+ * sign-up, PKCE code exchange, refresh, logout — goes through the server's
+ * `/api/auth/...` routes (session.js), so the refresh token reaches the browser
+ * only as an httpOnly cookie (WEB-13) and is never visible to page script.
  */
 
 /** Managed-service defaults, same values the iOS bundle ships
@@ -52,40 +53,6 @@ export function createSupabaseAuth({ projectURL, anonKey }) {
     return `${trimmed}/auth/v1/${path}`;
   }
 
-  async function send(path, body) {
-    const url = endpoint(path);
-    let res;
-    try {
-      res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: anonKey },
-        body: JSON.stringify(body),
-      });
-    } catch (e) {
-      throw new AuthError(-1, `Could not reach Supabase (${e.message || 'network error'})`);
-    }
-    const text = await res.text();
-    let json = null;
-    try { json = text ? JSON.parse(text) : null; } catch { /* non-JSON body */ }
-    if (!res.ok) {
-      const msg = json?.error_description || json?.msg || json?.message || json?.error || text || '';
-      throw new AuthError(res.status, `Supabase ${res.status}: ${msg || 'request failed'}`);
-    }
-    return json;
-  }
-
-  function decodeSession(j) {
-    if (!j || typeof j.access_token !== 'string' || !j.access_token) {
-      throw new AuthError(0, 'Could not read the Supabase response.');
-    }
-    return {
-      access_token: j.access_token,
-      refresh_token: j.refresh_token,
-      expires_in: j.expires_in ?? null,
-      user: j.user ? { id: j.user.id, email: j.user.email ?? null } : null,
-    };
-  }
-
   return {
     /** Public project settings: which providers are enabled, whether sign-up
      *  is open, whether email confirmation is required. Not a secret. */
@@ -102,43 +69,6 @@ export function createSupabaseAuth({ projectURL, anonKey }) {
       };
     },
 
-    signIn: async (email, password) =>
-      decodeSession(await send('token?grant_type=password', { email, password })),
-
-    /** `/signup` yields a Session only when email confirmation is OFF; when it is
-     *  ON GoTrue answers 200 with a bare User and no tokens. */
-    signUp: async (email, password) => {
-      const j = await send('signup', { email, password });
-      if (j && typeof j.access_token === 'string' && j.access_token) {
-        return { kind: 'session', session: decodeSession(j) };
-      }
-      return { kind: 'confirmation_required' };
-    },
-
-    refresh: async (refreshToken) =>
-      decodeSession(await send('token?grant_type=refresh_token', { refresh_token: refreshToken })),
-
-    /** Revoke this session's refresh token server-side (`scope=local`: this
-     *  browser only, other devices stay signed in). Clearing localStorage
-     *  alone left the refresh token valid for anyone who had copied it. */
-    logout: async (accessToken) => {
-      if (!accessToken) return;
-      let res;
-      try {
-        res = await fetch(endpoint('logout?scope=local'), {
-          method: 'POST',
-          headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` },
-        });
-      } catch (e) {
-        throw new AuthError(-1, `Could not reach Supabase (${e.message || 'network error'})`);
-      }
-      // 401/403/404: the token is already expired or the session is gone —
-      // the outcome sign-out wants.
-      if (!res.ok && ![401, 403, 404].includes(res.status)) {
-        throw new AuthError(res.status, `Supabase ${res.status}: logout failed`);
-      }
-    },
-
     /** GoTrue `/authorize` URL for a social provider (PKCE). */
     oauthAuthorizeURL: (provider, codeChallenge, redirectTo) => {
       const u = new URL(endpoint('authorize'));
@@ -149,9 +79,10 @@ export function createSupabaseAuth({ projectURL, anonKey }) {
       return u.toString();
     },
 
-    /** Completes a social sign-in from the provider callback URL — PKCE
-     *  ONLY. The exchange needs this browser's code_verifier, so a `code`
-     *  minted for someone else's challenge cannot become a session here.
+    /** Validates a social sign-in callback URL — PKCE ONLY — and returns the
+     *  `{ auth_code, code_verifier }` to exchange at `/api/auth/oauth`. The
+     *  exchange needs this browser's code_verifier, so a `code` minted for
+     *  someone else's challenge cannot become a session here.
      *
      *  There is deliberately no implicit-flow fallback: `#access_token=&
      *  refresh_token=` in the URL used to be adopted as-is, with nothing
@@ -159,7 +90,7 @@ export function createSupabaseAuth({ projectURL, anonKey }) {
      *  sign the victim into the attacker's account (login CSRF / session
      *  swap). This client never requests the implicit flow, so a token in the
      *  fragment is refused, not adopted. */
-    completeOAuth: async (callbackURL, verifier) => {
+    parseOAuthCallback: (callbackURL, verifier) => {
       if (!verifier) throw new AuthError(0, 'No sign-in in progress on this browser (missing PKCE verifier).');
       const u = new URL(callbackURL);
       const h = new URLSearchParams(u.hash.replace(/^#/, ''));
@@ -167,9 +98,7 @@ export function createSupabaseAuth({ projectURL, anonKey }) {
         || h.get('error_description') || h.get('error');
       if (err) throw new AuthError(-1, err.replace(/\+/g, ' '));
       const code = u.searchParams.get('code');
-      if (code) {
-        return decodeSession(await send('token?grant_type=pkce', { auth_code: code, code_verifier: verifier }));
-      }
+      if (code) return { auth_code: code, code_verifier: verifier };
       if (h.has('access_token')) {
         throw new AuthError(0, 'The sign-in callback carried tokens in the URL fragment (implicit flow). This app only completes PKCE sign-ins it started, so they were not used.');
       }

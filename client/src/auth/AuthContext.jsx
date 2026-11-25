@@ -1,6 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { api, ApiError } from '../api/client.js';
-import { sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost, REFRESH } from './session.js';
+import {
+  sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost, REFRESH,
+  signInWithPassword, signUpWithPassword, exchangeOAuthCode, serverLogout,
+} from './session.js';
 import { makePkcePair, AuthError } from './supabase.js';
 import { claimLocalData, releaseLocalData } from './localData.js';
 
@@ -66,10 +69,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const bootstrap = useCallback(async () => {
-    // The access token is memory-only, so after a reload there is none: a
-    // persisted refresh token is enough to try. In a fresh tab with the
-    // default (tab-only) mode there is neither, and the user signs in again.
-    if (!sessionStore.onboardingCompleted || !(sessionStore.accessToken || sessionStore.refreshToken)) {
+    // The access token is memory-only, so after a reload there is none: the
+    // httpOnly refresh cookie (which script cannot see) is exchanged for one at
+    // /api/auth/refresh. The non-secret session hint says whether a cookie is
+    // worth trying; with a session cookie and a closed browser the server
+    // answers 401 and the user signs in again.
+    if (!sessionStore.onboardingCompleted || !(sessionStore.accessToken || sessionStore.hasSessionHint)) {
       setGate(GATE.onboarding);
       return;
     }
@@ -99,7 +104,7 @@ export function AuthProvider({ children }) {
             if (isUnreachable(e2)) { setConnectionStalled(true); return; }
           }
         } else if (outcome === REFRESH.transient) {
-          // Supabase could not be reached: keep the tokens and offer a retry
+          // The identity provider could not be reached: keep the session and offer a retry
           // instead of signing the user out over a network blip.
           setConnectionStalled(true);
           return;
@@ -130,7 +135,7 @@ export function AuthProvider({ children }) {
 
   const establish = useCallback(async (session, keep) => {
     if (keep !== undefined) sessionStore.setKeepSignedIn(Boolean(keep));
-    sessionStore.setTokens(session.access_token, session.refresh_token);
+    sessionStore.setTokens(session.access_token, true);   // the server set the cookie
     const m = await api.get('/api/me');
     adopt(m);
     probeOperator();
@@ -138,12 +143,12 @@ export function AuthProvider({ children }) {
   }, [adopt, probeOperator]);
 
   const signIn = useCallback(async (email, password, { keep = false } = {}) => {
-    const s = await supabaseClient().signIn(email, password);
+    const s = await signInWithPassword(email, password, keep);
     return establish(s, keep);
   }, [establish]);
 
   const signUp = useCallback(async (email, password, { keep = false } = {}) => {
-    const r = await supabaseClient().signUp(email, password);
+    const r = await signUpWithPassword(email, password, keep);
     if (r.kind === 'session') return establish(r.session, keep);
     throw new AuthError(200, 'Check your inbox to confirm your email, then sign in.');
   }, [establish]);
@@ -169,7 +174,9 @@ export function AuthProvider({ children }) {
     let s;
     try {
       if (!flow) throw new AuthError(0, 'No sign-in was started in this tab (or it expired) — the callback was not used. Start the sign-in again.');
-      s = await supabaseClient().completeOAuth(href, flow.verifier);
+      const { auth_code: code, code_verifier: verifier } =
+        supabaseClient().parseOAuthCallback(href, flow.verifier);
+      s = await exchangeOAuthCode(code, verifier, sessionStore.keepSignedIn);
     } finally {
       sessionStore.clearOAuthFlow();
     }
@@ -177,10 +184,11 @@ export function AuthProvider({ children }) {
   }, [establish]);
 
   const signOut = useCallback(() => {
-    // Revoke the refresh token server-side, not just locally. Fire-and-forget:
-    // signing out must not wait on (or fail because of) the network.
-    const access = sessionStore.accessToken;
-    if (access) supabaseClient().logout(access).catch(() => { /* best effort; local state is cleared regardless */ });
+    // The server clears the httpOnly cookie (script cannot) and, given the
+    // access token, revokes the session. Always called, even with no access
+    // token, so the cookie goes. Fire-and-forget: signing out must not wait on
+    // (or fail because of) the network.
+    serverLogout(sessionStore.accessToken).catch(() => { /* best effort; local state is cleared regardless */ });
     sessionStore.clearTokens();
     sessionStore.setTenantId(null);
     sessionStore.setOnboardingCompleted(false);
@@ -221,7 +229,7 @@ export function AuthProvider({ children }) {
       memberships: me?.memberships ?? [],
       role,
       canManageWorkspace: role === 'owner' || role === 'admin',
-      hasSession: Boolean(sessionStore.accessToken || sessionStore.refreshToken),
+      hasSession: Boolean(sessionStore.accessToken || sessionStore.hasSessionHint),
       signIn, signUp, startOAuth, completeOAuthCallback, signOut, switchTenant,
       completeOnboarding, retryBootstrap, refreshMe,
     };
