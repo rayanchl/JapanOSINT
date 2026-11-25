@@ -10,6 +10,10 @@ struct IntelSourceItemsView: View {
 
     @State private var items: [IntelItem] = []
     @State private var nextCursor: String?
+    /// The server's own count of items matching the current server-side
+    /// filters (`page.total` / `page.total_gte` from `?total=1`): "10,000+"
+    /// when it hit the server's cap, nil when the count was not returned.
+    @State private var totalLabel: String?
     @State private var loading = false
     @State private var error: String?
     @State private var searchText = ""
@@ -167,6 +171,12 @@ struct IntelSourceItemsView: View {
                     .foregroundStyle(.orange)
                     .listRowBackground(Color.orange.opacity(0.12))
                     .accessibilityLabel("Error: \(error)")
+            }
+            // Rule 2: say how much of what exists this list shows.
+            if let totalLabel {
+                Text(shownOfTotalText(total: totalLabel))
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
             }
             if !items.isEmpty && filteredItems.isEmpty {
                 Text("No items match the current filters.")
@@ -339,11 +349,13 @@ struct IntelSourceItemsView: View {
             let env = try await apiClient.api
                 .intelItems(source: source.id, q: queried.isEmpty ? nil : queried,
                             limit: 50, cursor: nil,
+                            wantTotal: true,
                             collapse: collapseDuplicates,
                             langView: langView.isEmpty ? nil : langView)
             guard token == reloadToken else { return }   // a newer query is in flight
             items = env.data
             nextCursor = env.page?.next_cursor
+            totalLabel = env.page?.totalLabel
             // Only mirror the unfiltered first page into the cache —
             // search-filtered results would poison the cache for non-search
             // re-opens. A collapsed or translated page is a VIEW of the corpus,
@@ -356,6 +368,18 @@ struct IntelSourceItemsView: View {
         } catch let err {
             error = err.localizedDescription
         }
+    }
+
+    /// "Showing 50 of 1,234 items" (the count is the server's, over the same
+    /// server-side filters; the on-device language / link filters and a
+    /// collapsed view narrow what is listed further, and that is said too).
+    private func shownOfTotalText(total: String) -> String {
+        var t = "Showing \(items.count.formatted()) of \(total) items"
+        if filteredItems.count != items.count {
+            t += " (\(filteredItems.count.formatted()) after the on-device filters)"
+        }
+        if collapseDuplicates { t += ". Near-duplicates are folded into one row; the total counts them." }
+        return t
     }
 
     private func runNow() async {

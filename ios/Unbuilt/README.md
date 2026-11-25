@@ -1,3 +1,46 @@
+# Unbuilt iOS extensions and their app-side code (needs Xcode)
+
+**IOS-17 status: NOT DONE, needs Xcode.** This folder holds source that no Xcode
+target compiles. It is here, outside `ios/JapanOsintApp/` (a synchronized root
+group that compiles everything under it into the app), so the app contains no
+code that pretends the extensions exist.
+
+`JapanOsintApp.xcodeproj` is hand-maintained (one `PBXNativeTarget`, objectVersion 77);
+the repo has no XcodeGen `project.yml` and no Tuist manifest, so the targets
+were not generated.
+
+| Folder | What it is |
+| --- | --- |
+| `Unbuilt/JapanOsintWidgets/` | WidgetKit widgets + Live Activity renderer (widget target) |
+| `Unbuilt/JapanOsintShare/` | Share extension (share target) |
+| `Unbuilt/AppSide/SharedSnapshot.swift` | `AppGroup`, `WidgetSnapshot`, `ShareQueue` (app + widget + share) |
+| `Unbuilt/AppSide/SearchActivityAttributes.swift` | Live Activity attributes (app + widget) |
+| `Unbuilt/AppSide/WidgetSnapshotBuilder.swift` | app-only: writes the snapshot over the API |
+| `Unbuilt/AppSide/BackgroundRefresh.swift` | app-only: BGTask refresh of the snapshot |
+
+## Steps in addition to the ones below
+
+Do these FIRST, after creating the targets:
+
+1. Move the four `Unbuilt/AppSide/*.swift` files back under `ios/JapanOsintApp/`
+   (`Widgets/` for the first three, `Background/` for `BackgroundRefresh.swift`),
+   then set target membership as the tables below say.
+2. Restore in `JapanOsintApp.swift` (deleted when the code was parked; see git
+   history of this folder): `BackgroundRefresh.register(apiProvider:)` in `init`,
+   `WidgetSnapshotBuilder.refresh` + `BackgroundRefresh.scheduleRefresh/scheduleSync`
+   in `onReady`, a `scenePhase == .active` handler, and `drainShareQueue()` (called
+   from `handleOpenURL` for `japanosint://share`).
+3. Restore in `JapanOsintApp/Info.plist`: `BGTaskSchedulerPermittedIdentifiers`
+   (`com.rayanchl.japanosint.refresh`, `com.rayanchl.japanosint.sync`) and
+   `UIBackgroundModes` (`fetch`, `processing`).
+4. Paths below that say `JapanOsintWidgets/` or `JapanOsintShare/` now live under
+   `Unbuilt/`; move them back to `ios/` (siblings of `JapanOsintApp/`) before step 1 of the
+   Xcode procedure, as the procedure assumes that layout.
+
+The text below is the original procedure, unchanged except for this header.
+
+---
+
 # Adding the WidgetKit + Share extension targets (Xcode, ~20 min)
 
 **Status today:** `JapanOsintApp.xcodeproj` contains exactly **one**

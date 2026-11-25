@@ -457,9 +457,9 @@ jobs:
         run: npm run build
 
   # 148 Swift files, ~40k lines, zero tests and — until now — zero compilation
-  # check. There are no shared schemes in the .xcodeproj, so this drives
-  # -alltargets directly instead of -scheme; signing is off because CI has no
-  # certificates and this is a compile gate, not a distribution build.
+  # check. The project has one target and Xcode derives its scheme; signing is
+  # off because CI has no certificates and this is a compile gate, not a
+  # distribution build.
   ios-build:
     runs-on: macos-latest
     timeout-minutes: 30
@@ -475,6 +475,16 @@ jobs:
           xcodebuild -project ios/JapanOsintApp.xcodeproj \
             -scheme JapanOsintApp \
             -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            -quiet build
+
+      # Simulator SDK as well: a different slice (x86_64/arm64 simulator) with
+      # its own availability checks, still unsigned.
+      - name: Build (iOS Simulator)
+        run: |
+          xcodebuild -project ios/JapanOsintApp.xcodeproj \
+            -scheme JapanOsintApp \
+            -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
             -quiet build
 

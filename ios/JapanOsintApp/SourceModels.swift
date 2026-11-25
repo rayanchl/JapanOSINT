@@ -43,8 +43,18 @@ struct SourceFacets: Decodable, Hashable {
     let healths: SourceFacetSet?
 }
 
+/// `meta.credential` of a `?key=<NAME>` search: how many sources need that
+/// credential, whatever the page shows (same figure as `page.total`).
+struct SourceCredentialMeta: Decodable, Hashable {
+    let name: String?
+    let sources: Int?
+    let shown: Int?
+    let basis: String?
+}
+
 struct SourceSearchMeta: Decodable, Hashable {
     let facets: SourceFacets?
+    let credential: SourceCredentialMeta?
     let registry_total: Int?
     let snapshot_at: String?
 }
@@ -249,6 +259,8 @@ struct SourceDetailRegistry: Decodable, Hashable {
     let type: String?
     let engine: String?
     let kind: String?
+    /// The DECLARED source kind: feed | pivot | pod | probe (source.h).
+    let sourceKind: String?
     let interval: Double?
     let url: String?
     let host: String?
@@ -443,6 +455,7 @@ struct CadencePolicy: Decodable, Hashable {
 
 struct CadenceEstimate: Decodable, Hashable {
     let scheduled_rows: Int?
+    let realtime_exempt_rows: Int?
     let runs_per_day_declared: Int?
     let runs_per_day_effective: Int?
     let fastest_effective_sec: Int?

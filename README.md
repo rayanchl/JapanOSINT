@@ -112,12 +112,11 @@ Writing a new source: [`native/collectors/SOURCE_AUTHORING_CONTRACT.md`](native/
 * **`ios/` — the SwiftUI app.** Map with per-layer feature caching, intel
   feed, source dashboard, cases, entity graph, camera viewer, breach check.
   The Xcode project has exactly **one** target, the app (iOS and macOS). The
-  share extension (`ios/JapanOsintShare/`) and the WidgetKit widgets and Live
-  Activity (`ios/JapanOsintWidgets/`) are source files that **no target
-  compiles**, so they do not ship, and the App Group they would share data
-  through is not configured (the app gates that code off at runtime).
-  `ios/EXTENSION_TARGETS_TODO.md` is the procedure for adding the two
-  targets.
+  share extension and the WidgetKit widgets / Live Activity are source files
+  that **no target compiles**, so they do not ship; they, and the app-side code
+  that feeds them (widget snapshot, share queue, background refresh), live in
+  `ios/Unbuilt/`, and no app code references them. Adding the targets needs
+  Xcode: `ios/Unbuilt/README.md` is the procedure.
 
 ## History, so the tree makes sense
 
