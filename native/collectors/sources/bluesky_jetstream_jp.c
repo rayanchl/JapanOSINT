@@ -94,10 +94,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int max    = jo_env_int_strict("BLUESKY_JETSTREAM_MAX", 200, 1, INT_MAX);
 
   bsky_ud u = { cJSON_CreateArray(), max };
-  ws_collect(WS_URL, NULL, window, max, on_msg, &u);       /* err → 0 rows */
+  int got = ws_collect(WS_URL, NULL, window, max, on_msg, &u);
   int n = geojson_emit_features(sink, "bluesky-jetstream-jp", u.features);
   jo_ws_oversize_notice(sink, "bluesky-jetstream-jp", WS_URL, n > 0 ? n : 0);
   cJSON_Delete(u.features);
+  /* Rule 1: a refused handshake, or a socket that opened and stayed silent
+   * for the whole window, is a failed fetch - not an empty source. The
+   * firehose always has data; rc != 0 makes the scheduler file the
+   * collector-fetch-failure notice. */
+  if (got <= 0 && n <= 0 && ws_last_oversize_dropped() == 0) {
+    fprintf(stderr, "[bluesky-jetstream-jp] %s\n", got < 0
+            ? "websocket connect/handshake failed (no data obtained)"
+            : "websocket opened but delivered no message in the window");
+    return -1;
+  }
   fprintf(stderr, "[bluesky-jetstream-jp] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }

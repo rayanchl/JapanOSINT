@@ -160,12 +160,17 @@ def build_cmd(a, sid):
     is REPLACED, so the pid subprocess waits on and kills at --timeout is the
     binary itself and nothing is left orphaned holding a 14 GB WAL."""
     ent = (a.entities or {}).get(sid)
-    if a.file_limit_kb and os.path.exists("/bin/sh"):
-        if ent:
-            return ["/bin/sh", "-c", 'ulimit -f %d; exec "$0" --run "$1" "$2"'
-                    % a.file_limit_kb, a.bin, sid, ent]
-        return ["/bin/sh", "-c", 'ulimit -f %d; exec "$0" --run "$1"'
-                % a.file_limit_kb, a.bin, sid]
+    if a.file_limit_kb:
+        # setrlimit in BYTES, then exec. `sh -c 'ulimit -f N'` was wrong on
+        # dash (Debian/Ubuntu /bin/sh), whose -f counts 512-byte blocks, not
+        # 1 KiB: a 1024 MB ceiling was really 512 MB, and a legitimate
+        # 576 MB database (af-dportal-trans-bw: 100,000 records) died with
+        # SIGXFSZ (shell_rc -25) and read as SLOW. Measured 2026-11-25.
+        lim = int(a.file_limit_kb) * 1024
+        py = ("import os,sys,resource;"
+              "resource.setrlimit(resource.RLIMIT_FSIZE,(%d,%d));"
+              "os.execv(sys.argv[1],sys.argv[1:])" % (lim, lim))
+        return [sys.executable, "-c", py, a.bin, "--run", sid] + ([ent] if ent else [])
     return [a.bin, "--run", sid] + ([ent] if ent else [])
 
 

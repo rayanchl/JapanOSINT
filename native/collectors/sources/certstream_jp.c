@@ -91,7 +91,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0", NULL };
 
   cs_ud u = { cJSON_CreateArray() };
-  ws_collect(WS_URL, hdrs, window, MAX_EVENTS, on_msg, &u);
+  int got = ws_collect(WS_URL, hdrs, window, MAX_EVENTS, on_msg, &u);
+  if (got <= 0 && ws_last_oversize_dropped() == 0) {
+    /* Rule 1: no handshake, or an open socket that sent nothing for the
+     * whole window, is a failed fetch - not an empty source. */
+    fprintf(stderr, "[certstream-jp] %s\n", got < 0
+            ? "websocket connect/handshake failed (no data obtained)"
+            : "websocket opened but delivered no message in the window");
+    cJSON_Delete(u.events);
+    return -1;
+  }
 
   int n = 0, i = 0;
   cJSON *ev;
