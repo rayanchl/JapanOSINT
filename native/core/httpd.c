@@ -2738,7 +2738,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       (unsigned char) c->data[JO_CONN_CORS],
       mg_http_get_header(hm, "Origin") != NULL, &pst);
     /* /api/auth/...: the refresh cookie is credentialed CORS, listed origin only. */
-    if (starts(u, "/api/auth/"))
+    if (ac_kind_of(u.buf, u.len) != AC_NONE)
       pr = cors_preflight_response_creds((unsigned char) c->data[JO_CONN_CORS],
              mg_http_get_header(hm, "Origin") != NULL, &pst);
     mg_printf(c, "%s", pr);
@@ -2834,7 +2834,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
   /* /api/auth/...: the httpOnly refresh-cookie token exchange (authcookie.h).
    * Pre-auth by nature; guarded by ac_guard instead of a bearer token. */
-  if (pub && starts(u, "/api/auth/")) { auth_cookie_route(c, hm, u); return; }
+  if (pub && ac_kind_of(u.buf, u.len) != AC_NONE) { auth_cookie_route(c, hm, u); return; }
 
   /* ---- everything else under /api/\* passes the auth gate ---- */
   if (starts(u, "/api/")) {
