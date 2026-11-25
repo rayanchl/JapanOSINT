@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <strings.h>
 
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
@@ -63,6 +64,39 @@ static void slugify(sqlite3 *h, const char *email, char *out, size_t cap) {
   snprintf(out, cap, "%s-%s", s, u);
 }
 
+/* users.email is refreshed from the token on every login, but `users` carries
+ * no verified flag, so which addresses an account has PROVEN is recorded here:
+ * one row per (account, address) the first time a token carried that address
+ * with email_verified. Created lazily — the schema file is not this module's. */
+static void verified_table(sqlite3 *h) {
+  sqlite3_exec(h, "CREATE TABLE IF NOT EXISTS user_verified_emails ("
+               "user_id TEXT NOT NULL, email TEXT NOT NULL, "
+               "PRIMARY KEY(user_id,email))", NULL, NULL, NULL);
+}
+static int email_is_verified(sqlite3 *h, const char *user_id, const char *mail) {
+  sqlite3_stmt *st; int ok = 0;
+  verified_table(h);
+  if (sqlite3_prepare_v2(h, "SELECT 1 FROM user_verified_emails "
+        "WHERE user_id=?1 AND email=lower(?2)", -1, &st, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(st, 1, user_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(st, 2, mail, -1, SQLITE_TRANSIENT);
+    ok = sqlite3_step(st) == SQLITE_ROW;
+  }
+  sqlite3_finalize(st);
+  return ok;
+}
+static void record_verified_email(sqlite3 *h, const char *user_id, const char *mail) {
+  if (email_is_verified(h, user_id, mail)) return;      /* no write per request */
+  sqlite3_stmt *st;
+  if (sqlite3_prepare_v2(h, "INSERT OR IGNORE INTO user_verified_emails "
+        "(user_id,email) VALUES (?1,lower(?2))", -1, &st, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(st, 1, user_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(st, 2, mail, -1, SQLITE_TRANSIENT);
+    sqlite3_step(st);
+  }
+  sqlite3_finalize(st);
+}
+
 int tenant_resolve(db_handle *db, const auth_user *u,
                    const char *x_tenant_id, tenant_ctx *out) {
   if (!u || !u->id[0]) return -401;
@@ -103,30 +137,42 @@ int tenant_resolve(db_handle *db, const auth_user *u,
   snprintf(out->display_name, sizeof out->display_name, "%s", dn ? dn : "");
   sqlite3_finalize(st);
 
-  /* Claim any pending invites addressed to this email: a freshly-invited
-   * user becomes a member of the inviting workspace on their first
-   * authenticated request, and the invite is consumed.
-   *
-   * GATED ON A VERIFIED ADDRESS. The `email` claim proves only that the token
-   * is well-signed, not that its bearer controls the mailbox: with email
-   * confirmation off (or with a provider that mints a session before
-   * confirmation), signing up as alice@corp.example is enough to walk into
-   * corp's workspace with whatever role the invite carried. That is a
-   * cross-tenant crossing, so the claim must ALSO be backed by the token's
-   * verified-email assertion. Unverified users are not rejected — they simply
-   * do not consume the invite, which stays pending until they confirm and
-   * come back. Nothing is deleted on this path, so a retry is lossless.
-   *
-   * auth_email_verified() is declared here rather than in auth.h because
-   * auth.h is shared with consumers this pass does not own; it reads the
-   * thread-local auth.c set while verifying THIS request's token. */
+  /* The token's own `email` claim is the identity for everything below. The
+   * STORED users.email is whatever the first request carried: matching invites
+   * against it while trusting THIS token's email_verified flag let an account
+   * that signed up unverified as victim@corp, then verified a different
+   * address, claim victim@corp's invites. So the stored address is refreshed
+   * from the token (API-04), and the invite match uses the claim, which the
+   * verified flag is a statement about. */
   extern int auth_email_verified(void);
-  if (out->email[0] && auth_email_verified()) {
+  const char *claim = u->email[0] ? u->email : NULL;
+  if (claim) {
+    if (strcasecmp(claim, out->email) != 0) {
+      if (sqlite3_prepare_v2(h, "UPDATE users SET email=?1 WHERE id=?2",
+            -1, &st, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(st, 1, claim, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 2, out->user_id, -1, SQLITE_TRANSIENT);
+        sqlite3_step(st);
+      }
+      sqlite3_finalize(st);
+      snprintf(out->email, sizeof out->email, "%s", claim);
+    }
+    if (auth_email_verified()) record_verified_email(h, out->user_id, claim);
+  }
+
+  /* Claim any pending invites addressed to the (verified) claimed address: a
+   * freshly-invited user becomes a member of the inviting workspace on their
+   * first authenticated request, and the invite is consumed. Unverified users
+   * are not rejected — they simply do not consume the invite, which stays
+   * pending until they confirm and come back. Nothing is deleted on that
+   * path, so a retry is lossless. auth_email_verified() reads the thread-local
+   * auth.c set while verifying THIS request's token. */
+  if (claim && auth_email_verified()) {
     char itids[16][64], iroles[16][32]; int nv = 0;
     if (sqlite3_prepare_v2(h,
           "SELECT tenant_id,role FROM tenant_invites WHERE lower(email)=lower(?1)",
           -1, &st, NULL) == SQLITE_OK) {
-      sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(st, 1, claim, -1, SQLITE_TRANSIENT);
       while (sqlite3_step(st) == SQLITE_ROW && nv < 16) {
         snprintf(itids[nv], sizeof itids[nv], "%s",
                  (const char *)sqlite3_column_text(st, 0));
@@ -157,7 +203,7 @@ int tenant_resolve(db_handle *db, const auth_user *u,
       if (sqlite3_prepare_v2(h,
             "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)"
             " AND tenant_id=?2", -1, &st, NULL) == SQLITE_OK) {
-        sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 1, claim, -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(st, 2, itids[i], -1, SQLITE_TRANSIENT);
         sqlite3_step(st);
       }
@@ -209,6 +255,12 @@ int tenant_resolve(db_handle *db, const auth_user *u,
     snprintf(first_tid, sizeof first_tid, "%s", tid);
     snprintf(first_role, sizeof first_role, "owner");
   }
+
+  /* A tenant id the caller is not a member of is refused rather than silently
+   * answered with their first workspace: a stale or mistyped id would write
+   * cases, alerts, uploads and keys into a workspace the client does not
+   * believe it is in. An ABSENT header keeps the first-workspace fallback. */
+  if (x_tenant_id && *x_tenant_id && !picked_tid[0]) return -403;
 
   const char *use_tid  = picked_tid[0]  ? picked_tid  : first_tid;
   const char *use_role = picked_tid[0]  ? picked_role : first_role;
@@ -566,7 +618,14 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
 
     /* Already a user? Add membership immediately rather than queue an invite. */
     sqlite3_stmt *s; char existing_uid[64] = {0};
-    if (sqlite3_prepare_v2(h, "SELECT id FROM users WHERE lower(email)=?1",
+    /* Only an account that has PROVEN the address (a token carrying it with
+     * email_verified) is added at once; a squatter who merely claimed it is
+     * not, and the invite is queued for the verified sign-in to claim. */
+    verified_table(h);
+    if (sqlite3_prepare_v2(h,
+          "SELECT u.id FROM users u JOIN user_verified_emails v "
+          "ON v.user_id=u.id AND v.email=?1 WHERE lower(u.email)=?1 "
+          "ORDER BY u.created_at ASC LIMIT 1",
           -1, &s, NULL) == SQLITE_OK) {
       sqlite3_bind_text(s, 1, mail, -1, SQLITE_TRANSIENT);
       if (sqlite3_step(s) == SQLITE_ROW)
@@ -654,6 +713,13 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
     char cur[32];
     if (!member_role(h, t->tenant_id, seg, cur)) { if (jb) cJSON_Delete(jb);
       return merr(status, 404, "member not found"); }
+    /* Owner is a real boundary: only an owner (or the member themself) may
+     * change an owner membership, or an admin could demote the owners. */
+    if (strcmp(cur, "owner") == 0 && strcmp(t->role, "owner") != 0 &&
+        strcmp(seg, t->user_id) != 0) {
+      if (jb) cJSON_Delete(jb);
+      return merr(status, 403, "only a workspace owner can change an owner");
+    }
     if (strcmp(cur, "owner") == 0 && strcmp(role, "owner") != 0 &&
         owner_count(h, t->tenant_id) <= 1) {
       if (jb) cJSON_Delete(jb);
@@ -690,6 +756,9 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
     char cur[32];
     if (!member_role(h, t->tenant_id, seg, cur))
       return merr(status, 404, "member not found");
+    if (strcmp(cur, "owner") == 0 && strcmp(t->role, "owner") != 0 &&
+        strcmp(seg, t->user_id) != 0)
+      return merr(status, 403, "only a workspace owner can remove an owner");
     if (strcmp(cur, "owner") == 0 && owner_count(h, t->tenant_id) <= 1)
       return merr(status, 400, "cannot remove the last owner");
     sqlite3_stmt *s;

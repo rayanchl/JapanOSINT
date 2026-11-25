@@ -22,9 +22,16 @@
  *
  * A truncated or malformed sequence yields the raw lead BYTE with *adv = 1:
  * best effort, matching what the copies did on their malformed path, and the
- * only choice that cannot read unallocated memory. Overlong forms and
- * surrogates are decoded as written — every caller here classifies the
- * codepoint by script range, and none of those ranges contains one. */
+ * only choice that cannot read unallocated memory.
+ *
+ * A well-framed sequence that is not a valid scalar value — an overlong form
+ * (\xC0\x80 is U+0000 written two ways), a UTF-16 surrogate, or anything past
+ * U+10FFFF — yields U+FFFD with *adv = 1, so the caller's loop steps byte by
+ * byte through the hostile bytes. They used to be "decoded as written", which
+ * let jpnorm_fold turn "abc\xC0\x80zzz" into a string holding an embedded NUL
+ * ("abc<hostile>zzz" then collided with "abc" in every C-string consumer) and
+ * emit surrogates as invalid UTF-8. U+FFFD is in no script range any caller
+ * classifies by, which is the property the old comment relied on. */
 static inline unsigned utf8_decode(const unsigned char *s, int *adv) {
   unsigned c = s[0], cp, need;
   if (c < 0x80)                { *adv = 1; return c; }
@@ -37,6 +44,12 @@ static inline unsigned utf8_decode(const unsigned char *s, int *adv) {
   for (unsigned i = 1; i <= need; i++) {
     if ((s[i] & 0xC0) != 0x80) { *adv = 1; return c; }
     cp = (cp << 6) | (s[i] & 0x3Fu);
+  }
+  if ((need == 1 && cp < 0x80) || (need == 2 && cp < 0x800) ||
+      (need == 3 && cp < 0x10000) || cp > 0x10FFFFu ||
+      (cp >= 0xD800u && cp <= 0xDFFFu)) {
+    *adv = 1;
+    return 0xFFFDu;
   }
   *adv = (int)need + 1;
   return cp;

@@ -100,8 +100,43 @@ static void test_boot_offset(void) {
   assert(sched_boot_offset(999, 1000, 8, 0, 900, 3600) == 0);
 }
 
+/* a wall-clock step is told apart from time passing: both clocks advancing
+ * together is not a step, slew under 5 s is not a step, and a jump either way
+ * is reported with its sign so the plan can be shifted by it */
+static void test_clock_step(void) {
+  assert(sched_clock_step(1000, 1001, 50, 51) == 0);          /* one ordinary tick */
+  assert(sched_clock_step(1000, 1601, 50, 651) == 0);         /* ten minutes passed on both */
+  assert(sched_clock_step(1000, 1004, 50, 51) == 0);          /* 3 s of slew */
+  assert(sched_clock_step(1000, 4601, 50, 51) == 3600);       /* set an hour forward */
+  assert(sched_clock_step(1000, 401, 50, 51) == -600);        /* set ten minutes back */
+  assert(sched_clock_step(1000, 1000 + 28800, 50, 50 + 28800) == 0);  /* slept 8 h on a boot-time clock: overdue, not a step */
+}
+
+/* the walk is a permutation (every source exactly once) whose neighbours are
+ * far apart, at the registry's real size and at the degenerate ones */
+static void test_walk_order(void) {
+  static const int sizes[] = { 1, 2, 3, 7, 7919, 15838, 98728, 131072 };
+  for (size_t t = 0; t < sizeof sizes / sizeof sizes[0]; t++) {
+    int n = sizes[t], st = sched_walk_stride(n);
+    char *seen = calloc((size_t)n, 1);
+    for (int k = 0; k < n; k++) {
+      int i = sched_walk_index(k, n, st);
+      assert(i >= 0 && i < n && !seen[i] && "the walk must visit each source once");
+      seen[i] = 1;
+    }
+    free(seen);
+    if (n > 30000) {
+      int a = sched_walk_index(10, n, st), b = sched_walk_index(11, n, st);
+      int gap = a > b ? a - b : b - a;
+      assert(gap > 1000 && n - gap > 1000 && "neighbours in the walk must not be neighbours in the registry");
+    }
+  }
+}
+
 int main(void) {
   test_boot_offset();
+  test_clock_step();
+  test_walk_order();
 
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }

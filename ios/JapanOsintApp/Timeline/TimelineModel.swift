@@ -282,8 +282,20 @@ final class TimelineModel: ObservableObject {
     func loadSourcesIfNeeded(using api: API) async {
         guard sources.isEmpty else { return }
         do {
-            sources = try await api.intelSources().data
-            sourcesError = nil
+            // One bounded, server-searched page (the 500 most recently fetched
+            // sources that hold items) — NOT the whole registry. When more
+            // exist the sheet says so instead of silently listing a slice.
+            var q = SourceSearchQuery()
+            q.hasItems = true
+            q.sort = "fetched"
+            q.desc = true
+            let env = try await api.searchSources(q, limit: 500, offset: 0)
+            sources = (env.data ?? []).map(\.asIntelSource)
+            if env.page?.has_more == true, let total = env.page?.total {
+                sourcesError = "Showing the \(sources.count) most recently fetched of \(total) sources that hold items."
+            } else {
+                sourcesError = nil
+            }
         } catch {
             sourcesError = "Couldn't load the full source list (\(error.localizedDescription)). "
                 + "Showing only the sources present in the events below."

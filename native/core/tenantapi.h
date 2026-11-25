@@ -17,7 +17,8 @@ typedef struct {
 
 /* resolveTenant: first-seen provisioning (users + personal tenant + owner
  * membership), X-Tenant-Id pick. Returns 0 on success (out filled), or a
- * negative auth/500 marker: -401 (no user), -500 (db failure). */
+ * negative auth/500 marker: -401 (no user), -403 (X-Tenant-Id names a
+ * workspace the caller is not a member of), -500 (db failure). */
 int tenant_resolve(db_handle *db, const auth_user *u,
                    const char *x_tenant_id, tenant_ctx *out);
 

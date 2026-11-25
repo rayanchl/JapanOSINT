@@ -2529,9 +2529,32 @@ pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
 Two numbers it measured that are decisions rather than defects: at a mean run
 of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
 18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
-scheduled rows main held by the time this merged); and the policy holds
-the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
-until each is given its own interval.
+scheduled rows main held by the time this merged) — and **24 is the default since 2026-11-16**, measured on the full registry
+(8 / 24 / 48 workers: 1.38 / 2.09 / 2.50 runs/s over 180 s, no refused write at
+any of them; the 6 h policy needs ~4.5, which no setting reached from the
+measuring container). The dispatcher also walks the registry on a stride
+(`sched_walk_index`) so one host's rows do not fill the queue together, and a
+wall-clock step shifts the whole plan (`sched_clock_step`); and the policy held
+the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours.
+
+**A REAL-TIME FEED IS OUTSIDE THE POLICY** (the owner's decision of
+2026-11-14, `CAD_REALTIME_SEC` in `core/cadence.h`): a row that DECLARES an
+interval under 300 s runs as declared under any policy — global, floor or
+ceiling — because an earthquake early warning read every six hours is not a
+slower feed, it is a useless one. The rule is in `cadence.c`'s `apply()`, so
+the scheduler, the pages and the runs-per-day estimate all see it, and such a
+row's mode reads `declared`. To slow one down, set its own interval from its
+page. Two things in the dispatcher make the interval real under a backlog,
+which is the normal state at 96,472 scheduled rows: the last
+`SCHED_RT_RESERVE` (64) slots of the queue are theirs alone, and a healthy
+real-time row's key sits below every priority band — a failing one keeps its
+band, so backoff is not bypassed. Measured on a live boot at the default 8
+workers with the queue pinned full and 17,187 rows deferred: `wolfx-eew` ran
+21 times in 240 s, the 60 s feeds 4 times, `odpt-train` (30 s) 8 times. Run
+one by one the same day, 16 of the 22 store records; `odpt-train` needs its
+ODPT key and says so, and `certstream-jp`, `odpt-bus`, `flightradar-jp`,
+`airplanes-live-mil` and `nerv-feed` returned nothing or were refused from
+the measuring container — one reading each, nothing changed on it.
 
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against

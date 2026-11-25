@@ -21037,6 +21037,7 @@ static const hp_source HP3B63_EUODS[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_052-003_fonds-documentaire-du-patrimoine-rpdl/records?limit=100&offset=0&order_by=doc_cote%2Cdoc_de%2Cdoc_per_dpar",
     .array_path = "results",
+    .id_keys = "doc_titre+doc_cote+doc_source+doc_dee+doc_per_dpar+doc_sup+doc_an_edit+doc_de+doc_dl", /* measured 2026-11-14: a bibliographic fonds with NO natural key. 23,488 records (full export), titles repeat (21,840 distinct doc_titre), and the unkeyed row stored 1,975 of 2,000 per run because its uid was the first scalar (the title) and same-title records on different pages collapsed. This 9-field composite is 2,000 of 2,000 distinct on every 2,000-record window tried (offsets 0, 2000, 10000, 21000) and 23,487 of 23,488 over the whole export; no 1-3 field key is unique (doc_titre+doc_cote 23,185). A missing part joins as "". The offset walk has no stable order here (no unique sort key exists), so the 20-page ceiling reads an arbitrary 2,000 of 23,488. */
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,

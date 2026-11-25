@@ -97,7 +97,8 @@ int csv_quote_repairs(void);
  * whole-file parse would build one cJSON node per cell, ~7.5 million. */
 size_t csv_record_end(const char *text, size_t len, size_t from, char delim);
 
-/* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error
+/* Shift_JIS → UTF-8 (decoded as CP932, its strict superset, so ㈱ ① 髙 survive),
+ * malloc'd NUL-terminated (caller frees). On iconv error
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);
 /* Same, for any iconv source encoding ("SHIFT_JIS", "EUC-JP", ...).

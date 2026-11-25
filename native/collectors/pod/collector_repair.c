@@ -31,6 +31,7 @@
  * itself is down (core/llm_fault.h). */
 #include "source.h"
 #include "core/prompts.h"
+#include "core/hostgate.h"   /* hostgate_same_host */
 #include "core/source_registry.h"
 #include "core/thresholds.h"   /* repair_sem_cos_floor */
 #include "core/url_override.h"
@@ -510,15 +511,21 @@ static int sanity_ok_llm(llm_client *llm, const char *name, const char *category
                          char *reason_out, int reason_sz) {
   if (!body || !*body) { snprintf(reason_out, reason_sz, "empty body"); return 0; }
   char *sample = build_sample(body);
-  size_t plen = strlen(SYS_SANITY) + strlen(sample) + 400;
+  /* The sample is whatever the (possibly hostile) upstream answered, and this
+   * classifier's verdict is gate (c) of an automatic URL swap — so it is
+   * fenced as DATA, as anomaly_triage.c fences the same bytes. */
+  char *fenced = prompt_fence_untrusted("PAYLOAD_SAMPLE", sample ? sample : "");
+  if (!fenced) { free(sample); snprintf(reason_out, reason_sz, "oom"); return 0; }
+  size_t plen = strlen(SYS_SANITY) + strlen(fenced) + 400;
   char *prompt = malloc(plen);
-  if (!prompt) { free(sample); snprintf(reason_out, reason_sz, "oom"); return 0; }
+  if (!prompt) { free(fenced); free(sample); snprintf(reason_out, reason_sz, "oom"); return 0; }
   snprintf(prompt, plen,
     "%s\n\nCollector: %s\nCategory: %s\nType: %s\nRecords reported: %d\n"
     "Sample:\n%s\n\nDoes this look like a healthy payload? "
     "JSON: {\"looks_correct\": boolean, \"reason\": short string}",
     SYS_SANITY, name ? name : "?", category ? category : "?",
-    type ? type : "?", records, sample);
+    type ? type : "?", records, fenced);
+  free(fenced);
   free(sample);
   int timeout = env_int("LLM_REPAIR_SANITY_TIMEOUT_MS", 8000);
   const char *grammar = grammar_load("repair_sanity");
@@ -729,11 +736,17 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
 
   char *bundle = cJSON_PrintUnformatted(b);
   cJSON_Delete(b);
-  size_t plen = strlen(SYS_PROPOSAL) + (bundle ? strlen(bundle) : 0) + 64;
-  char *prompt = malloc(plen);
-  if (prompt) snprintf(prompt, plen, "%s\n\nInput:\n%s\n\nOutput JSON only.",
-                       SYS_PROPOSAL, bundle ? bundle : "{}");
+  /* The bundle carries current_fetch.body_head — the first bytes of whatever
+   * the failing host answers — and the model's output here becomes a live URL
+   * override. Fenced as data, exactly as anomaly_triage.c fences the same
+   * bundle. */
+  char *fenced = prompt_fence_untrusted("REPAIR_BUNDLE", bundle ? bundle : "{}");
   free(bundle);
+  size_t plen = strlen(SYS_PROPOSAL) + (fenced ? strlen(fenced) : 0) + 64;
+  char *prompt = fenced ? malloc(plen) : NULL;
+  if (prompt) snprintf(prompt, plen, "%s\n\nInput:\n%s\n\nOutput JSON only.",
+                       SYS_PROPOSAL, fenced);
+  free(fenced);
 
   const char *grammar = grammar_load("repair_proposal");
   long t0 = llm_fault_now_ms();
@@ -843,7 +856,12 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
 
   int dry = env_truthy("REPAIR_DRY");
   /* Honesty rule: merged only when old_url is matchable AND not dry. */
-  int live = matchable && !dry;
+  /* A swap onto a DIFFERENT host is never applied without a human: the model's
+   * URL is influenced by upstream bytes, and a live override would attribute
+   * that host's data to this source for every later fetch. It stays
+   * "verified" (the non-merged status) for the operator to approve. */
+  int cross_host = !(old_url && hostgate_same_host(old_url, new_url));
+  int live = matchable && !dry && !cross_host;
 
   cJSON *patch = cJSON_CreateObject();
   add_str(patch, "old_url", old_url);
@@ -878,12 +896,15 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     /* Verified suggestion: gate passed but we can't (or won't, in dry mode)
      * apply a live override. Leave the anomaly open for a human / the digest. */
     cJSON_AddStringToObject(gp, "applied", dry ? "dry-run (override skipped)"
-                            : "old_url not matchable by runtime override");
+                            : cross_host && matchable
+                              ? "cross-host url_swap: needs operator approval"
+                              : "old_url not matchable by runtime override");
     char *gj = cJSON_PrintUnformatted(gp);
     record_repair(h, a->id, a->source_id, "verified", "url_swap", patchj, gj, model, cls);
     free(gj);
     fprintf(stderr, "[repair] VERIFIED (parked) %s -> %s (%s)\n", a->source_id,
-            new_url, dry ? "dry" : "unmatchable old_url");
+            new_url, dry ? "dry" : cross_host && matchable
+                     ? "cross-host, needs operator approval" : "unmatchable old_url");
   }
   free(patchj);
   cJSON_Delete(gp);

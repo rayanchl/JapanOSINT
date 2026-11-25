@@ -2034,7 +2034,7 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
       free(sid);
       continue;
     }
-    int rc = upload ? 0 : http_request(http, "GET", a->url, hdrs, NULL, 0, tmo, 1, &r);
+    int rc = upload ? 0 : http_request_strict(http, "GET", a->url, hdrs, NULL, 0, tmo, 1, 1, &r);
     if (rc != 0 || (r.status != 200 && r.status != 206) ||
         !r.body || r.body_len < 16) {
       http_response_free(&r);

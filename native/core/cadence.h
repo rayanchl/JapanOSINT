@@ -36,7 +36,20 @@ void cadence_init(db_handle *db);
  * entity pivot or a pod that is not scheduled) is returned unchanged. */
 long cadence_apply(long declared);
 
-/* "declared" | "global" | "clamped" for a row declaring `declared`. */
+/* REAL-TIME FEEDS ARE NOT THE POLICY'S (the owner's decision of 2026-11-14).
+ * A row that declares an interval under five minutes exists to be current —
+ * earthquake early warning (10 s), JMA tsunami and intensity (60 s), train
+ * and aircraft positions (30-120 s) — and the fleet-wide cadence, the
+ * compiled 6 h default included, would turn each into a reading six hours
+ * old. Such a row runs as declared under ANY policy: global, floor or
+ * ceiling. To slow one down, set its own interval from its page (Settings ›
+ * Collection interval), which outranks everything. 22 rows of 90,907
+ * scheduled on 2026-11-14; `./bin/japanosint --schedule` lists them. */
+#define CAD_REALTIME_SEC 300L
+int cadence_is_realtime(long declared);
+
+/* "declared" | "global" | "clamped" for a row declaring `declared` (a
+ * real-time row reads "declared": it runs as it declares). */
 const char *cadence_mode_for(long declared);
 
 cadence_policy cadence_get(void);

@@ -295,7 +295,7 @@ struct LayerRow: View {
                 }
                 if let count = stats.count(for: layer.id) {
                     Text("·").font(.caption2).foregroundStyle(theme.textMuted)
-                    Text("\(count.formatted())")
+                    Text(stats.serverBoundNote(for: layer.id) ?? "\(count.formatted())")
                         .font(.caption2.monospacedDigit())
                         .foregroundStyle(theme.textMuted)
                 } else if let n = layer.recordsGeocoded {

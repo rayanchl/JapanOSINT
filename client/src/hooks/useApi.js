@@ -42,8 +42,16 @@ export function useApi(path, { deps = [], transform, enabled = true, poll = 0 } 
 
   useEffect(() => {
     if (!poll || !path || !enabled) return undefined;
-    const t = setInterval(() => load({ silent: true }), poll);
-    return () => clearInterval(t);
+    // A hidden tab does not poll (nobody can read the answer); coming back
+    // to the tab refreshes once so the figure is not stale on return.
+    const hidden = () => typeof document !== 'undefined' && document.hidden;
+    const t = setInterval(() => { if (!hidden()) load({ silent: true }); }, poll);
+    const onVis = () => { if (!hidden()) load({ silent: true }); };
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', onVis);
+    return () => {
+      clearInterval(t);
+      if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', onVis);
+    };
   }, [poll, path, enabled, load]);
 
   return { data, error, loading, loadedAt, reload: load, setData };

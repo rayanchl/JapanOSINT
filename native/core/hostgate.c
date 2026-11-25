@@ -335,6 +335,19 @@ static hg_slot *slot_for(const char *host) {
   return s;
 }
 
+/* The cancel flag of the run this THREAD is executing, or NULL. Every wait on
+ * the fetch path (this gate, the retry backoff, a row's page delay) used to
+ * sleep through a cancellation: a run the watchdog or a shutdown had already
+ * told to stop could stay parked here for HG_OVERRIDE_MAX_WAIT_MS. The
+ * scheduler sets it around each run; a thread that never set one behaves
+ * exactly as before. */
+static __thread volatile int *g_hg_cancel;
+void hostgate_set_cancel(volatile int *flag) { g_hg_cancel = flag; }
+int hostgate_cancelled(void) {
+  volatile int *f = g_hg_cancel;
+  return f && __atomic_load_n((int *)f, __ATOMIC_ACQUIRE);
+}
+
 int hostgate_acquire(const char *url, int max_wait_ms) {
   char host[HG_HOSTLEN];
   if (!url_host(url, host, sizeof host)) return 0;
@@ -383,6 +396,11 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
       pthread_mutex_unlock(&g_mu);
       return 1;
     }
+    if (hostgate_cancelled()) {            /* the run was told to stop        */
+      s->waiters--;
+      pthread_mutex_unlock(&g_mu);
+      return 0;                            /* not gated; the caller must not fetch */
+    }
     if (now >= deadline) {                 /* fail open — see header          */
       s->waiters--;
       g_timeouts++;
@@ -401,6 +419,8 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
     if (!gap_ok && ready_at < wake) wake = ready_at;
     long long delta = wake - now;
     if (delta < 1) delta = 1;
+    /* nothing broadcasts on a cancel, so a cancellable wait re-checks */
+    if (g_hg_cancel && delta > 250) delta = 250;
 
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
@@ -491,20 +511,40 @@ static int v4_class(unsigned a) {
   if (b1 == 10)                      return 2;   /* RFC1918                  */
   if (b1 == 172 && b2 >= 16 && b2 <= 31) return 2;
   if (b1 == 192 && b2 == 168)        return 2;
+  /* Cloud metadata services live here (Alibaba 100.100.100.200, Oracle
+   * 192.0.0.192), so these two are the FLOOR and not strict-only: the default
+   * non-strict floor must not let a collector URL, an LLM-proposed override
+   * or a webhook reach them. */
+  /* Only the metadata ADDRESS in 100.64/10 is floor. The rest of that range
+   * is carrier-grade NAT and is what Tailscale hands out, so an operator's
+   * model server on a tailnet address must keep working at the default
+   * floor; it is private under strict like loopback and RFC1918. */
+  if (a == 0x646464C8u)              return 1;   /* 100.100.100.200          */
   if (b1 == 100 && b2 >= 64 && b2 <= 127) return 2;  /* CGNAT 100.64/10      */
-  if (b1 == 192 && b2 == 0 && ((a >> 8) & 0xFF) == 0) return 2;  /* 192.0.0/24 */
+  if (b1 == 192 && b2 == 0 && ((a >> 8) & 0xFF) == 0) return 1;  /* 192.0.0/24 */
   if (b1 == 198 && (b2 == 18 || b2 == 19)) return 2; /* benchmark 198.18/15  */
   return 0;
+}
+
+static unsigned v4_at(const unsigned char *p) {
+  return ((unsigned)p[0] << 24) | ((unsigned)p[1] << 16) |
+         ((unsigned)p[2] << 8)  |  (unsigned)p[3];
 }
 
 static int v6_class(const unsigned char *a) {
   static const unsigned char v4mapped[12] =
     {0,0,0,0,0,0,0,0,0,0,0xFF,0xFF};
-  if (memcmp(a, v4mapped, 12) == 0) {           /* ::ffff:1.2.3.4           */
-    unsigned v = ((unsigned)a[12] << 24) | ((unsigned)a[13] << 16) |
-                 ((unsigned)a[14] << 8)  |  (unsigned)a[15];
-    return v4_class(v);
-  }
+  static const unsigned char nat64[12] =
+    {0,0x64,0xFF,0x9B,0,0,0,0,0,0,0,0};
+  if (memcmp(a, v4mapped, 12) == 0)             /* ::ffff:1.2.3.4           */
+    return v4_class(v4_at(a + 12));
+  /* Forms that EMBED an IPv4 address are judged by the address they embed: a
+   * NAT64 gateway or a 6to4 relay will happily deliver to 169.254.169.254 or
+   * 10.0.0.5 on the caller's behalf. */
+  if (memcmp(a, nat64, 12) == 0)                /* 64:ff9b::/96 NAT64       */
+    return v4_class(v4_at(a + 12));
+  if (a[0] == 0x20 && a[1] == 0x02)             /* 2002::/16 6to4           */
+    return v4_class(v4_at(a + 2));
   int all_zero = 1;
   for (int i = 0; i < 16; i++) if (a[i]) { all_zero = 0; break; }
   if (all_zero)                       return 1;  /* ::  unspecified          */
@@ -516,6 +556,12 @@ static int v6_class(const unsigned char *a) {
     if (memcmp(a, loop, 16) == 0)     return 2;  /* ::1                      */
   }
   if ((a[0] & 0xFE) == 0xFC)          return 2;  /* fc00::/7 unique-local    */
+  {
+    /* ::a.b.c.d, the deprecated IPv4-compatible form (::1 was handled above). */
+    int zero12 = 1;
+    for (int i = 0; i < 12; i++) if (a[i]) { zero12 = 0; break; }
+    if (zero12) return v4_class(v4_at(a + 12));
+  }
   return 0;
 }
 

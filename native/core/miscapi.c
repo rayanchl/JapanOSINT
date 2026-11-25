@@ -8,6 +8,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* one SELECT * row → cJSON object, sqlite type → JSON type (mirrors
  * better-sqlite3 row objects + JSON.stringify). */
@@ -71,17 +72,6 @@ char *miscapi_set_schedule(db_handle *db, const char *id, const char *body) {
   return miscapi_source_by_id(db, id);           /* updated row */
 }
 
-/* Node's new Date().toISOString(), the modulo-clamped spelling used across the
- * tree so -Wformat-truncation can prove the 24 chars fit. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* GET /api/sources/:id/logs
  *
@@ -164,7 +154,7 @@ char *miscapi_source_logs(db_handle *db, const char *id, int limit, int offset) 
 
   cJSON *filters = cJSON_CreateObject();
   cJSON_AddStringToObject(filters, "source_id", id);
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);

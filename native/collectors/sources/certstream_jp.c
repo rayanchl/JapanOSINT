@@ -22,7 +22,7 @@
 #define WS_URL "wss://certstream.calidog.io/"
 #define MAX_EVENTS 500
 
-typedef struct { cJSON *events; } cs_ud;
+typedef struct { cJSON *events; int msgs; } cs_ud;   /* msgs: every message received, .jp or not */
 
 static void now_iso(char *o, size_t n) {        /* new Date().toISOString() */
   struct timeval tv; gettimeofday(&tv, NULL);
@@ -42,6 +42,7 @@ static const char *so(cJSON *o, const char *k) {
 static int on_msg(const char *data, size_t len, void *udp) {
   (void)len;
   cs_ud *u = (cs_ud *)udp;
+  u->msgs++;
   cJSON *msg = cJSON_Parse(data);
   if (!msg) return 0;
   const char *mt = so(msg, "message_type");
@@ -100,8 +101,32 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (window <= 0) window = 10000;
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0", NULL };
 
-  cs_ud u = { cJSON_CreateArray() };
-  ws_collect(WS_URL, hdrs, window, MAX_EVENTS, on_msg, &u);
+  cs_ud u = { cJSON_CreateArray(), 0 };
+  int wrc = ws_collect(WS_URL, hdrs, window, MAX_EVENTS, on_msg, &u);
+
+  /* A stream that could not be opened, or that delivered NOTHING, is a failed
+   * run and not a quiet minute (2026-11-16). ws_collect()'s return was
+   * discarded, so both read `rc=0 records=0 stored=0 bytes=0 requests=0`:
+   *  - ws_collect() returns -1 when the handshake fails — including when the
+   *    linked libcurl has no ws/wss protocol at all (Ubuntu's libcurl 8.5.0
+   *    has none: `curl --version` lists no ws/wss, and the run returns in
+   *    1 ms). No certificate was ever going to arrive.
+   *  - the handshake can succeed and the stream stay silent: measured that
+   *    day, certstream.calidog.io answered 101 Switching Protocols and then
+   *    sent ZERO frames in 25 s. Certstream relays every CT log entry
+   *    world-wide plus heartbeats, so zero MESSAGES of any kind in the window
+   *    is the relay not sending, never "no .jp certificate this minute" —
+   *    that honest empty is msgs > 0 with no .jp match, and still returns 0.
+   * Returning -1 lets the scheduler file the collector-fetch-failure. */
+  if (wrc < 0 || u.msgs == 0) {
+    fprintf(stderr, "[certstream-jp] %s (window %d ms, messages %d)\n",
+            wrc < 0 ? "websocket could not be opened (handshake failed, or "
+                      "this libcurl has no ws/wss support)"
+                    : "stream opened but delivered no message at all",
+            window, u.msgs);
+    cJSON_Delete(u.events);
+    return -1;
+  }
 
   int n = 0, i = 0;
   cJSON *ev;
