@@ -173,6 +173,9 @@ jobs:
           python3 tools/jo_audit.py --self-test
           # Shared jo_registry/manifest code driven through the tools, fake binary.
           python3 tools/test_audit_tools.py
+          # OPS-07: no core/ or lib/ module may be untested (or un-allow-listed).
+          python3 tools/audit_test_coverage.py --self-test
+          python3 tools/audit_test_coverage.py
 
       # docs/ENVIRONMENT.md is generated from the getenv() calls (OPS-06): a new
       # variable without a regenerated table fails here.

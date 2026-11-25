@@ -369,7 +369,6 @@ static char *aoi_list(db_handle *db, const tenant_ctx *t, const char *qs,
   sqlite3_bind_text(s, bi++, t->tenant_id, -1, SQLITE_TRANSIENT);
   if (k.p && k.u) {
     sqlite3_bind_text(s, bi++, k.p, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(s, bi++, k.p, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, bi++, k.u, -1, SQLITE_TRANSIENT);
   }
   sqlite3_bind_int(s, bi, lim);
@@ -699,7 +698,6 @@ static char *wl_list(db_handle *db, const tenant_ctx *t, const char *qs,
   int bi = 1;
   sqlite3_bind_text(s, bi++, t->tenant_id, -1, SQLITE_TRANSIENT);
   if (k.p && k.u) {
-    sqlite3_bind_text(s, bi++, k.p, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, bi++, k.p, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, bi++, k.u, -1, SQLITE_TRANSIENT);
   }

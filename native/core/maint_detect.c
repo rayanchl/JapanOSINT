@@ -124,8 +124,15 @@ static void insert_anomaly(sqlite3 *h, const char *source_id, long fetch_log_id,
   sqlite3_bind_text(s, 3, verdict, -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(s, 4, reason, -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(s, 5, evidence, -1, SQLITE_TRANSIENT);
-  sqlite3_step(s);
+  int rc = sqlite3_step(s);
   sqlite3_finalize(s);
+  /* Say "opened" only when it was: a rejected INSERT (a verdict the schema
+   * CHECK does not admit) used to be logged as success and lost. */
+  if (rc != SQLITE_DONE) {
+    fprintf(stderr, "[detect] anomaly NOT stored: %s verdict=%s — %s\n",
+            source_id, verdict, sqlite3_errmsg(h));
+    return;
+  }
   fprintf(stderr, "[detect] anomaly opened: %s verdict=%s — %s\n",
           source_id, verdict, reason ? reason : "");
 }

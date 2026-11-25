@@ -1,0 +1,7 @@
+# core/ and lib/ modules that no unit test includes or calls, with the reason
+# each is not unit-testable (OPS-07). One "<module> <reason>" per line; '#'
+# starts a comment. tools/audit_test_coverage.py (make test-coverage-list) fails
+# when a module is neither tested nor listed here, and fails when a listed
+# module IS tested (stale line) -- so this file only ever shrinks.
+#
+# Currently empty: every core/*.c and lib/*.c module has a test.

@@ -312,6 +312,19 @@ char *breach_job_fetch(const char *source_id, const char *url, int *http_status)
     *http_status = 400;
     return strdup("{\"error\":\"source_id and url required\"}");
   }
+  /* source_id becomes the staging FILE NAME ("<staging>/<source_id>.dat"), so
+   * "../../x" wrote the downloaded body outside the breach directory — the
+   * same escape breach_path_confine() exists to stop on the read side. Only a
+   * plain id is a file name. */
+  for (const char *c = source_id; *c; c++) {
+    int okc = (*c >= 'a' && *c <= 'z') || (*c >= 'A' && *c <= 'Z') ||
+              (*c >= '0' && *c <= '9') || *c == '-' || *c == '_' || *c == '.';
+    if (!okc || (c == source_id && *c == '.')) {
+      *http_status = 400;
+      return strdup("{\"error\":\"source_id must be letters, digits, '-', '_' or '.' "
+                    "(not leading '.')\"}");
+    }
+  }
 
   /* `url` is a caller-supplied fetch destination, which is exactly the class
    * alertsapi.c's webhook target belongs to — and it was going out through
