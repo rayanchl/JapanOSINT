@@ -217,7 +217,9 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, gatedPaging, onClos
   const needs = usePagedList(rowName ? `/api/sources/search?key=${encodeURIComponent(rowName)}&sort=id` : '',
     { pageSize: 25, enabled: Boolean(rowName), deps: [rowName] });
 
-  React.useEffect(() => { setWorking(row); setRevealed(null); setNewValue(''); setError(null); setSaved(false); }, [rowName, row]);
+  // A different (or refreshed) row resets the working copy: derived while rendering.
+  const [workingOf, setWorkingOf] = useState(row);
+  if (workingOf !== row) { setWorkingOf(row); setWorking(row); setRevealed(null); setNewValue(''); setError(null); setSaved(false); }
 
   if (!row || !working) return null;
   const base = scope === 'platform' ? '/api/keys' : '/api/tenant-keys';
@@ -458,7 +460,9 @@ export function KeyPolicySheet({ open, onClose, onSaved }) {
   const [memberId, setMemberId] = useState(null);
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState(null);
-  React.useEffect(() => { if (data) { setPolicy(data.policy); setMemberId(data.memberId ?? null); } }, [data]);
+  // Fetched policy seeds the editable copy (derived while rendering, so a reload re-seeds it).
+  const [seededFrom, setSeededFrom] = useState(null);
+  if (data && seededFrom !== data) { setSeededFrom(data); setPolicy(data.policy); setMemberId(data.memberId ?? null); }
   const members = data?.members || [];
   const cur = policy ?? data?.policy ?? 'owner_only';
 

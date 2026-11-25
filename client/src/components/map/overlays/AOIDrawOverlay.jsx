@@ -101,7 +101,9 @@ export default function AOIDrawOverlay({ mapRef, active, onClose, onSave }) {
     };
   }, [mapRef, active]);
 
-  useEffect(() => { if (!active) clearAll(); }, [active, clearAll]);
+  // Going inactive discards the drawing: derived while rendering.
+  const [wasActive, setWasActive] = useState(active);
+  if (wasActive !== active) { setWasActive(active); if (!active) clearAll(); }
 
   const drawn = useMemo(() => {
     if (mode === 'polygon') {

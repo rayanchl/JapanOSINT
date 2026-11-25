@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { LuRefreshCw, LuUsers } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
@@ -66,7 +67,7 @@ export default function WorkspaceRuns({ onOpen }) {
     } finally { if (my === seq.current) setLoading(false); }
   }, [fetchPage]);
 
-  useEffect(() => { load(); }, [load]);
+  useLoadOnChange(load);
 
   const more = async () => {
     if (!page?.next_cursor || loadingMore) return;

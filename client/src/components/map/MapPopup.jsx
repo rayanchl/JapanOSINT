@@ -65,14 +65,15 @@ function ReverseGeocodeLabel({ feature }) {
  *   - nothing, if the request never resolves (network error / aborted)
  */
 function DamLiveLevel({ feature, layerType }) {
-  const [state, setState] = useState({ status: 'idle' });
+  // The answer is stored with the feature it belongs to: a different feature
+  // reads as loading, a layer that is not a dam (or a dam without an id) as idle.
+  const [answer, setAnswer] = useState({ feature: null, state: null });
+  const damId = layerType === 'dam-water-level' ? feature?.properties?.dam_id : null;
+  const state = !damId ? { status: 'idle' } : (answer.feature === feature ? answer.state : { status: 'loading' });
 
   useEffect(() => {
-    if (layerType !== 'dam-water-level') { setState({ status: 'idle' }); return; }
-    const damId = feature?.properties?.dam_id;
-    if (!damId) { setState({ status: 'idle' }); return; }
+    if (!damId) return undefined;
     let cancelled = false;
-    setState({ status: 'loading' });
 
     (async () => {
       try {
@@ -80,13 +81,13 @@ function DamLiveLevel({ feature, layerType }) {
         if (!res.ok) return;
         const data = await res.json();
         if (cancelled) return;
-        if (data?.ok) setState({ status: 'live', data });
-        else setState({ status: 'unavailable', reason: data?.reason || null });
+        if (data?.ok) setAnswer({ feature, state: { status: 'live', data } });
+        else setAnswer({ feature, state: { status: 'unavailable', reason: data?.reason || null } });
       } catch { /* silent */ }
     })();
 
     return () => { cancelled = true; };
-  }, [feature, layerType]);
+  }, [feature, damId]);
 
   if (state.status === 'idle' || state.status === 'loading') return null;
 
@@ -360,21 +361,22 @@ const SNAPSHOT_CHANNELS = new Set([
 
 function CameraSnapshot({ cameraUid, name }) {
   // { status: loading | ok | failed, src, why }
-  const [img, setImg] = useState({ status: 'loading', src: null, why: null });
+  // The answer carries the camera it belongs to; another camera reads as loading.
+  const [answer, setAnswer] = useState({ uid: null, status: 'loading', src: null, why: null });
+  const img = answer.uid === cameraUid ? answer : { status: 'loading', src: null, why: null };
   useEffect(() => {
     let cancelled = false;
     let objectUrl = null;
-    setImg({ status: 'loading', src: null, why: null });
     fetchImageObjectUrl(
       apiUrl(`/api/data/cameras/proxy?camera_uid=${encodeURIComponent(cameraUid)}`),
     )
       .then((u) => {
         if (cancelled) { URL.revokeObjectURL(u); return; }
         objectUrl = u;
-        setImg({ status: 'ok', src: u, why: null });
+        setAnswer({ uid: cameraUid, status: 'ok', src: u, why: null });
       })
       .catch((e) => {
-        if (!cancelled) setImg({ status: 'failed', src: null, why: e?.message || 'failed' });
+        if (!cancelled) setAnswer({ uid: cameraUid, status: 'failed', src: null, why: e?.message || 'failed' });
       });
     return () => {
       cancelled = true;

@@ -35,12 +35,14 @@ export default function useDataSources() {
   const { connected } = useWebSocket('/ws', { onMessage, respondToOnline: true });
 
   useEffect(() => {
-    fetchStats();
+    // First read from a timer callback: state is set from the async result,
+    // never synchronously in the effect body.
+    const first = setTimeout(fetchStats, 0);
     // Paused while the tab is hidden; one refresh when it becomes visible.
     const pollInterval = setInterval(() => { if (!document.hidden) fetchStats(); }, 60000);
     const onVis = () => { if (!document.hidden) fetchStats(); };
     document.addEventListener('visibilitychange', onVis);
-    return () => { clearInterval(pollInterval); document.removeEventListener('visibilitychange', onVis); };
+    return () => { clearTimeout(first); clearInterval(pollInterval); document.removeEventListener('visibilitychange', onVis); };
   }, [fetchStats]);
 
   return { stats, isConnected: connected, lastUpdate, error };

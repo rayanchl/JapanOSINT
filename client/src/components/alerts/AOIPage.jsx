@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuMapPin, LuPencil, LuTrash2, LuBellRing, LuPenTool } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Card, Pill, Button, Input, TextArea, Field, Segmented, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
@@ -42,7 +43,7 @@ export default function AOIPage() {
   const [confirmDel, setConfirmDel] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
+  const load = useCallback(async (cursor) => {
     setLoading(true); setError(null);
     try {
       const j = await api.get('/api/aoi', { query: { limit: 100, cursor } });
@@ -51,8 +52,8 @@ export default function AOIPage() {
       setPage(j?.page || null);
     } catch (e) { setError(e); }
     finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
+  }, []);
+  useLoadOnChange(load);
 
   const del = async () => {
     const a = confirmDel; setConfirmDel(null); setBusy(a.id);
@@ -164,7 +165,9 @@ function CreateAoiSheet({ open, onClose, onCreated }) {
   const [circle, setCircle] = useState({ lat: '', lon: '', radius_m: '1000' });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => { if (open) { setError(null); } }, [open]);
+  // Opening the sheet clears the last error (derived while rendering).
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (open) setError(null); }
 
   const save = async () => {
     setError(null);
@@ -219,10 +222,12 @@ function CreateAoiSheet({ open, onClose, onCreated }) {
 }
 
 function RenameSheet({ aoi, onClose, onRenamed }) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(aoi?.name || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => { if (aoi) { setName(aoi.name || ''); setError(null); } }, [aoi]);
+  // A different area to rename re-seeds the draft (derived while rendering).
+  const [seededFor, setSeededFor] = useState(aoi);
+  if (seededFor !== aoi) { setSeededFor(aoi); if (aoi) { setName(aoi.name || ''); setError(null); } }
   const save = async () => {
     setSaving(true); setError(null);
     try {

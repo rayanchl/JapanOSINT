@@ -51,6 +51,10 @@ export default function DatabaseExplorerTab() {
 
   // Reload rows whenever the query changes. An in-flight request is dropped
   // on cleanup so a slow response can't overwrite a newer table's rows.
+  // A changed query marks the rows as loading while rendering (not in the effect).
+  const queryKey = selected ? `${selected}|${q}|${limit}|${offset}|${orderBy}|${orderDir}` : null;
+  const [prevQueryKey, setPrevQueryKey] = useState(null);
+  if (prevQueryKey !== queryKey) { setPrevQueryKey(queryKey); if (queryKey) setLoading(true); }
   useEffect(() => {
     if (!selected) return undefined;
     let ignore = false;
@@ -62,7 +66,6 @@ export default function DatabaseExplorerTab() {
       params.set('orderBy', orderBy);
       params.set('orderDir', orderDir);
     }
-    setLoading(true);
     fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);

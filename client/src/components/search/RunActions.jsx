@@ -15,7 +15,12 @@ export function SaveSearchSheet({ open, onClose, query, kind = 'osint' }) {
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => { if (open) { setName(query || ''); setError(null); } }, [open, query]);
+  // Opening, or a changed query, re-seeds the name: derived while rendering.
+  const [seeded, setSeeded] = useState(null);
+  if (!seeded || seeded.open !== open || seeded.query !== query) {
+    setSeeded({ open, query });
+    if (open) { setName(query || ''); setError(null); }
+  }
   const save = async () => {
     setBusy(true); setError(null);
     try {
@@ -62,10 +67,13 @@ export function SaveSearchSheet({ open, onClose, query, kind = 'osint' }) {
  */
 export function SearchShareSheet({ open, onClose, query }) {
   const [state, setState] = useState({ minting: false, link: null, error: null });
+  // (Re)opening or a changed query starts a mint: flagged while rendering.
+  const mintKey = open ? `q:${query}` : null;
+  const [prevMintKey, setPrevMintKey] = useState(null);
+  if (prevMintKey !== mintKey) { setPrevMintKey(mintKey); if (mintKey) setState({ minting: true, link: null, error: null }); }
   useEffect(() => {
     if (!open) return undefined;
     let alive = true;
-    setState({ minting: true, link: null, error: null });
     api.post('/api/permalink', { kind: 'osint', params: { q: query } })
       .then((r) => {
         if (!alive) return;

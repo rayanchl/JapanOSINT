@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import apiUrl from '../utils/apiUrl.js';
 import { buildCatalog } from './layerCatalog.js';
 import { LAYER_DEFINITIONS } from './layerDefinitions.js';
@@ -91,13 +91,35 @@ export function _resetLayerCatalogForTests() {
   cachedServerLayers = null; catalogError = null; inflight = null; fetchedThisLoad = false; listeners.clear();
 }
 
+// useSyncExternalStore needs a referentially stable snapshot: rebuild only
+// when the module state it is derived from changed identity.
+let snapState = null;
+let snapLayers = null;
+let snapError = null;
 function snapshot() {
-  return {
-    catalog: buildCatalog(cachedServerLayers, LAYER_DEFINITIONS),
-    serverLayers: cachedServerLayers,
-    status: cachedServerLayers ? 'ready' : (catalogError ? 'error' : 'loading'),
-    error: catalogError,
-  };
+  // Hydrate from sessionStorage the first time anyone reads (module state, not component state).
+  if (!cachedServerLayers) {
+    const fromSession = readSession();
+    if (fromSession) { cachedServerLayers = fromSession; cachedForKey = ssKey(); }
+  }
+  if (!snapState || snapLayers !== cachedServerLayers || snapError !== catalogError) {
+    snapLayers = cachedServerLayers;
+    snapError = catalogError;
+    snapState = {
+      catalog: buildCatalog(cachedServerLayers, LAYER_DEFINITIONS),
+      serverLayers: cachedServerLayers,
+      status: cachedServerLayers ? 'ready' : (catalogError ? 'error' : 'loading'),
+      error: catalogError,
+    };
+  }
+  return snapState;
+}
+
+function subscribe(onChange) {
+  listeners.add(onChange);
+  // Revalidate once per page load: a session copy may be stale.
+  if (!fetchedThisLoad) loadServerLayers({ force: true });
+  return () => { listeners.delete(onChange); };
 }
 
 /**
@@ -111,22 +133,5 @@ function snapshot() {
  * is it.
  */
 export default function useLayerCatalog() {
-  const [state, setState] = useState(() => {
-    if (!cachedServerLayers) {
-      const fromSession = readSession();
-      if (fromSession) { cachedServerLayers = fromSession; cachedForKey = ssKey(); }
-    }
-    return snapshot();
-  });
-
-  useEffect(() => {
-    const onChange = () => setState(snapshot());
-    listeners.add(onChange);
-    // Revalidate once per page load: a session copy may be stale.
-    if (!fetchedThisLoad) loadServerLayers({ force: true });
-    else setState(snapshot());
-    return () => { listeners.delete(onChange); };
-  }, []);
-
-  return state;
+  return useSyncExternalStore(subscribe, snapshot, snapshot);
 }

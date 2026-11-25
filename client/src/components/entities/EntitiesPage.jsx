@@ -11,7 +11,13 @@ export default function EntitiesPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [q, setQ] = React.useState(() => params.get('q') || '');
-  React.useEffect(() => { const pq = params.get('q'); if (pq != null && pq !== '') setQ(pq); }, [params]);
+  // A new ?q= (deep link, history re-run) pre-fills the box: derived while rendering.
+  const [seenParams, setSeenParams] = React.useState(params);
+  if (seenParams !== params) {
+    setSeenParams(params);
+    const pq = params.get('q');
+    if (pq != null && pq !== '') setQ(pq);
+  }
   const { results, loading, error, resolved } = useEntitySearch(q);
   // The box searches as you type, so a keystroke is never recorded. A search
   // is committed by Enter, by opening a result, or by arriving with ?q= (a

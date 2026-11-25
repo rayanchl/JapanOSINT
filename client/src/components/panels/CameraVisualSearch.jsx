@@ -35,20 +35,23 @@ function openCameraOnMap(hit) {
 
 export function FrameThumb({ hit }) {
   const stillId = hit?.still?.id || null;
-  const [img, setImg] = useState({ status: stillId ? 'loading' : 'none', src: null, why: null });
+  // The answer carries the still it belongs to; another still reads as loading,
+  // none at all as 'none' (nothing to reset in an effect).
+  const [answer, setAnswer] = useState({ id: null, status: 'loading', src: null, why: null });
+  const img = !stillId ? { status: 'none', src: null, why: null }
+    : answer.id === stillId ? answer : { status: 'loading', src: null, why: null };
   useEffect(() => {
-    if (!stillId) { setImg({ status: 'none', src: null, why: null }); return undefined; }
+    if (!stillId) return undefined;
     let cancelled = false;
     let objectUrl = null;
-    setImg({ status: 'loading', src: null, why: null });
     fetchStillObjectUrl(stillId)
       .then((u) => {
         if (cancelled) { URL.revokeObjectURL(u); return; }
         objectUrl = u;
-        setImg({ status: 'ok', src: u, why: null });
+        setAnswer({ id: stillId, status: 'ok', src: u, why: null });
       })
       .catch((e) => {
-        if (!cancelled) setImg({ status: 'failed', src: null, why: e?.message || 'failed' });
+        if (!cancelled) setAnswer({ id: stillId, status: 'failed', src: null, why: e?.message || 'failed' });
       });
     return () => {
       cancelled = true;
@@ -128,13 +131,14 @@ function Results({ state, onSimilar }) {
 
 /** Cameras whose frames look like one still; used here and in the stills timeline. */
 export function SimilarCameras({ stillId, label, onClose, onSimilar }) {
-  const [state, setState] = useState({ status: 'loading', body: null, why: null });
+  // The answer carries the still it belongs to; another still reads as loading.
+  const [answer, setAnswer] = useState({ id: null, status: 'loading', body: null, why: null });
+  const state = answer.id === stillId ? answer : { status: 'loading', body: null, why: null };
   useEffect(() => {
     let cancelled = false;
-    setState({ status: 'loading', body: null, why: null });
     fetchSimilarToStill(stillId)
-      .then((b) => { if (!cancelled) setState({ status: 'ok', body: b, why: null }); })
-      .catch((e) => { if (!cancelled) setState({ status: 'failed', body: null, why: e?.message || 'failed' }); });
+      .then((b) => { if (!cancelled) setAnswer({ id: stillId, status: 'ok', body: b, why: null }); })
+      .catch((e) => { if (!cancelled) setAnswer({ id: stillId, status: 'failed', body: null, why: e?.message || 'failed' }); });
     return () => { cancelled = true; };
   }, [stillId]);
   return (
