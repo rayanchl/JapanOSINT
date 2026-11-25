@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS collector_anomaly (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     source_id        TEXT NOT NULL REFERENCES sources(id),
     fetch_log_id     INTEGER REFERENCES fetch_log(id),
-    verdict          TEXT NOT NULL CHECK(verdict IN ('records_drop','status_bad','sanity_failed','duration_outlier','manual')),
+    verdict          TEXT NOT NULL CHECK(verdict IN ('records_drop','status_bad','sanity_failed','never_produced','duration_outlier','manual')),
     reason           TEXT,
     evidence         TEXT,
     escalation_level INTEGER NOT NULL DEFAULT 0,

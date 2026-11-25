@@ -501,6 +501,7 @@ static void ensure_parent_dir(const char *path) {
 }
 
 static void alert_events_unique_migrate(db_handle *db);   /* below db_open */
+static void anomaly_verdict_migrate(db_handle *db);       /* below db_open */
 
 /* Schema version stamped into `PRAGMA user_version` (audit OPS-05). Bump it
  * when a change to schema.sql or the boot migrations below is one an OLDER
@@ -594,6 +595,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * rule (they are the inbox's history), and the inbox/export still name it. */
   ensure_column(db, "alert_events", "rule_name", "TEXT");
   alert_events_unique_migrate(db);
+  anomaly_verdict_migrate(db);
 
   /* Correlation scoring (roadmap item 22): significance over co-mention
    * edges. NULL until the stats pod has run, and NULL for pairs below the
@@ -845,4 +847,51 @@ int db_object_count(db_handle *db) {
   int n = (sqlite3_step(st) == SQLITE_ROW) ? sqlite3_column_int(st, 0) : -1;
   sqlite3_finalize(st);
   return n;
+}
+
+/* collector_anomaly.verdict has a CHECK list, and core/maint_detect.c files a
+ * `never_produced` verdict that the list did not admit: the INSERT failed
+ * (unchecked) and the log line said "anomaly opened" — the fleet's silent-empty
+ * cohort was detected and then thrown away. The list is widened in schema.sql
+ * for fresh databases; a deployed table keeps its old CHECK (CREATE TABLE IF
+ * NOT EXISTS skips it), so this widens the stored text in place. Widening a
+ * CHECK cannot invalidate an existing row, which is what makes rewriting
+ * sqlite_master safe here; schema_version is bumped so this connection
+ * re-reads it. Idempotent: once the text carries the verdict it does nothing. */
+static void anomaly_verdict_migrate(db_handle *db) {
+  sqlite3_stmt *st = NULL;
+  int need = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='collector_anomaly'"
+        " AND sql LIKE '%''sanity_failed'',%' AND sql NOT LIKE '%never_produced%'",
+        -1, &st, NULL) == SQLITE_OK) {
+    need = sqlite3_step(st) == SQLITE_ROW;
+    sqlite3_finalize(st);
+  }
+  if (!need) return;
+  char *err = NULL;
+  int rc = sqlite3_exec(db->h,
+    "BEGIN IMMEDIATE;"
+    "PRAGMA writable_schema=ON;"
+    "UPDATE sqlite_master SET sql=replace(sql,'''sanity_failed'',',"
+    "'''sanity_failed'',''never_produced'',') WHERE type='table' AND"
+    " name='collector_anomaly' AND sql NOT LIKE '%never_produced%';"
+    "PRAGMA writable_schema=OFF;"
+    "COMMIT;", NULL, NULL, &err);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] collector_anomaly verdict migration failed: %s\n", err ? err : "?");
+    sqlite3_free(err);
+    sqlite3_exec(db->h, "PRAGMA writable_schema=OFF;ROLLBACK;", NULL, NULL, NULL);
+    return;
+  }
+  sqlite3_stmt *sv = NULL;
+  long v = 0;
+  if (sqlite3_prepare_v2(db->h, "PRAGMA schema_version", -1, &sv, NULL) == SQLITE_OK) {
+    if (sqlite3_step(sv) == SQLITE_ROW) v = (long)sqlite3_column_int64(sv, 0);
+    sqlite3_finalize(sv);
+  }
+  char q[64];
+  snprintf(q, sizeof q, "PRAGMA schema_version=%ld", v + 1);
+  sqlite3_exec(db->h, q, NULL, NULL, NULL);
+  fprintf(stderr, "[db] migrated: collector_anomaly.verdict admits never_produced\n");
 }
