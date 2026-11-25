@@ -1468,9 +1468,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 100 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_229F1AA7D9", .name = "service.pdok.nl — jeugdregio_gegeneraliseerd "
       "[gebiedsindelingen:jeugdregio_gegeneraliseerd]",
@@ -1560,14 +1559,13 @@ static const hp_source HP3B63_EUWFS[] = {
     .page_zero_based = 1,
     .timeout_ms = 120000,
     .interval = 604800,
-    .description = "WFS 2.0 feature type 'ms:W11_Port_morski' ('W11_Port_morski') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 40 on 2026-11-14. Enumerated from the server's "
-      "own GetCapabilities. Each feature carries its geometry and "
-      "attributes. NOTE: GeoServer refuses startIndex without a primary "
-      "key, so this row reads one page (count=1000) and discloses the "
-      "remainder rather than paging." },
+    .description = "WFS 2.0 feature type 'ms:W11_Port_morski' ('W11_Port_morski') from"
+      " the Poland national/regional geoportal mapy.geoportal.gov.pl. "
+      "GetFeature as GML 3.2, the layer's numberMatched was 40 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_FDC5B2E08A", .name = "geo.stat.fi — AVI-alueet 2013 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2013]",
@@ -1708,9 +1706,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 10 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_21E2DBCA0F", .name = "geo.stat.fi — AVI-alueet 2013 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2013]",
@@ -1877,13 +1875,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:W09_Pas_techniczny' "
-      "('W09_Pas_techniczny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
-      "layer's numberMatched was 151 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "('W09_Pas_techniczny') from the Poland national/regional geoportal"
+      " mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
+      "numberMatched was 151 on 2026-11-14. Enumerated from the server's "
+      "own GetCapabilities. Each feature carries its geometry and "
+      "attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_D1358AD78D", .name = "si.icnf.pt — Reserva da Biosfera do POEM [POEM:biosfera_poem]",
     .name_ja = "si.icnf.pt — Reserva da Biosfera do POEM [POEM:biosfera_poem]",
@@ -2021,13 +2018,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:W08_Pas_ochronny' ('W08_Pas_ochronny') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 65 on 2026-11-14. Enumerated from the server's "
-      "own GetCapabilities. Each feature carries its geometry and "
-      "attributes. NOTE: GeoServer refuses startIndex without a primary "
-      "key, so this row reads one page (count=1000) and discloses the "
-      "remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 65 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_4F7E046089", .name = "geo.stat.fi — AVI-alueet 2014 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2014]",
@@ -2197,13 +2193,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:W07_Pas_nadbrzezny' "
-      "('W07_Pas_nadbrzezny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
-      "layer's numberMatched was 456 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "('W07_Pas_nadbrzezny') from the Poland national/regional geoportal"
+      " mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
+      "numberMatched was 456 on 2026-11-14. Enumerated from the server's "
+      "own GetCapabilities. Each feature carries its geometry and "
+      "attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_B04E2A03FC", .name = "service.pdok.nl — landbouwgroep_gegeneraliseerd "
       "[gebiedsindelingen:landbouwgroep_gegeneraliseerd]",
@@ -2348,9 +2343,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 649 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_40FB90919E", .name = "geo.stat.fi — AVI-alueet 2015 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2015]",
@@ -2470,9 +2464,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_220CCB3ACD", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Chef-lieu entité rattachée "
       "[ADMINEXPRESS-COG.2020:chef_lieu_entite_rattachee]",
@@ -2613,11 +2606,10 @@ static const hp_source HP3B63_EUWFS[] = {
     .description = "WFS 2.0 feature type 'ms:W04_Wylaczna_strefa_ekonomiczna' "
       "('W04_Wylaczna_strefa_ekonomiczna') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_D594BA8909", .name = "service.pdok.nl — Wegvakken [nwbwegen:wegvakken]",
     .name_ja = "service.pdok.nl — Wegvakken [nwbwegen:wegvakken]",
@@ -2757,13 +2749,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:W03_Morskie_wody_wewnetrzne' "
-      "('W03_Morskie_wody_wewnetrzne') from the Poland "
-      "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "('W03_Morskie_wody_wewnetrzne') from the Poland national/regional "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
+      "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
+      "server's own GetCapabilities. Each feature carries its geometry "
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_E544A7D105", .name = "geoservizi.regione.liguria.it — (Pi 3) AREE A PERICOLOSITA' "
       "MOLTO ELEVATA [M2423:L9146]",
@@ -2955,9 +2946,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_ABB7D49D16", .name = "geoservizi.regione.liguria.it — (Pi 3*) AREE 'EE' PAI E "
       "'STORICAMENTE INONDATE' NON INDAGATE [M2423:L9150]",
@@ -3077,11 +3067,10 @@ static const hp_source HP3B63_EUWFS[] = {
       "'ms:W01_Linia_podstawowa_morza_terytorialnego' "
       "('W01_Linia_podstawowa_morza_terytorialnego') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 4.4 MB / 3 s, page 1 10 features / 4.5 MB, ids disjoint; numberMatched 332 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_D9004C66B6", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement "
@@ -3253,11 +3242,10 @@ static const hp_source HP3B63_EUWFS[] = {
     .description = "WFS 2.0 feature type 'ms:U11_Urzad_zeglugi_srodladowej' "
       "('U11_Urzad_zeglugi_srodladowej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 8 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 8 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=250: page 0 250 features / 26.7 MB / 7 s, page 1 250 features / 27.4 MB, ids disjoint. */
   { .id = "JO63_EUWFS_054A01334D", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Canton "
@@ -3373,13 +3361,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:U10_Urzad_morski' ('U10_Urzad_morski') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 4 on 2026-11-14. Enumerated from the server's "
-      "own GetCapabilities. Each feature carries its geometry and "
-      "attributes. NOTE: GeoServer refuses startIndex without a primary "
-      "key, so this row reads one page (count=1000) and discloses the "
-      "remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 4 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_B85F24D9B1", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu Arrondissement "
       "municipal "
@@ -3598,14 +3585,13 @@ static const hp_source HP3B63_EUWFS[] = {
     .interval = 604800,
     .description = "WFS 2.0 feature type "
       "'ms:U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP' "
-      "('U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP') from the "
-      "Poland national/regional geoportal mapy.geoportal.gov.pl. "
-      "GetFeature as GML 3.2, the layer's numberMatched was 11 on "
-      "2026-11-14. Enumerated from the server's own GetCapabilities. "
-      "Each feature carries its geometry and attributes. NOTE: "
-      "GeoServer refuses startIndex without a primary key, so this row "
-      "reads one page (count=1000) and discloses the remainder rather "
-      "than paging." },
+      "('U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP') from the Poland "
+      "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
+      "GML 3.2, the layer's numberMatched was 11 on 2026-11-14. "
+      "Enumerated from the server's own GetCapabilities. Each feature "
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_77E829564D", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2021:chef_lieu_commune]",
@@ -3941,9 +3927,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 50 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_07FF5B4B29", .name = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - "
       "Comune Santo Stefano di Magra [M2744:L10845]",
@@ -4231,9 +4216,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 17 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_43569FC90A", .name = "service.pdok.nl — toeristengebied_gegeneraliseerd "
       "[gebiedsindelingen:toeristengebied_gegeneraliseerd]",
@@ -4758,13 +4743,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:U06_Nadlesnictwo' ('U06_Nadlesnictwo') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 429 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 429 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_CA985B9EB1", .name = "geoservizi.regione.liguria.it — 0 - 2 [ADSL] [M2704:L10610]",
     .name_ja = "geoservizi.regione.liguria.it — 0 - 2 [ADSL] [M2704:L10610]",
@@ -4979,9 +4963,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_49CE284340", .name = "geo.stat.fi — AVI-alueet 2025 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2025]",
@@ -5269,9 +5253,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 16 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_B1C251CB8B", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2022:commune_associee_ou_deleguee]",
@@ -5489,9 +5472,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 20 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_529A7D43E6", .name = "geoservizi.regione.liguria.it — 100 - 150 [FTTC-200] "
       "[M2704:L10622]",
@@ -5929,13 +5912,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:U02_Urzad_skarbowy' "
-      "('U02_Urzad_skarbowy') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
-      "layer's numberMatched was 379 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "('U02_Urzad_skarbowy') from the Poland national/regional geoportal"
+      " mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
+      "numberMatched was 379 on 2026-11-14. Enumerated from the server's "
+      "own GetCapabilities. Each feature carries its geometry and "
+      "attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_A54207D0CD", .name = "geoservizi.regione.liguria.it — 132 - Discariche [M1921:L6332]",
     .name_ja = "geoservizi.regione.liguria.it — 132 - Discariche [M1921:L6332]",
@@ -6176,9 +6158,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 29 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_4E3ADF690C", .name = "geoservizi.regione.liguria.it — 1332 - Suoli rimaneggiati e "
       "artefatti [M1921:L6330]",
@@ -7014,11 +6995,10 @@ static const hp_source HP3B63_EUWFS[] = {
       "('K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy') from the "
       "Poland national/regional geoportal mapy.geoportal.gov.pl. "
       "GetFeature as GML 3.2, the layer's numberMatched was 2477 on "
-      "2026-11-14. Enumerated from the server's own GetCapabilities. "
-      "Each feature carries its geometry and attributes. NOTE: "
-      "GeoServer refuses startIndex without a primary key, so this row "
-      "reads one page (count=1000) and discloses the remainder rather "
-      "than paging." },
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_26A8CB2F94", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Chef-lieu Commune associée "
       "ou déléguée "
@@ -7354,11 +7334,10 @@ static const hp_source HP3B63_EUWFS[] = {
       "('K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu') from the "
       "Poland national/regional geoportal mapy.geoportal.gov.pl. "
       "GetFeature as GML 3.2, the layer's numberMatched was 380 on "
-      "2026-11-14. Enumerated from the server's own GetCapabilities. "
-      "Each feature carries its geometry and attributes. NOTE: "
-      "GeoServer refuses startIndex without a primary key, so this row "
-      "reads one page (count=1000) and discloses the remainder rather "
-      "than paging." },
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_41AD781BB7", .name = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-100] [M2704:L10612]",
     .name_ja = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-100] [M2704:L10612]",
@@ -7549,11 +7528,10 @@ static const hp_source HP3B63_EUWFS[] = {
       "('K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa') from "
       "the Poland national/regional geoportal mapy.geoportal.gov.pl. "
       "GetFeature as GML 3.2, the layer's numberMatched was 16 on "
-      "2026-11-14. Enumerated from the server's own GetCapabilities. "
-      "Each feature carries its geometry and attributes. NOTE: "
-      "GeoServer refuses startIndex without a primary key, so this row "
-      "reads one page (count=1000) and discloses the remainder rather "
-      "than paging." },
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.2 MB / 5 s, page 1 100 features / 17.2 MB, ids disjoint. */
   { .id = "JO63_EUWFS_327656C3B7", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 EPCI "
@@ -7694,11 +7672,10 @@ static const hp_source HP3B63_EUWFS[] = {
     .description = "WFS 2.0 feature type 'ms:K10_Dywizjon_strazy_granicznej' "
       "('K10_Dywizjon_strazy_granicznej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 2 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 2 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_D5D02AA5DD", .name = "geoservizi.regione.liguria.it — 200 - 300 [FTTC-200] "
       "[M2704:L10624]",
@@ -7966,9 +7943,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 94 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   /* 2026-11-16: count=1000 exceeded the 64 MB body ceiling. This GeoServer type has no primary key: the feature id is generated per REQUEST (the same record came back as fid-...-315c and then fid-...-3156), so id_keys=id re-keyed every record on every run; properties.id is the record's own number (500 distinct of 500). startIndex is refused bare (400) and honoured with sortBy=id: offsets 0 and 3 answer ids 62-64 and 65-67, offset 0 re-read answers 62-64 again. count=500 measured 35.8 MB, so 250; numberMatched 7,229 needs 29 pages. */
   { .id = "JO63_EUWFS_3E5310E218", .name = "si.icnf.pt — cont_aquaticas [snimar:cont_aquaticas]",
@@ -8180,11 +8157,10 @@ static const hp_source HP3B63_EUWFS[] = {
     .description = "WFS 2.0 feature type 'ms:K08_Oddzial_strazy_granicznej' "
       "('K08_Oddzial_strazy_granicznej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 9 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 9 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_78707F5A29", .name = "geo.stat.fi — Hyvinvointialueet (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k]",
@@ -8500,9 +8476,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 337 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_AF08344F6F", .name = "si.icnf.pt — corredores_ecologicos [BDG:corredores_ecologicos]",
     .name_ja = "si.icnf.pt — corredores_ecologicos [BDG:corredores_ecologicos]",
@@ -8624,9 +8600,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_153FB8AE1F", .name = "si.icnf.pt — dados_aquariport [BDG:dados_aquariport]",
     .name_ja = "si.icnf.pt — dados_aquariport [BDG:dados_aquariport]",
@@ -9036,9 +9012,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 607 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_C578C9BCF8", .name = "geo.stat.fi — Kunnat (1:1 000 000) "
       "[tilastointialueet:kunta1000k]",
@@ -9177,13 +9152,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:K04_Komenda_rejonowa_policji' "
-      "('K04_Komenda_rejonowa_policji') from the Poland "
-      "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 7 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "('K04_Komenda_rejonowa_policji') from the Poland national/regional"
+      " geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
+      "layer's numberMatched was 7 on 2026-11-14. Enumerated from the "
+      "server's own GetCapabilities. Each feature carries its geometry "
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.1 MB / 5 s, page 1 100 features / 19.7 MB, ids disjoint. */
   { .id = "JO63_EUWFS_44CF56D105", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 EPCI "
@@ -9281,11 +9255,10 @@ static const hp_source HP3B63_EUWFS[] = {
     .description = "WFS 2.0 feature type 'ms:K03_Komenda_stoleczna_policji' "
       "('K03_Komenda_stoleczna_policji') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
-      "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. Enumerated"
+      " from the server's own GetCapabilities. Each feature carries its "
+      "geometry and attributes. Paged by startIndex at a per-layer count "
+      "(row rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_6CA89E57D7", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con feriti "
       "[M2741:L10824]",
@@ -9718,9 +9691,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 336 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_5299C49293", .name = "geo.stat.fi — Kunnat 2016 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2016]",
@@ -9914,9 +9887,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_56B5DB985F", .name = "geo.stat.fi — Kunnat 2017 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2017]",
@@ -10281,9 +10254,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 358 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_C85058B4F5", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Commune associée ou "
       "déléguée , édition 2026-01-01 "
@@ -10505,9 +10477,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 46 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=1: page 0 1 features / 13.5 MB / 4 s, page 1 1 features / 3.0 MB, ids disjoint; numberMatched 18 needs 18 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_1AA9A8EA1D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Région , édition "
@@ -10679,9 +10650,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 11 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_19B19E5EB3", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con biciclette "
       "coinvolte [M2240:L8215]",
@@ -10874,9 +10844,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_D2A0E73B46", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con deceduti "
       "[M2240:L8212]",
@@ -11356,13 +11326,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:S03_Sad_rejonowy' ('S03_Sad_rejonowy') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 318 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 318 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_15DECC2D71", .name = "si.icnf.pt — fgc_pmdfci2g_faro [PMDFCI:fgc_pmdfci2g_faro]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_faro [PMDFCI:fgc_pmdfci2g_faro]",
@@ -11595,13 +11564,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:S02_Sad_okregowy' ('S02_Sad_okregowy') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 47 on 2026-11-14. Enumerated from the server's "
-      "own GetCapabilities. Each feature carries its geometry and "
-      "attributes. NOTE: GeoServer refuses startIndex without a primary "
-      "key, so this row reads one page (count=1000) and discloses the "
-      "remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 47 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_E7049E9366", .name = "geo.stat.fi — Kunnat 2026 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2026]",
@@ -11716,13 +11684,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:S01_Sad_apelacyjny' "
-      "('S01_Sad_apelacyjny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
-      "layer's numberMatched was 11 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "('S01_Sad_apelacyjny') from the Poland national/regional geoportal"
+      " mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
+      "numberMatched was 11 on 2026-11-14. Enumerated from the server's "
+      "own GetCapabilities. Each feature carries its geometry and "
+      "attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   { .id = "JO63_EUWFS_DFC451FB77", .name = "geo.stat.fi — Maakunnat (1:4 500 000) "
       "[tilastointialueet:maakunta4500k]",
@@ -13468,9 +13435,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 35577 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_B22ED9B0B3", .name = "si.icnf.pt — prof [BDG:prof]",
     .name_ja = "si.icnf.pt — prof [BDG:prof]",
@@ -13819,9 +13786,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 54267 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_0211B04E82", .name = "si.icnf.pt — pt_art12_aves_distribuicao "
       "[snimar:pt_art12_aves_distribuicao]",
@@ -13977,9 +13944,9 @@ static const hp_source HP3B63_EUWFS[] = {
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
       "GML 3.2, the layer's numberMatched was 3227 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
-      "carries its geometry and attributes. NOTE: GeoServer refuses "
-      "startIndex without a primary key, so this row reads one page "
-      "(count=1000) and discloses the remainder rather than paging." },
+      "carries its geometry and attributes. Paged by startIndex at a "
+      "per-layer count (row rewritten 2026-11-23; stored through the "
+      "engine that day)." },
 
   { .id = "JO63_EUWFS_7B2C7E657E", .name = "si.icnf.pt — pt_art17_habitats_distribuicao "
       "[BDG:pt_art17_habitats_distribuicao]",
@@ -14044,14 +14011,13 @@ static const hp_source HP3B63_EUWFS[] = {
     .page_zero_based = 1,
     .timeout_ms = 120000,
     .interval = 604800,
-    .description = "WFS 2.0 feature type 'ms:A04_Granice_miast' "
-      "('A04_Granice_miast') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
-      "layer's numberMatched was 1050 on 2026-11-14. Enumerated from "
-      "the server's own GetCapabilities. Each feature carries its "
-      "geometry and attributes. NOTE: GeoServer refuses startIndex "
-      "without a primary key, so this row reads one page (count=1000) "
-      "and discloses the remainder rather than paging." },
+    .description = "WFS 2.0 feature type 'ms:A04_Granice_miast' ('A04_Granice_miast') "
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 1050 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   { .id = "JO63_EUWFS_6E7C5BD80B", .name = "si.icnf.pt — pt_art17_habitats_range "
       "[snimar:pt_art17_habitats_range]",
@@ -14181,13 +14147,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .timeout_ms = 120000,
     .interval = 604800,
     .description = "WFS 2.0 feature type 'ms:A03_Granice_gmin' ('A03_Granice_gmin') "
-      "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
-      "numberMatched was 2479 on 2026-11-14. Enumerated from the "
-      "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "from the Poland national/regional geoportal mapy.geoportal.gov.pl."
+      " GetFeature as GML 3.2, the layer's numberMatched was 2479 on "
+      "2026-11-14. Enumerated from the server's own GetCapabilities. Each"
+      " feature carries its geometry and attributes. Paged by startIndex "
+      "at a per-layer count (row rewritten 2026-11-23; stored through the"
+      " engine that day)." },
 
   /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=50: page 0 50 members / 10.5 MB / 19 s, ms:IIP_IDENTY distinct on all of them; startIndex=50 answers 50 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_969FA4BA90", .name = "mapy.geoportal.gov.pl — A02_Granice_powiatow "
@@ -14212,9 +14177,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 380 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.3 MB / 15 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_F221892145", .name = "mapy.geoportal.gov.pl — A01_Granice_wojewodztw "
@@ -14239,9 +14203,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 16 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 
   /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 1 members / 2.0 MB / 6 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_06B702C5B2", .name = "mapy.geoportal.gov.pl — A00_Granice_panstwa "
@@ -14266,9 +14229,8 @@ static const hp_source HP3B63_EUWFS[] = {
       "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
-      "and attributes. NOTE: GeoServer refuses startIndex without a "
-      "primary key, so this row reads one page (count=1000) and "
-      "discloses the remainder rather than paging." },
+      "and attributes. Paged by startIndex at a per-layer count (row "
+      "rewritten 2026-11-23; stored through the engine that day)." },
 };
 
 HP_REGISTER_TABLE(HP3B63_EUWFS)

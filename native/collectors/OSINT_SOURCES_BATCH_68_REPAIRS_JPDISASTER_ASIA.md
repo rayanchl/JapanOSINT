@@ -55,3 +55,34 @@ from this container, not dead.
 
 Still failing and kept: 154 batch-67 rows on seven hosts the egress gateway
 cannot connect to (unmeasured), 3 rows over the body ceiling.
+
+## Follow-up, 2026-11-24 (registry 109,801 → 109,647)
+
+* **Every Socrata row of batches 66 and 67 failed on page 2 — 8,282 rows.**
+  Their URLs spell the offset `%24offset=0` and the rows declared
+  `page_param = "$offset"`. The engine replaces a parameter it finds by NAME and
+  appends one it does not, so page 2 asked for `…%24offset=0&$offset=100`, which
+  Socrata refuses with HTTP 400. Each row stored its first 100 records and filed
+  a truncation notice naming `failed_page: 2` — and the batch sweeps, run under
+  `JO_PAGE_MAX=2`, read that as OK because page 1 stored. `page_param` is
+  `%24offset` now, the spelling the URL carries. Measured: VA 52 of 52 and
+  Hawaii 18 of 18 across 6–7 requests; a 50-row sample under `JO_PAGE_MAX=3` is
+  50 OK with 27 reaching the three-page limit (300 records).
+  **A sweep that brakes at two pages cannot see a failed second page unless it
+  reads the notice**; `audit_cycle_advance.py` does, and was not run on these.
+* **154 rows removed**: seven Socrata domains the federated catalogue still
+  lists have no address in public DNS (five NXDOMAIN, two with no A/AAAA/CNAME,
+  asked of dns.google and cloudflare-dns), and three engine readings over eight
+  days never connected. Listed in `docs/removed-sources-2026-11-23-batch68.tsv`.
+* **Three rows over the 64 MB body ceiling** carry megabytes of geometry per
+  record; their page size is 10, 3 and 10 now and each reads whole
+  (49 / 18 / 52).
+* The verified lists of batches 63–67 are refreshed: removed rows dropped,
+  URLs re-read from the C, and the newer engine readings folded in. The 51
+  Polish WFS descriptions no longer claim the rows read one page.
+
+Not done, with the reason: the 8,730 ISUT heat-index snapshot services stay out
+(one static service per hour; the Ministry of the Environment's own WBGT
+forecast file is already registered and its observation files 404 out of
+season, so they could not be measured now); the 371 held-back Asian homepage
+rows stay staged; the `.gov.cn` hosts remain unreachable from this container.
