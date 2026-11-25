@@ -23,8 +23,10 @@ static int is_hex(char c){ return (c>='0'&&c<='9')||(c>='a'&&c<='f'); }
 
 /* normalizeHex: ^#([0-9a-f]{3}|[0-9a-f]{6})$ (ci); #rgb → #rrggbb; lower. */
 static int normalize_hex(const char *s, char *out8) {
-  char l[8]; size_t n = 0;
-  for (const char *p = s; *p && n < 7; p++) l[n++] = (char)tolower((unsigned char)*p);
+  /* Read ONE char past the longest valid form (#rrggbb = 7): stopping at 7
+   * silently accepted "#1234567" / "#12345678" as "#123456". */
+  char l[9]; size_t n = 0;
+  for (const char *p = s; *p && n < 8; p++) l[n++] = (char)tolower((unsigned char)*p);
   l[n] = 0;
   if (l[0] != '#') return 0;
   size_t hl = n - 1;

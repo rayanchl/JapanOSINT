@@ -55,8 +55,14 @@ typedef enum {
    * the user id, not the IP, so one account cannot fan runs out over the
    * ~18,000 registered sources from many addresses. */
   RL_COLLECTOR_RUN = 3,
-  RL_CLASS_MAX  = 4
+  /* POST /api/auth/... (core/authcookie.c): credential and refresh exchanges
+   * with the identity provider. Pre-auth, so fail-closed. */
+  RL_AUTH_EXCHANGE = 4,
+  RL_CLASS_MAX  = 5
 } rl_class;
+
+/* 1 when `peer` (text address) is listed in $JO_TRUSTED_PROXIES. */
+int ratelimit_peer_trusted(const char *peer);
 
 /* Charges one request against (key, cls). `key` is the client identity —
  * normally the peer IP as text; NULL/empty is folded into one shared bucket

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LuFolderPlus } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { usePaged } from '../../hooks/useCases.js';
@@ -26,7 +26,8 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
   const [newName, setNewName] = useState('');
   const [creating, setCreating] = useState(false);
 
-  useEffect(() => { if (open) { setPinError(null); setNewName(''); } }, [open]);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (open) { setPinError(null); setNewName(''); } }
 
   const pin = async (caseRow) => {
     setBusy(caseRow.id); setPinError(null);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { Card, Pill, Button, Input, ErrorNotice } from '../ui/kit.jsx';
@@ -28,10 +28,13 @@ export default function CadenceCard({ canEdit = false }) {
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({ global_interval_sec: '', min_interval_sec: '', max_interval_sec: '', realtime_max_sec: '' });
   const [saving, setSaving] = useState({ busy: false, error: null });
-  useEffect(() => {
+  // The fetched policy seeds the form (derived while rendering, so a reload re-seeds it).
+  const [seededFrom, setSeededFrom] = useState(null);
+  if (seededFrom !== data) {
+    setSeededFrom(data);
     const p = data?.policy;
     if (p) setForm({ global_interval_sec: String(p.global_interval_sec || ''), min_interval_sec: String(p.min_interval_sec || ''), max_interval_sec: String(p.max_interval_sec || ''), realtime_max_sec: String(p.realtime_max_sec || '') });
-  }, [data]);
+  }
   if (error) return <ErrorNotice error={error} title="Could not load the cadence policy" onRetry={reload} />;
   if (loading && !data) return null;
   const p = data?.policy; const est = data?.estimate;

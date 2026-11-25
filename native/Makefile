@@ -116,7 +116,7 @@ OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
 
 .PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
         collectors-def collectors-def-check batch-gates \
-        lint-sources lint-baseline source-count tools-selftest
+        lint-sources lint-baseline source-count tools-selftest test-coverage-list
 all: $(BIN)
 
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
@@ -171,6 +171,12 @@ $(BIN): $(OBJS) $(OBJLIST)
 tools-selftest:
 	python3 -W error -m py_compile tools/*.py
 	python3 tools/test_audit_tools.py
+	python3 tools/audit_test_coverage.py --self-test
+
+# OPS-07: every core/*.c and lib/*.c module is included or called by a test, or
+# is listed with a reason in tools/test-coverage-allow.txt. Offline.
+test-coverage-list:
+	python3 tools/audit_test_coverage.py
 
 selftest: $(BIN)
 	./$(BIN) --selftest

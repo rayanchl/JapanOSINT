@@ -1246,7 +1246,11 @@ static char *station_summary(db_handle *db, const char *stationUid) {
         "json_extract(properties,'$.operator') AS operator, "
         "json_extract(properties,'$.line') AS line, lat, lon, properties "
         "FROM intel_items WHERE record_type='station' "
-        "AND uid LIKE '%|' || ?1 LIMIT 1", -1, &s, NULL) != SQLITE_OK)
+        /* Suffix compare, not LIKE: stationUid is the caller's path segment, and
+         * `%` / `_` in it were LIKE wildcards — /station/%25/summary answered
+         * with the first station in the table, a confident wrong answer. */
+        "AND substr(uid, length(uid) - length(?1)) = '|' || ?1 "
+        "AND length(uid) > length(?1) LIMIT 1", -1, &s, NULL) != SQLITE_OK)
     return err_json("internal");
   sqlite3_bind_text(s, 1, stationUid, -1, SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) {

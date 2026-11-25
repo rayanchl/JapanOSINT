@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LuBellPlus, LuRefreshCw, LuPencil, LuTrash2, LuFlaskConical, LuHistory, LuBell } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { usePaged } from '../../hooks/useCases.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
@@ -67,7 +68,13 @@ export default function AlertsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetAoi, presetNew, paramsKey]);
   // A viewer following the link gets the list, not an editor the server refuses.
-  useEffect(() => { if (preset && canWrite) setEditing('new'); }, [preset, canWrite]);
+  // Opening the editor for a followed link is derived while rendering: the
+  // pair (preset, canWrite) is compared with the one already acted on.
+  const [presetSeen, setPresetSeen] = useState({ preset: null, canWrite: false });
+  if (presetSeen.preset !== preset || presetSeen.canWrite !== canWrite) {
+    setPresetSeen({ preset, canWrite });
+    if (preset && canWrite) setEditing('new');
+  }
 
   const act = async (id, fn, okMsg) => {
     setBusyId(id);
@@ -203,17 +210,18 @@ function RuleEvents({ rule }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const load = async (cursor) => {
+  const ruleId = rule.id;
+  const load = useCallback(async (cursor) => {
     setLoading(true); setError(null);
     try {
-      const j = await api.get(`/api/alerts/${encodeURIComponent(rule.id)}/events`, { query: { limit: 100, cursor } });
+      const j = await api.get(`/api/alerts/${encodeURIComponent(ruleId)}/events`, { query: { limit: 100, cursor } });
       const d = Array.isArray(j?.data) ? j.data : [];
       setRows((xs) => (cursor ? [...xs, ...d] : d));
       setPage(j?.page || null);
     } catch (e) { setError(e); }
     finally { setLoading(false); }
-  };
-  useEffect(() => { load(); /* eslint-disable-line react-hooks/exhaustive-deps */ }, [rule.id]);
+  }, [ruleId]);
+  useLoadOnChange(load);
 
   return (
     <div className="border-t border-osint-border p-3 space-y-2 bg-osint-bg/40">
@@ -355,22 +363,26 @@ function RuleEditorSheet({ open, rule, onClose, onSaved, preset }) {
   const aois = usePaged(open ? '/api/aoi' : null, { limit: 200, enabled: open, deps: [open] });
   const aoiRows = aois.rows;
 
-  useEffect(() => {
-    if (!open) return;
-    const base = draftFrom(rule);
-    if (preset && !rule) {
-      const next = { ...base };
-      if (preset.aoi_id) { next.spatial = 'aoi'; next.aoi_id = preset.aoi_id; }
-      if (preset.mode) next.mode = preset.mode;
-      if (preset.q) next.q = preset.q;
-      if (preset.nl_query) next.nl_query = preset.nl_query;
-      if (preset.name) next.name = preset.name;
-      setD(next);
-    } else {
-      setD(base);
+  // (Re)open or a different rule/preset re-seeds the draft: derived while rendering.
+  const [seeded, setSeeded] = useState(null);
+  if (!seeded || seeded.open !== open || seeded.rule !== rule || seeded.preset !== preset) {
+    setSeeded({ open, rule, preset });
+    if (open) {
+      const base = draftFrom(rule);
+      if (preset && !rule) {
+        const next = { ...base };
+        if (preset.aoi_id) { next.spatial = 'aoi'; next.aoi_id = preset.aoi_id; }
+        if (preset.mode) next.mode = preset.mode;
+        if (preset.q) next.q = preset.q;
+        if (preset.nl_query) next.nl_query = preset.nl_query;
+        if (preset.name) next.name = preset.name;
+        setD(next);
+      } else {
+        setD(base);
+      }
+      setError(null);
     }
-    setError(null);
-  }, [open, rule, preset]);
+  }
 
   const set = (patch) => setD((x) => ({ ...x, ...patch }));
   const [predicate, predErr] = useMemo(() => buildPredicate(d), [d]);
@@ -533,10 +545,14 @@ export function PreviewSection({ predicate, mode, enabled = true }) {
   const isLlm = mode === 'llm';
   const empty = !predicate || Object.keys(predicate).filter((k) => k !== 'mode' && k !== 'threshold').length === 0;
 
+  // The request identity (null = nothing to ask) resets the status while
+  // rendering: loading when there is something to backtest, else idle.
+  const reqKey = !enabled || empty ? null : key;
+  const [prevReqKey, setPrevReqKey] = useState(null);
+  if (prevReqKey !== reqKey) { setPrevReqKey(reqKey); setState({ status: reqKey === null ? 'idle' : 'loading' }); }
   useEffect(() => {
-    if (!enabled || empty) { setState({ status: 'idle' }); return undefined; }
+    if (reqKey === null) return undefined;
     let alive = true;
-    setState({ status: 'loading' });
     const t = setTimeout(async () => {
       try {
         const j = await api.post('/api/alerts/preview', { predicate: JSON.parse(key) });
@@ -544,7 +560,7 @@ export function PreviewSection({ predicate, mode, enabled = true }) {
       } catch (e) { if (alive) setState({ status: 'error', error: e }); }
     }, 600);
     return () => { alive = false; clearTimeout(t); };
-  }, [key, enabled, empty]);
+  }, [key, reqKey]);
 
   return (
     <Section label="Backtest" right={state.status === 'loading' ? <span className="text-[11px] text-osint-muted">Backtesting…</span> : null}>

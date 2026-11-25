@@ -44,30 +44,55 @@ export function circlePolygon(lat, lon, radiusM, n = 64) {
 export default function useAoi({ enabled = true } = {}) {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(enabled));
+  // `enabled` turning on starts a load: flag it during render, not in the effect.
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+  if (prevEnabled !== enabled) { setPrevEnabled(enabled); if (enabled) setLoading(true); }
   const [truncated, setTruncated] = useState(false);
+
+  // Read every page of /api/aoi; pure (no state), so the mount effect and the
+  // imperative reload share it.
+  const fetchAll = useCallback(async () => {
+    const all = [];
+    let cursor = null;
+    let guard = 0;
+    do {
+      const j = await api.get('/api/aoi', { query: { limit: 200, cursor: cursor || undefined } });
+      const data = Array.isArray(j?.data) ? j.data : [];
+      all.push(...data);
+      cursor = j?.page?.next_cursor || null;
+      guard++;
+    } while (cursor && guard < 50);
+    return { all, truncated: Boolean(cursor) };
+  }, []);
 
   const load = useCallback(async () => {
     if (!enabled) return;
     setLoading(true); setError(null);
     try {
-      const all = [];
-      let cursor = null;
-      let guard = 0;
-      do {
-        const j = await api.get('/api/aoi', { query: { limit: 200, cursor: cursor || undefined } });
-        const data = Array.isArray(j?.data) ? j.data : [];
-        all.push(...data);
-        cursor = j?.page?.next_cursor || null;
-        guard++;
-      } while (cursor && guard < 50);
-      setTruncated(Boolean(cursor));
+      const { all, truncated: t } = await fetchAll();
+      setTruncated(t);
       setRows(all);
     } catch (e) { setError(e); }
     finally { setLoading(false); }
-  }, [enabled]);
+  }, [enabled, fetchAll]);
 
-  useEffect(() => { load(); }, [load]);
+  // State is set only from the async continuation, with cancellation.
+  useEffect(() => {
+    if (!enabled) return undefined;
+    let alive = true;
+    (async () => {
+      try {
+        const { all, truncated: t } = await fetchAll();
+        if (!alive) return;
+        setTruncated(t);
+        setRows(all);
+        setError(null);
+      } catch (e) { if (alive) setError(e); }
+      finally { if (alive) setLoading(false); }
+    })();
+    return () => { alive = false; };
+  }, [enabled, fetchAll]);
 
   const create = useCallback(async ({ name, kind, geometry }) => {
     const j = await api.post('/api/aoi', { name, kind, geometry });

@@ -236,7 +236,10 @@ static void cand_offer(cf_cands *C, const char *group, const char *url,
   if (!c || rank >= c->rank) return;
   c->url = url;
   c->rank = rank;
-  snprintf(c->key, sizeof c->key, "%s", key);
+  /* Explicit bound: the key is deliberately cut to the field (a long key was
+   * already truncated here); the precision states it and keeps -Wformat-truncation
+   * quiet (the tree is held at 0 warnings). */
+  snprintf(c->key, sizeof c->key, "%.*s", (int)sizeof c->key - 1, key);
 }
 
 /* Override path match: case-insensitive, `#` = a digit run. On a match that

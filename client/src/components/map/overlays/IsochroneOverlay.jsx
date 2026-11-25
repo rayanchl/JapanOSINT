@@ -54,7 +54,9 @@ export default function IsochroneOverlay({ mapRef, open, onClose }) {
     return () => { map.off('click', onClick); canvas.style.cursor = restore; };
   }, [mapRef, open, picking]);
 
-  useEffect(() => { if (!open) { clear(); setOrigin(null); setPicking(true); } }, [open, clear]);
+  // Closing the overlay resets it: derived while rendering.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (!open) { clear(); setOrigin(null); setPicking(true); } }
 
   const bandsFc = useMemo(() => {
     if (!result) return null;

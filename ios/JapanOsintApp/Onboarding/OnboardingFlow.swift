@@ -383,7 +383,7 @@ private struct IntroPowerStep: View {
     var body: some View {
         Group {
             Text("Japan, fully mapped").font(.largeTitle.bold())
-            Text("Live OSINT from hundreds of collectors and tens of thousands of sources — flights, ships, trains, cameras, cyber threats and more — fused onto one tactical map that updates in real time.")
+            Text("Open-source intelligence from the sources your server has registered, fused onto one tactical map. Once you are signed in, the Sources tab shows exactly how many there are and which are working.")
                 .foregroundStyle(theme.textMuted)
 
             AnimatedMapMock()
@@ -624,7 +624,7 @@ private struct IntroLayersStep: View {
     @Environment(\.theme) private var theme
     let advance: () -> Void
 
-    private let showcase = [
+    private let candidates = [
         "unified-flights", "unified-ais-ships", "unified-trains", "cameras",
         "earthquake", "wifi-networks", "satellite-imagery", "phishing-feeds-jp",
         // `population-density` was the same defect as `twitch-jp-streams`
@@ -639,6 +639,13 @@ private struct IntroLayersStep: View {
         // implemented (`bluesky_jetstream_jp.c`) and catalogued.
         "twitter-geo", "vending-machines", "tabelog-restaurants", "bluesky-jetstream-jp",
     ]
+
+    /// Only layers the server actually lists (`GET /api/layers`): a decorative
+    /// id the server does not return is never shown. Empty until the list loads.
+    private var showcase: [String] {
+        let have = Set(registry.layers.map(\.id))
+        return candidates.filter { have.contains($0) }
+    }
 
     /// The server's own layer count (`GET /api/layers`), not a number baked
     /// into the copy; a generic word until the list has loaded.
@@ -682,7 +689,8 @@ private struct IntroLayersStep: View {
             }
             .animation(.spring(response: 0.4, dampingFraction: 0.7), value: highlight)
             .onReceive(timer) { _ in
-                highlight = (highlight + 1) % showcase.count
+                let n = showcase.count
+                if n > 0 { highlight = (highlight + 1) % n }
             }
             .padding(.vertical, 8)
 

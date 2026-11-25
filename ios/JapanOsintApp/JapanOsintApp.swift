@@ -4,7 +4,6 @@ import CoreSpotlight
 
 @main
 struct JapanOsintApp: App {
-    @Environment(\.scenePhase) private var scenePhase
     /// Shared SwiftData stack — built once and threaded through every
     /// persistence-aware store via constructor injection. The `modelContainer`
     /// view modifier on `RootView` exposes the same container to any view
@@ -40,12 +39,6 @@ struct JapanOsintApp: App {
         _cases      = StateObject(wrappedValue: CaseStore(apiClient: client))
         _saved      = StateObject(wrappedValue: SavedStore(container: container))
         _intelCache = StateObject(wrappedValue: IntelCache(container: container))
-
-        // BGTask handlers MUST be registered before launch completes (roadmap
-        // 37). The closure resolves the current API at run time so it tracks a
-        // later backend-URL change. No-ops cleanly until the Background Modes
-        // capability + Info.plist identifiers are in place.
-        BackgroundRefresh.register(apiProvider: { client.api })
     }
 
     var body: some Scene {
@@ -98,21 +91,10 @@ struct JapanOsintApp: App {
                 // App Intents / Siri / Shortcuts / share-queue drain hand off
                 // here (roadmap 36); the shell switches tabs and runs the work.
                 .onReceive(IntentRouter.shared.$pending) { dispatchIntent($0) }
-                // Permalinks (roadmap 38) and the share extension's deep link
-                // (roadmap 36) both arrive as URLs.
+                // Permalinks (roadmap 38) arrive as URLs.
                 .onOpenURL { handleOpenURL($0) }
                 // A Spotlight hit re-enters here with the item's identifier.
                 .onContinueUserActivity(CSSearchableItemActionType) { handleSpotlight($0) }
-                .onChange(of: scenePhase) { _, phase in
-                    guard phase == .active else { return }
-                    // Coming to the foreground: pick up anything the share
-                    // extension queued, refresh the widget snapshot, and
-                    // re-arm the background series.
-                    guard auth.gate == .ready else { return }
-                    drainShareQueue()
-                    Task { await WidgetSnapshotBuilder.refresh(api: apiClient.api) }
-                    BackgroundRefresh.scheduleRefresh()
-                }
                 .onChange(of: settings.backendBaseURL) { _, newURL in
                     guard auth.gate == .ready else { return }
                     // Cached GeoJSON belongs to the previous deployment.
@@ -133,15 +115,12 @@ struct JapanOsintApp: App {
 
     // MARK: - Platform integration (roadmap 36/37)
 
-    /// Fired once the auth gate reaches `.ready`. Seeds the widget snapshot,
-    /// (re)builds the Spotlight index, and arms background refresh. All three
-    /// no-op cleanly until their capabilities are configured in Xcode.
+    /// Fired once the auth gate reaches `.ready`: (re)builds the Spotlight
+    /// index. (Widgets, the share queue and background refresh need extension
+    /// targets that do not exist yet; their sources are in `ios/Unbuilt/`.)
     @MainActor
     private func onReady() {
-        Task { await WidgetSnapshotBuilder.refresh(api: apiClient.api) }
         SpotlightIndexer.index(cases: cases.cases, saved: saved.items)
-        BackgroundRefresh.scheduleRefresh()
-        BackgroundRefresh.scheduleSync()
     }
 
     /// Route an intent action into the running UI, then clear it so it can't
@@ -156,16 +135,10 @@ struct JapanOsintApp: App {
         IntentRouter.shared.pending = nil
     }
 
-    /// Share-extension deep link → drain the queue; permalink → resolve and, for
-    /// a search permalink, route to the Search tab. Full permalink state
+    /// Permalink → resolve and, for a search permalink, route to the Search tab. Full permalink state
     /// application (map camera + layers + time window) is a later pass.
     @MainActor
     private func handleOpenURL(_ url: URL) {
-        if url.scheme?.lowercased() == "japanosint",
-           url.host?.lowercased() == "share" {
-            drainShareQueue()
-            return
-        }
         if let token = PermalinkResolver.token(from: url) {
             Task { @MainActor in
                 if let state = try? await PermalinkResolver.resolve(token, api: apiClient.api),
@@ -174,27 +147,6 @@ struct JapanOsintApp: App {
                    !q.isEmpty {
                     mapNav.showSearch(q)
                 }
-            }
-        }
-    }
-
-    /// Consume ONE queued share item per call. `showSearch` can show only one
-    /// query, so looping over several made the last one win and silently
-    /// dropped the others from view. The first URL/text item starts a search
-    /// and is removed; every other item (further URLs/text, and images — the
-    /// on-device media pipeline, roadmap 27, isn't present yet) stays queued
-    /// and is picked up by the next drain (next foreground or share-URL open),
-    /// so nothing the user shared is discarded.
-    @MainActor
-    private func drainShareQueue() {
-        for item in ShareQueue.pending() {
-            switch item.kind {
-            case .url, .text:
-                mapNav.showSearch(item.value)
-                ShareQueue.remove(item)
-                return
-            case .image:
-                continue
             }
         }
     }

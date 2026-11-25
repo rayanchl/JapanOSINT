@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LuRefreshCw, LuSearch } from 'react-icons/lu';
 import { api } from '../../api/client.js';
@@ -117,7 +117,9 @@ export default function SourcesListPage() {
   const [sp, setSp] = useSearchParams();
   const filters = useMemo(() => readFilters(sp), [sp]);
   const [draft, setDraft] = useState(filters.q || '');
-  useEffect(() => { setDraft(filters.q || ''); }, [filters.q]);
+  // The URL's q drives the box: re-seed the draft when it changes (derived while rendering).
+  const [draftQ, setDraftQ] = useState(filters.q || '');
+  if (draftQ !== (filters.q || '')) { setDraftQ(filters.q || ''); setDraft(filters.q || ''); }
   const [showProbe, setShowProbe] = useState(false);
 
   const set = (patch) => setSp(writeFilters({ ...filters, ...patch }), { replace: true });

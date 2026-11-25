@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuMailOpen, LuCheckCheck, LuBellOff, LuBell, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
@@ -53,7 +54,11 @@ export default function AlertInboxPage() {
     finally { if (my === seq.current) setLoading(false); }
   }, [filter]);
 
-  useEffect(() => { setRows([]); setPage(null); load(); }, [load]);
+  // A changed filter drops the rows of the old one while rendering; the
+  // loader then fetches the new first page.
+  const [rowsFilter, setRowsFilter] = useState(filter);
+  if (rowsFilter !== filter) { setRowsFilter(filter); setRows([]); setPage(null); }
+  useLoadOnChange(load);
 
   const markRead = async (ev) => {
     setBusy(ev.id);

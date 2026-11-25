@@ -126,30 +126,36 @@ export function useMoreRows(initialRows, initialPage, urlFor, { key = 'id' } = {
   const [page, setPage] = useState(initialPage || null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [moreError, setMoreError] = useState(null);
-  const gen = useRef(0);
+  const [gen, setGen] = useState(0);
+  const genRef = useRef(0);
+  useLayoutEffect(() => { genRef.current = gen; });
 
-  useEffect(() => {
-    gen.current += 1;
+  // The parent reloaded (new first page): start over from it. Derived while
+  // rendering — the React-documented reset-on-prop-change pattern.
+  const [seen, setSeen] = useState({ initialRows, initialPage });
+  if (seen.initialRows !== initialRows || seen.initialPage !== initialPage) {
+    setSeen({ initialRows, initialPage });
+    setGen(gen + 1);
     setRows(initialRows || []);
     setPage(initialPage || null);
     setMoreError(null);
     setLoadingMore(false);
-  }, [initialRows, initialPage]);
+  }
 
   const loadMore = useCallback(async () => {
     if (!page?.has_more || !urlFor) return;
-    const my = gen.current;
+    const my = genRef.current;
     setLoadingMore(true);
     try {
       const j = await api.get(urlFor(nextOffset(page, rows.length)));
-      if (my !== gen.current) return;
+      if (my !== genRef.current) return;
       setRows((prev) => appendPage(prev, Array.isArray(j?.data) ? j.data : [], key));
       setPage(j?.page ?? null);
       setMoreError(null);
     } catch (e) {
-      if (my === gen.current && e?.name !== 'AbortError') setMoreError(e);
+      if (my === genRef.current && e?.name !== 'AbortError') setMoreError(e);
     } finally {
-      if (my === gen.current) setLoadingMore(false);
+      if (my === genRef.current) setLoadingMore(false);
     }
   }, [page, rows.length, urlFor, key]);
 

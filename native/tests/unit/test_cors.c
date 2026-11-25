@@ -58,6 +58,22 @@ int main(void) {
   assert(v(NULL) == 1);
   printf("  unlisted and look-alike origins get Vary only: ok\n");
 
+  /* WEB-13: credentials only for the auth routes and only for a listed origin */
+  assert(!strcmp(cors_credentials_headers(ok), "Access-Control-Allow-Credentials: true\r\n"));
+  assert(!strcmp(cors_credentials_headers(v("https://evil.example")), ""));
+  assert(!strcmp(cors_credentials_headers(v(NULL)), ""));
+  assert(!strcmp(cors_credentials_headers(0), ""));
+  { int cst = 0;
+    const char *cp = cors_preflight_response_creds(ok, 1, &cst);
+    assert(cst == 204 && strstr(cp, "Access-Control-Allow-Origin: https://app.example.com\r\n"));
+    assert(strstr(cp, "Access-Control-Allow-Credentials: true\r\n"));
+    assert(strstr(cp, "X-JO-Refresh") && !strstr(cp, ": *"));
+    cp = cors_preflight_response_creds(v("https://evil.example"), 1, &cst);
+    assert(cst == 403 && !strstr(cp, "Credentials") && !strstr(cp, "Access-Control-Allow-Origin"));
+    const char *plain = cors_preflight_response(ok, 1, &cst);
+    assert(!strstr(plain, "Credentials") && "non-auth preflight names no credentials"); }
+  printf("  Allow-Credentials: auth routes, listed origin only, never *: ok\n");
+
   int st = 0;
   const char *pr = cors_preflight_response(ok, 1, &st);
   assert(st == 204 && !strncmp(pr, "HTTP/1.1 204", 12));

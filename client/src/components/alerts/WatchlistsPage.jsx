@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuEye, LuTrash2, LuPencil, LuX } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
@@ -41,7 +42,7 @@ export default function WatchlistsPage() {
   const [confirmDel, setConfirmDel] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
+  const load = useCallback(async (cursor) => {
     setLoading(true); setError(null);
     try {
       const j = await api.get('/api/watchlists', { query: { limit: 100, cursor } });
@@ -50,8 +51,8 @@ export default function WatchlistsPage() {
       setPage(j?.page || null);
     } catch (e) { setError(e); }
     finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
+  }, []);
+  useLoadOnChange(load);
 
   const toggle = async (w) => {
     setBusy(w.id);
@@ -173,12 +174,16 @@ function WatchlistEditor({ open, watchlist, onClose, onSaved }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!open) return;
-    setName(watchlist?.name || '');
-    setSelected((watchlist?.entity_ids || []).map((id) => ({ id })));
-    setQ(''); setError(null);
-  }, [open, watchlist]);
+  // (Re)opening, or a different watchlist, re-seeds the draft (derived while rendering).
+  const [seeded, setSeeded] = useState(null);
+  if (!seeded || seeded.open !== open || seeded.watchlist !== watchlist) {
+    setSeeded({ open, watchlist });
+    if (open) {
+      setName(watchlist?.name || '');
+      setSelected((watchlist?.entity_ids || []).map((id) => ({ id })));
+      setQ(''); setError(null);
+    }
+  }
 
   const add = (e) => {
     if (selected.some((s) => s.id === e.entity_id)) return;

@@ -40,8 +40,10 @@ static void uid_tail(const char *url, const char *name, char *out,
     unsigned char c = (unsigned char)src[i];
     out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
   }
-  /* never split a multi-byte sequence */
-  while (i > 0 && ((unsigned char)out[i - 1] & 0xC0) == 0x80) i--;
+  /* never split a multi-byte sequence: if the first byte NOT copied is a
+   * continuation byte the cut is mid-codepoint, so back up over the whole
+   * partial sequence (its lead byte included). */
+  while (i > 0 && src[i] && ((unsigned char)src[i] & 0xC0) == 0x80) i--;
   out[i] = 0;
   snprintf(out + i, outsz - i, "#%016llx", h);
 }

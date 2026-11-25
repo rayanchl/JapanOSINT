@@ -171,14 +171,17 @@ export default function MapPage() {
   }, [mapReadyTick, reverseGeocodeAt]);
 
   // `?aoi=new` (from Console → Areas of interest) starts drawing.
+  // The flag is raised while rendering (idempotent until the param is stripped);
+  // dropping the param from the URL is the effect's only job.
+  const aoiParamNew = searchParams.get('aoi') === 'new';
+  if (aoiParamNew && !aoiDrawing) setAoiDrawing(true);
   useEffect(() => {
-    if (searchParams.get('aoi') === 'new') {
-      setAoiDrawing(true);
+    if (aoiParamNew) {
       const next = new URLSearchParams(searchParams);
       next.delete('aoi');
       setSearchParams(next, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+  }, [aoiParamNew, searchParams, setSearchParams]);
 
   // `?layer=<id>` (from a source page: "this source feeds layer X") switches
   // that layer on once the catalogue has delivered it, then drops the param.

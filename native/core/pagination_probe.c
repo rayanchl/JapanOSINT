@@ -156,6 +156,11 @@ static int fingerprint(const char *body, fpset *out) {
       if (!e) break;
       p = e + 1;
     }
+    /* overlap() walks both sets as sorted runs. The JSON path below sorts;
+     * this one did not, so a CSV page 2 that repeated page 1's rows in a
+     * different order read as a low overlap — i.e. as "paginates" — and
+     * proposed a url_swap for an API that ignores the offset. */
+    qsort(out->h, (size_t)out->n, sizeof out->h[0], ull_cmp);
     return line > 0;
   }
   cJSON *arr = record_array(doc, 0);

@@ -1,3 +1,5 @@
+> **Status (2026-11-25):** the extension sources and the app-side files named below now live in `ios/Unbuilt/` (see `ios/Unbuilt/README.md`); paths in this plan that say `ios/JapanOsintWidgets/`, `ios/JapanOsintShare/` or `ios/JapanOsintApp/Widgets/` refer to the layout after the targets are added.
+
 # iOS extension targets — setup plan (roadmap items 35 & 36)
 
 > **STATUS (2026-07-28).** The app-side code that needs **no** new target is now

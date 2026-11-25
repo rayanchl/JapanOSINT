@@ -43,7 +43,29 @@ export function useIntelItems(path, params, { enabled = true } = {}) {
     } finally { if (my === seq.current) setLoading(false); }
   }, [fetchPage, enabled]);
 
-  useEffect(() => { load(); }, [load]);
+  // A new request identity starts a load: flag it while rendering, not in the effect.
+  const requestId = `${enabled ? 1 : 0}|${key}|${path}`;
+  const [prevRequestId, setPrevRequestId] = useState(requestId);
+  if (prevRequestId !== requestId) { setPrevRequestId(requestId); if (enabled) setLoading(true); }
+
+  // State is set only from the async continuation; `seq` drops a stale answer.
+  useEffect(() => {
+    if (!enabled) return;
+    const my = ++seq.current;
+    (async () => {
+      try {
+        const j = await fetchPage(null);
+        if (my !== seq.current) return;
+        setItems(Array.isArray(j?.data) ? j.data : []);
+        setPage(j?.page || null);
+        setMeta(j?.meta || null);
+        setError(null);
+      } catch (e) {
+        if (my !== seq.current) return;
+        setError(e);
+      } finally { if (my === seq.current) setLoading(false); }
+    })();
+  }, [fetchPage, enabled]);
 
   const loadMore = useCallback(async () => {
     const cur = page?.next_cursor;
@@ -64,7 +86,7 @@ export function useIntelItems(path, params, { enabled = true } = {}) {
 
   const total = page?.total ?? null;
   const totalGte = page?.total_gte ?? null;
-  return { items, page, meta, error, loading, loadingMore, reload: load, loadMore,
+  return { items, page, meta, error, loading: enabled && loading, loadingMore, reload: load, loadMore,
     hasMore: Boolean(page?.next_cursor), total, totalGte };
 }
 

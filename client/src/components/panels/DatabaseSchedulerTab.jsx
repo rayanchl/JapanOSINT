@@ -38,8 +38,7 @@ export default function DatabaseSchedulerTab() {
   const [sortDir, setSortDir] = useState('DESC');
 
   useEffect(() => {
-    let alive = true;
-    setLoading(true);
+    let alive = true;   // `loading` starts true: this runs once, on mount
     fetch(apiUrl('/api/db/scheduler'))
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);

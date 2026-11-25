@@ -12,21 +12,29 @@ import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 /** Resolve a /:type/lookup?q=value chip link to a concrete entity_id. */
 function useResolvedId(type, id) {
   const [params] = useSearchParams();
-  const [resolved, setResolved] = React.useState(id === 'lookup' ? null : id);
-  const [missing, setMissing] = React.useState(false);
+  const lookup = id === 'lookup';
+  const q = params.get('q');
+  // The lookup's answer is stored with the (type, q) it answers, so a stale
+  // answer never reads as the current one; a plain id needs no state at all.
+  const lookupKey = `${type}\u0000${q}`;
+  const [answer, setAnswer] = React.useState({ key: null, resolved: null, missing: false });
   React.useEffect(() => {
-    if (id !== 'lookup') { setResolved(id); return; }
-    const q = params.get('q');
-    if (!q) { setMissing(true); return; }
+    if (!lookup || !q) return undefined;
+    let live = true;
     (async () => {
+      let next;
       try {
         const r = await fetch(apiUrl(`/api/entities/search?q=${encodeURIComponent(q)}&type=${type}&limit=1`));
         const j = r.ok ? await r.json() : { results: [] };
-        if (j.results?.[0]) setResolved(j.results[0].entity_id);
-        else setMissing(true);
-      } catch { setMissing(true); }
+        next = j.results?.[0] ? { resolved: j.results[0].entity_id, missing: false } : { resolved: null, missing: true };
+      } catch { next = { resolved: null, missing: true }; }
+      if (live) setAnswer({ key: lookupKey, ...next });
     })();
-  }, [type, id, params]);
+    return () => { live = false; };
+  }, [type, lookup, q, lookupKey]);
+  const current = answer.key === lookupKey ? answer : null;
+  const resolved = lookup ? (current?.resolved ?? null) : id;
+  const missing = lookup ? (!q || Boolean(current?.missing)) : false;
   return { resolved, missing };
 }
 

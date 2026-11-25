@@ -8,13 +8,25 @@
  * requests. A 401 mid-session triggers ONE coalesced refresh and a retry —
  * Supabase refresh tokens are single-use, so concurrent 401s must share the
  * same refresh promise rather than race it.
+ *
+ * WEB-13: the refresh token is NOT stored, read or sent by this module. It
+ * lives only in an httpOnly cookie the server sets on /api/auth/... (core/
+ * authcookie.h); page script cannot read it. The access token is a module
+ * variable. "Keep me signed in" only picks the cookie's lifetime (the server
+ * gives it a Max-Age; otherwise it is a session cookie).
  */
 
 import { createSupabaseAuth, AuthError, DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_ANON_KEY } from './supabase.js';
+import apiUrl from '../utils/apiUrl.js';
 
 const KEYS = {
   access: 'osint:auth:access',
+  /** LEGACY: older builds stored the refresh token here (localStorage and
+   *  sessionStorage). Read once to migrate into the cookie, then deleted. */
   refresh: 'osint:auth:refresh',
+  /** Non-secret '1': a cookie session probably exists, so a reload should try
+   *  to restore it. (httpOnly means script cannot ask the cookie itself.) */
+  hint: 'osint:auth:session-hint',
   tenant: 'osint:auth:tenant',
   onboarded: 'osint:auth:onboarded',
   supabaseURL: 'osint:auth:supabase-url',
@@ -31,8 +43,8 @@ const KEYS = {
 export const OAUTH_FLOW_TTL_MS = 10 * 60 * 1000;
 
 /** The access token lives in this variable and nowhere else: not in
- *  localStorage, not in sessionStorage. A reload drops it and the next request
- *  (or bootstrap) obtains a fresh one with the refresh token. */
+ *  localStorage, not in sessionStorage. A reload drops it and bootstrap obtains
+ *  a fresh one by calling /api/auth/refresh (the cookie rides along). */
 let accessInMemory = null;
 
 function lsGet(k) { try { return window.localStorage.getItem(k); } catch { return null; } }
@@ -57,11 +69,15 @@ function lsSet(k, v) {
 
 function ssRemove(k) { try { window.sessionStorage.removeItem(k); } catch { /* private mode */ } }
 
+/** A refresh token an older build left in storage (either one), or null. */
+function readLegacyRefresh() { return lsGet(KEYS.refresh) || ssGet(KEYS.refresh) || null; }
+function deleteLegacyRefresh() { lsSet(KEYS.refresh, null); ssRemove(KEYS.refresh); }
+
 export const sessionStore = {
   get accessToken() { return accessInMemory; },
-  /** Persisted refresh token: localStorage if the user chose to stay signed
-   *  in on this device, else this tab's sessionStorage. */
-  get refreshToken() { return lsGet(KEYS.refresh) || ssGet(KEYS.refresh); },
+  /** True when a refresh is worth attempting (a cookie session was
+   *  established here, or a legacy stored token still awaits migration). */
+  get hasSessionHint() { return lsGet(KEYS.hint) === '1' || Boolean(readLegacyRefresh()); },
   get keepSignedIn() { return lsGet(KEYS.keep) === '1'; },
   setKeepSignedIn(v) { lsSet(KEYS.keep, v ? '1' : null); },
   get tenantId() { return lsGet(KEYS.tenant); },
@@ -71,32 +87,40 @@ export const sessionStore = {
   get pkceVerifier() { return lsGet(KEYS.pkce); },
   get oauthReturn() { return lsGet(KEYS.oauthReturn); },
 
-  /** Access token -> memory only. Refresh token -> localStorage when
-   *  keepSignedIn, else sessionStorage; never both. */
-  setTokens(access, refresh) {
+  /** Access token -> memory only. `cookieSession` (truthy once the server has
+   *  set the refresh cookie) records the non-secret hint that a reload may
+   *  try to restore a session. No refresh token passes through here. */
+  setTokens(access, cookieSession) {
     accessInMemory = access || null;
-    if (!refresh) { lsSet(KEYS.refresh, null); ssRemove(KEYS.refresh); return; }
-    if (sessionStore.keepSignedIn) { lsSet(KEYS.refresh, refresh); ssRemove(KEYS.refresh); }
-    else { ssSet(KEYS.refresh, refresh); lsSet(KEYS.refresh, null); }
+    lsSet(KEYS.hint, cookieSession ? '1' : null);
   },
-  /** Clears BOTH storages (and the legacy access key) and the memory copy. */
+  /** Clears the memory copy, the hint, the keep flag and any legacy key. (The
+   *  cookie itself is cleared by the server, on /api/auth/logout or when it
+   *  refuses the token.) */
   clearTokens() {
     accessInMemory = null;
-    lsSet(KEYS.access, null); lsSet(KEYS.refresh, null); lsSet(KEYS.keep, null);
-    ssRemove(KEYS.access); ssRemove(KEYS.refresh);
+    lsSet(KEYS.access, null); lsSet(KEYS.hint, null); lsSet(KEYS.keep, null);
+    deleteLegacyRefresh();
+    ssRemove(KEYS.access);
   },
   /**
    * One-time upgrade of a session written by an older build, which kept the
-   * access token (and the refresh token) in localStorage. A stored session is
-   * treated as "keep me signed in" so nobody is signed out by the upgrade;
-   * the access token is moved into memory and removed from storage.
+   * access token (and the refresh token) in localStorage. The access token is
+   * moved into memory and removed from storage. A stored refresh token is NOT
+   * adopted: it stays where it is only until the first refresh hands it to the
+   * server once (`cookie: true`), which turns it into the httpOnly cookie, and
+   * is then deleted (coalescedRefresh). A legacy localStorage token means the
+   * user had ticked "keep me signed in", so the cookie gets that lifetime.
    */
   migrateLegacySession() {
     const legacyAccess = lsGet(KEYS.access);
-    if (legacyAccess == null) return false;
-    if (!accessInMemory) accessInMemory = legacyAccess;
-    lsSet(KEYS.access, null);
-    if (lsGet(KEYS.refresh)) lsSet(KEYS.keep, '1');
+    const hadLegacyRefresh = Boolean(lsGet(KEYS.refresh));
+    if (legacyAccess == null && !readLegacyRefresh()) return false;
+    if (legacyAccess != null) {
+      if (!accessInMemory) accessInMemory = legacyAccess;
+      lsSet(KEYS.access, null);
+    }
+    if (hadLegacyRefresh) lsSet(KEYS.keep, '1');
     return true;
   },
   setTenantId(id) { lsSet(KEYS.tenant, id); },
@@ -161,19 +185,81 @@ export function classifyRefreshError(e) {
   return e instanceof AuthError && (e.status === 400 || e.status === 401) ? REFRESH.invalid : REFRESH.transient;
 }
 
+/**
+ * One call to the server's token-exchange routes (core/authcookie.h). The
+ * ONLY place `credentials: 'include'` is used: the refresh cookie is scoped to
+ * /api/auth/refresh and the server also requires the custom X-JO-Refresh
+ * header, which a cross-site form cannot send. Answers carry the access token
+ * (never the refresh token); a failure is an AuthError with the HTTP status.
+ */
+export async function authExchange(path, body, { bearer } = {}) {
+  const headers = { 'Content-Type': 'application/json', 'X-JO-Refresh': '1' };
+  if (bearer) headers.Authorization = `Bearer ${bearer}`;
+  let res;
+  try {
+    res = await fetch(apiUrl(path), {
+      method: 'POST', headers, credentials: 'include', body: JSON.stringify(body || {}),
+    });
+  } catch (e) {
+    throw new AuthError(-1, `Could not reach the server (${e.message || 'network error'})`);
+  }
+  const text = await res.text();
+  let json = null;
+  try { json = text ? JSON.parse(text) : null; } catch { /* non-JSON body */ }
+  if (!res.ok) {
+    throw new AuthError(res.status, json?.message || json?.error || text || `request failed (${res.status})`);
+  }
+  return json || {};
+}
+
+function decodeSession(j) {
+  if (!j || typeof j.access_token !== 'string' || !j.access_token) {
+    throw new AuthError(0, 'Could not read the sign-in response.');
+  }
+  return { access_token: j.access_token, expires_in: j.expires_in ?? null, user: j.user ?? null };
+}
+
+export async function signInWithPassword(email, password, keep) {
+  return decodeSession(await authExchange('/api/auth/login', { email, password, keep: Boolean(keep) }));
+}
+
+/** A session only when email confirmation is OFF, else { kind: 'confirmation_required' }. */
+export async function signUpWithPassword(email, password, keep) {
+  const j = await authExchange('/api/auth/signup', { email, password, keep: Boolean(keep) });
+  if (j.confirmation_required) return { kind: 'confirmation_required' };
+  return { kind: 'session', session: decodeSession(j) };
+}
+
+export async function exchangeOAuthCode(authCode, verifier, keep) {
+  return decodeSession(await authExchange('/api/auth/oauth',
+    { auth_code: authCode, code_verifier: verifier, keep: Boolean(keep) }));
+}
+
+/** Revoke (when we hold an access token) and ALWAYS clear the cookie. */
+export async function serverLogout(accessToken) {
+  await authExchange('/api/auth/logout', {}, { bearer: accessToken || undefined });
+}
+
 /** One in-flight refresh at a time; every concurrent 401 awaits the same one. */
 let refreshInFlight = null;
 export function coalescedRefresh() {
   if (refreshInFlight) return refreshInFlight;
   refreshInFlight = (async () => {
-    const rt = sessionStore.refreshToken;
-    if (!rt) return REFRESH.invalid;
+    // A token an older build stored is handed over exactly once so the server
+    // can turn it into the cookie; it is deleted as soon as the server has
+    // answered definitively (a transient failure keeps it for the retry).
+    const legacy = readLegacyRefresh();
     try {
-      const s = await supabaseClient().refresh(rt);
-      sessionStore.setTokens(s.access_token, s.refresh_token);
+      const body = { keep: sessionStore.keepSignedIn };
+      if (legacy) { body.refresh_token = legacy; body.cookie = true; }
+      const s = decodeSession(await authExchange('/api/auth/refresh', body));
+      sessionStore.setTokens(s.access_token, true);
+      if (legacy) deleteLegacyRefresh();
       return REFRESH.ok;
     } catch (e) {
-      return classifyRefreshError(e);
+      const outcome = classifyRefreshError(e);
+      if (legacy && outcome === REFRESH.invalid) deleteLegacyRefresh();
+      return outcome;
     } finally {
       refreshInFlight = null;
     }
@@ -188,10 +274,13 @@ export function onSessionLost(fn) { deathListeners.add(fn); return () => deathLi
 function isApiRequest(input) {
   const url = typeof input === 'string' ? input : input?.url;
   if (!url) return false;
+  // /api/auth/... is the token exchange itself: it must neither carry a bearer
+  // nor trigger a 401->refresh retry (that would recurse).
+  if (url.startsWith('/api/auth/')) return false;
   if (url.startsWith('/api/')) return true;
   try {
     const u = new URL(url, window.location.href);
-    if (!u.pathname.startsWith('/api/')) return false;
+    if (!u.pathname.startsWith('/api/') || u.pathname.startsWith('/api/auth/')) return false;
     // Same origin, or the configured API host override.
     const override = import.meta.env?.VITE_API_HOST;
     return u.origin === window.location.origin || (override && u.host === override);
@@ -221,7 +310,7 @@ export function installFetchInterceptor() {
 
     let res = await raw(input, build());
     if (res.status !== 401) return res;
-    if (!sessionStore.refreshToken) {
+    if (!sessionStore.hasSessionHint) {
       // A 401 with nothing to refresh with (an expired break-glass / API
       // token, or tokens cleared in another tab) is the end of the session
       // too: say so, so the app can ask for a sign-in instead of every page

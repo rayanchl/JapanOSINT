@@ -62,7 +62,7 @@ struct ApiKeyDetailView: View {
         do {
             let env = try await api.searchSources(q, limit: Self.usingMax, offset: 0)
             let rows = env.data ?? []
-            usingTotal = env.page?.total ?? rows.count
+            usingTotal = env.meta?.credential?.sources ?? env.page?.total ?? rows.count
             usingRows = rows
         } catch {
             usingError = error.localizedDescription

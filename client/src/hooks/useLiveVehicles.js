@@ -70,6 +70,14 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
   const rafRef = useRef(null);
   const lastTickRef = useRef(null);
 
+  // Disabling clears what is on show; done while rendering (the React-documented
+  // reset-on-prop-change pattern), not by an effect.
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+  if (prevEnabled !== enabled) {
+    setPrevEnabled(enabled);
+    if (!enabled) setGeojson({ type: 'FeatureCollection', features: [] });
+  }
+
   // Stable viewport key — the poll effect only re-fires when the string
   // representation actually changes, not on every rerender.
   const viewportKey = viewport
@@ -81,8 +89,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
   useEffect(() => {
     if (!enabled) {
       vehiclesRef.current = [];
-      setGeojson({ type: 'FeatureCollection', features: [] });
-      return;
+      return undefined;
     }
     let cancelled = false;
     (async () => {
