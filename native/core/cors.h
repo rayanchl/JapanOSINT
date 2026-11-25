@@ -26,9 +26,10 @@
  *                 auth gate: 204 with the allowed methods/headers for a listed
  *                 origin, 403 for an unlisted one.
  *
- * No Access-Control-Allow-Credentials, ever. The client authenticates with a
- * bearer header, not cookies, and this server reads no cookie; credentialed
- * CORS would only widen what a listed origin could do. */
+ * Access-Control-Allow-Credentials is sent ONLY by the /api/auth/... routes
+ * (the httpOnly refresh cookie, core/authcookie.h), ONLY for a listed origin,
+ * and the origin is reflected, never "*". Every other route reads no cookie and
+ * names no credentials. */
 #ifndef JO_CORS_H
 #define JO_CORS_H
 #include <stddef.h>
@@ -66,4 +67,11 @@ const char *cors_headers(unsigned char verdict);
 const char *cors_preflight_response(unsigned char verdict, int has_origin,
                                     int *status);
 
+/* Auth routes only: "Access-Control-Allow-Credentials: true\r\n" for a listed
+ * origin, "" otherwise. */
+const char *cors_credentials_headers(unsigned char verdict);
+/* cors_preflight_response() for an /api/auth/... preflight: the listed origin's
+ * answer also carries Allow-Credentials. */
+const char *cors_preflight_response_creds(unsigned char verdict, int has_origin,
+                                          int *status);
 #endif

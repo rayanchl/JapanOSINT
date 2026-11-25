@@ -123,12 +123,16 @@ static void test_gates(void) {
   assert(look("GET", "/api/admin/routes", NULL)->gate == RG_OPERATOR);
 
   /* pre-auth set is exactly the intended one */
-  const char *pub[8]; int np = 0;
+  const char *pub[16]; int np = 0;
   for (size_t i = 0; i < n; i++) if (t[i].gate == RG_PUBLIC) pub[np++] = t[i].pattern;
-  assert(np == 3);
+  assert(np == 8);
   assert(!strcmp(pub[0], "/api/health"));
   assert(!strcmp(pub[1], "/api/search/stream/:id"));
   assert(!strcmp(pub[2], "/admin/break-glass/login"));
+  /* WEB-13: the httpOnly refresh-cookie exchange, guarded by ac_guard */
+  assert(!strcmp(pub[3], "/api/auth/login") && !strcmp(pub[4], "/api/auth/signup") &&
+         !strcmp(pub[5], "/api/auth/oauth") && !strcmp(pub[6], "/api/auth/refresh") &&
+         !strcmp(pub[7], "/api/auth/logout"));
   assert(look("GET", "/api/search/stream/abc", NULL)->gate == RG_PUBLIC);
 
   /* source writes are operator, source reads are not */

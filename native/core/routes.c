@@ -34,6 +34,14 @@ static const route_row ROUTES[] = {
   R(RM_ANY,  "/api/search/stream/:id",   RG_PUBLIC, RR_LOOP, 0, "search-stream"),
   /* Mounted outside /api: it exists for when token verification is down. */
   R(RM_ANY,  "/admin/break-glass/login", RG_PUBLIC, RR_LOOP, 0, "break-glass-login"),
+  /* The httpOnly refresh-cookie token exchange (core/authcookie.h, WEB-13).
+   * No bearer exists yet when these run; ac_guard (X-JO-Refresh + Origin) is
+   * their gate, and the identity call runs on a worker thread. */
+  R(RM_ANY,  "/api/auth/login",          RG_PUBLIC, RR_WORKER, 0, "auth-login"),
+  R(RM_ANY,  "/api/auth/signup",         RG_PUBLIC, RR_WORKER, 0, "auth-signup"),
+  R(RM_ANY,  "/api/auth/oauth",          RG_PUBLIC, RR_WORKER, 0, "auth-oauth"),
+  R(RM_ANY,  "/api/auth/refresh",        RG_PUBLIC, RR_WORKER, 0, "auth-refresh"),
+  R(RM_ANY,  "/api/auth/logout",         RG_PUBLIC, RR_WORKER, 0, "auth-logout"),
 
   /* ---- search --------------------------------------------------------- */
   R(RM_ANY,  "/api/search/analyze",      RG_TENANT, RR_LOOP,   0, "search-analyze"),

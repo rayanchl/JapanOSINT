@@ -9,7 +9,7 @@
 #define CORS_METHODS "GET, POST, PUT, PATCH, DELETE, OPTIONS"
 /* What the web client actually sends (auth/session.js adds the first and
  * third to every /api call; JSON bodies set the second). */
-#define CORS_REQ_HEADERS "Authorization, Content-Type, X-Tenant-Id"
+#define CORS_REQ_HEADERS "Authorization, Content-Type, X-Tenant-Id, X-JO-Refresh"
 /* Response headers the client reads beyond the CORS-safelisted ones:
  * Content-Disposition (case/export downloads), X-JO-Evidence-SHA256
  * (IntelItemPage evidence download), Retry-After (503 server_busy). */
@@ -18,6 +18,7 @@
 static char g_origin[CORS_MAX_ORIGINS][CORS_ORIGIN_MAX];
 static char g_hdr[CORS_MAX_ORIGINS][CORS_HDR_MAX];
 static char g_pre[CORS_MAX_ORIGINS][CORS_ORIGIN_MAX + 512];
+static char g_pre_cred[CORS_MAX_ORIGINS][CORS_ORIGIN_MAX + 560];
 static int  g_n = 0;
 
 static const char *PRE_REFUSED =
@@ -84,6 +85,14 @@ int cors_init(void) {
                    "Access-Control-Allow-Headers: " CORS_REQ_HEADERS "\r\n"
                    "Access-Control-Max-Age: 600\r\n"
                    "Content-Length: 0\r\n\r\n", e);
+          snprintf(g_pre_cred[g_n], sizeof g_pre_cred[g_n],
+                   "HTTP/1.1 204 No Content\r\n"
+                   "Access-Control-Allow-Origin: %s\r\nVary: Origin\r\n"
+                   "Access-Control-Allow-Credentials: true\r\n"
+                   "Access-Control-Allow-Methods: POST, OPTIONS\r\n"
+                   "Access-Control-Allow-Headers: " CORS_REQ_HEADERS "\r\n"
+                   "Access-Control-Max-Age: 600\r\n"
+                   "Content-Length: 0\r\n\r\n", e);
           g_n++;
         } else if (!dup) {
           fprintf(stderr, "[cors] more than %d origins in JO_CORS_ORIGINS; "
@@ -126,4 +135,20 @@ const char *cors_preflight_response(unsigned char verdict, int has_origin,
   }
   if (status) *status = 403;
   return PRE_REFUSED;
+}
+
+/* WEB-13: the auth routes only. Credentials are named for a LISTED origin and
+ * never otherwise; the origin is always reflected, never "*". */
+const char *cors_credentials_headers(unsigned char verdict) {
+  if (g_n == 0 || verdict < 2 || verdict - 2 >= g_n) return "";
+  return "Access-Control-Allow-Credentials: true\r\n";
+}
+
+const char *cors_preflight_response_creds(unsigned char verdict, int has_origin,
+                                          int *status) {
+  if (verdict >= 2 && verdict - 2 < g_n) {
+    if (status) *status = 204;
+    return g_pre_cred[verdict - 2];
+  }
+  return cors_preflight_response(verdict, has_origin, status);
 }

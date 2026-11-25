@@ -11,7 +11,7 @@
  * request wrapper calls. So the handler does nothing on a worker thread (even
  * one that fell back to the shared handle), at startup, in migrations, or in a
  * timer: nothing there ever arms it. An overrun is interrupted
- * (SQLITE_INTERRUPT) and stays interrupted until loopdl_disarm(), which
+ * (SQLITE_INTERRUPT; a lock wait: SQLITE_BUSY) and stays interrupted until loopdl_disarm(), which
  * reports it so the caller can answer 503 instead of whatever the route made
  * of a failed query. */
 #ifndef JO_LOOPDL_H
@@ -19,8 +19,12 @@
 #include <sqlite3.h>
 
 #define LOOPDL_DEFAULT_MS 5000
+/* Lock-wait ceiling while NOT armed: the busy_timeout the handler replaces. */
+#define LOOPDL_BUSY_FALLBACK_MS 5000
 
-/* Install the progress handler on the loop connection (once). */
+/* Install the progress handler and the busy handler on the loop connection
+ * (once). The busy handler gives up at the armed deadline, so a writer holding
+ * the lock cannot freeze the loop longer than JO_LOOP_QUERY_MS either. */
 void loopdl_install(sqlite3 *h);
 /* Arm for this thread from JO_LOOP_QUERY_MS; loopdl_arm_ms for an explicit
  * deadline (<= 0 disables). */

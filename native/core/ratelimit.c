@@ -21,7 +21,9 @@ typedef struct {
 } rl_slot;
 
 /* See ratelimit.h: a live counter of these classes is never recycled. */
-static int fail_closed(int cls) { return cls == RL_BREAKGLASS || cls == RL_JWKS; }
+static int fail_closed(int cls) {
+  return cls == RL_BREAKGLASS || cls == RL_JWKS || cls == RL_AUTH_EXCHANGE;
+}
 
 static rl_slot         g_slots[RL_SLOTS];
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
@@ -155,6 +157,11 @@ static int trusted_proxy(const char *canon) {
     p = e;
   }
   return 0;
+}
+
+int ratelimit_peer_trusted(const char *peer) {
+  char pc[RL_KEYLEN];
+  return peer && *peer && canon_addr(peer, pc, sizeof pc) && trusted_proxy(pc);
 }
 
 void ratelimit_client_key(const char *peer, const char *xff,

@@ -11,6 +11,9 @@
  *   - armed on THIS thread does not reach a query on another thread using the
  *     same connection (a worker that fell back to the shared handle);
  *   - JO_LOOP_QUERY_MS: default, override, 0 = disabled, garbage = default;
+ *   - a lock wait (second connection holding an exclusive lock) gives up at the
+ *     same deadline with SQLITE_BUSY, reported for the 503; released in time it
+ *     succeeds;
  *   - the 503 body is JSON naming the deadline. */
 #include "../../core/loopdl.c"
 
@@ -18,6 +21,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* Counts to N with a recursive CTE: cost scales with N, no table needed. */
 static int run_count(sqlite3 *h, long n, long long *out) {
@@ -39,6 +43,14 @@ static void *worker(void *arg) {
   (void) arg;
   long long n = 0;
   g_thread_rc = run_count(g_shared, 3000000, &n);
+  return NULL;
+}
+
+static sqlite3 *g_wr;
+static void *release_later(void *a) {
+  (void) a;
+  usleep(200000);
+  sqlite3_exec(g_wr, "COMMIT", NULL, NULL, NULL);
   return NULL;
 }
 
@@ -106,6 +118,50 @@ int main(void) {
   assert(strstr(b, "\"error\":\"query_deadline_exceeded\""));
   assert(strstr(b, "\"deadline_ms\":40"));
   printf("  503 body names the deadline: ok\n");
+
+  /* Lock wait: a second connection holds an exclusive lock on a file DB. */
+  {
+    char path[128];
+    snprintf(path, sizeof path, "/tmp/test_loopdl_lock_%d.db", (int) getpid());
+    unlink(path);
+    sqlite3 *loop, *wr;
+    assert(sqlite3_open(path, &loop) == SQLITE_OK);
+    assert(sqlite3_open(path, &wr) == SQLITE_OK);
+    sqlite3_exec(loop, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+    loopdl_install(loop);               /* replaces the busy timeout */
+    assert(sqlite3_exec(wr, "CREATE TABLE t(x); BEGIN EXCLUSIVE;", NULL, NULL, NULL) == SQLITE_OK);
+
+    loopdl_arm_ms(150);
+    long long t1 = mono_ms();
+    int brc = sqlite3_exec(loop, "INSERT INTO t VALUES(1)", NULL, NULL, NULL);
+    long long bel = mono_ms() - t1;
+    assert(brc == SQLITE_BUSY);
+    assert(bel >= 100 && bel < 1500 && "lock wait gives up at the deadline");
+    assert(loopdl_disarm() == 1 && "reported so the route answers 503");
+    printf("  armed, lock held: gave up in %lld ms (deadline 150) and reported: ok\n", bel);
+
+    /* not armed: falls back to a bounded wait; release the lock mid-wait */
+    sqlite3_exec(wr, "COMMIT", NULL, NULL, NULL);
+    assert(sqlite3_exec(loop, "INSERT INTO t VALUES(2)", NULL, NULL, NULL) == SQLITE_OK);
+    assert(loopdl_disarm() == 0);
+    sqlite3_exec(wr, "BEGIN EXCLUSIVE", NULL, NULL, NULL);
+    sqlite3_exec(wr, "ROLLBACK", NULL, NULL, NULL);
+    printf("  unarmed: free lock acquired, not reported: ok\n");
+
+    /* armed with a generous deadline, lock released while waiting: succeeds */
+    sqlite3_exec(wr, "BEGIN EXCLUSIVE", NULL, NULL, NULL);
+    g_wr = wr;
+    pthread_t rel;
+    pthread_create(&rel, NULL, release_later, NULL);
+    loopdl_arm_ms(4000);
+    assert(sqlite3_exec(loop, "INSERT INTO t VALUES(3)", NULL, NULL, NULL) == SQLITE_OK);
+    assert(loopdl_disarm() == 0);
+    pthread_join(rel, NULL);
+    printf("  armed, lock released inside the deadline: write succeeds: ok\n");
+
+    sqlite3_close(wr); sqlite3_close(loop);
+    unlink(path);
+  }
 
   sqlite3_close(h);
   printf("test_loopdl: all passed\n");
