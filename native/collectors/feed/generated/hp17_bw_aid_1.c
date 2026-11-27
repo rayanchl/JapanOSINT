@@ -34,7 +34,7 @@ static const hp_source T[] = {
     .array_path = "rows",
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
-    .page_walk = 1,
+    .page_walk = 1, .page_resume = 1,   /* measured 2026-11-27: offset walk under orderby=aid,trans_id is position-stable over 6,000 rows; the collection (53k..482k per country) exceeds one 100,000-row run, so each run continues where the last stopped */
     .interval = 86400, .free_tier = 1 },
 
 };
