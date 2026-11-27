@@ -224,3 +224,27 @@ database each time, from one container. One reading per setting.
   `odpt-train` needs its ODPT key; `airplanes-live-mil` answers 403 to every
   agent tried; `nerv-feed`'s host `unii-api.nerv.app` does not resolve. The last
   two are unchanged and are the owner's decision.
+
+## Throughput: what bounds it (2026-11-27)
+
+Measured on 300 s scheduler boots at 24 workers, fresh database, full registry,
+one container. One reading per configuration.
+
+* **The bound is storing records, not fetching them.** All 24 workers were busy
+  while only 5 to 10 were inside a network request. Stack samples of a live run
+  (six snapshots) showed one thread inside SQLite and the rest waiting to write.
+* **The fleet stores about 470 records a second in total** (141,654 in 300 s),
+  while one source run alone on an empty database stores 9,642 in 6.4 s, about
+  1,500 a second. A source that returns 9,651 records in one request held a
+  worker for 165 s. Runs of 2,000 records or more were 32 of 468 runs and 44% of
+  all worker time.
+* **Two fixes were tried and neither is in the tree.** Queueing writers on a
+  mutex instead of SQLite's busy-wait: 375 records/s (no gain). One shared
+  writer connection for every worker: 539 against 472 (about 14%, one reading
+  each, not enough to justify the change).
+* **Not yet measured:** what the single writer spends its roughly 2 ms per
+  record on (the row, its full-text mirror, the near-duplicate fingerprint), and
+  whether committing several records per transaction removes it. Every record is
+  its own transaction today.
+* **More workers will not reach the 6-hour policy on their own**, because the
+  extra workers queue behind the same writer.
