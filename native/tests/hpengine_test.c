@@ -5363,7 +5363,7 @@ int main(void) {
   fx_add("/cal.html", 200,
          "<!DOCTYPE html><html><head>"
          "<title>\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83\x8a\xe3\x83\xb3"
-         "\xe3\x82\xb9\xe4\xb8\xad\xef\xbd\x9cFINMAC</title></head>"
+         "\xe3\x82\xb9\xe4\xb8\xad\xef\xbd\x9c" "FINMAC</title></head>"
          "<body><p>ただいまメンテナンス中です</p></body></html>");
   g_ncap = 0;
   rc = run_source("T_HTML_CAL", NULL);
