@@ -140,9 +140,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *html = feed_get_text(ctx->http, WCT_BASE, 25000);
   if (!html || !html[0]) {
     free(html);
-    fprintf(stderr,
-            "[cam-webcamtaxi] 0 (no html — Cloudflare 1005 / WAF likely)\n");
-    return 0;
+    /* "faithful ⇒ 0 cameras" was the right call with nowhere else to put it;
+     * sched_disclose_fetch_failure (2026-10-22) is somewhere else, and rule 1
+     * asks for a record rather than this line. Re-measured 2026-11-05: the
+     * host answers **HTTP 403 with 5,664 bytes**, so the WAF reading above
+     * still holds — what changes is that the database can now say so, and the
+     * remedy it carries points at the agent table rather than at pacing. */
+    fprintf(stderr, "[cam-webcamtaxi] no html (Cloudflare 1005 / WAF likely) "
+                    "— reporting a failed fetch, not zero cameras\n");
+    return -1;
   }
 
   char **seen = NULL;

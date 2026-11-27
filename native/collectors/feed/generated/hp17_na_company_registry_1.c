@@ -16,11 +16,12 @@ static const hp_source T[] = {
   { .id = "af-gleif-lei-na",
     .name = "GLEIF — legal entities registered in Namibia",
     .collector = "na_company-registry", .category = "company-registry",
-    .description = "Namibian LEI holders with legal name, addresses, legal form, BIPA registration number where supplied, status and parent/ultimate-parent links. Detail by LEI.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry-record", .tags = "\"na\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Namibian LEI holders with legal name, addresses, legal form, BIPA registration number where supplied, status and parent/ultimate-parent links. Detail by LEI.",
+    .record_type = "company-registry-record", .tags = "\"na\",\"company-registry\",\"batch17\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=NA&page%5Bsize%5D=100",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

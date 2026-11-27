@@ -1680,30 +1680,6 @@ static const hp_source HP3B25_JPMUNIRESERVE[] = {
       "committee — and almost none of it is reprinted anywhere a "
       "national search reaches." },
 
-  { .id = "JPMUNI_SAITO_UPDATE_2", .name = "Saito — municipal update feed",
-    .name_ja = "西都市 宮崎県西都市",
-    .category = "government", .portal = "https://www.city.saito.lg.jp/",
-    .record_type = "municipal-notice",
-    .tags = "\"japan\",\"municipal\",\"localgov\",\"rss\",\"update\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.saito.lg.jp/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "link",
-    .interval = 21600,
-    .link_keys = "link",
-    .title_keys = "title",
-    .description = "The Saito municipal office's own update feed, read straight off "
-      "the town hall CMS rather than through an aggregator. It carries "
-      "every page the office adds or revises, which in a Japanese "
-      "municipal CMS is the single stream carrying ordinances, council "
-      "minutes, budget documents, permit registers, tender results and "
-      "personnel notices alike. Japanese municipal sites are the "
-      "primary record for a person or a business at the level where "
-      "things are actually decided — a planning permission, a subsidy "
-      "award, a licence suspension, an appointment to a local committee "
-      "— and almost none of it is reprinted anywhere a national search "
-      "reaches." },
 
   { .id = "JPMUNI_MINOH_UPDATE_3", .name = "Minoh — municipal update feed",
     .name_ja = "箕面市 箕面市 報道資料",

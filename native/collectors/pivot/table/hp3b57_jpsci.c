@@ -557,24 +557,6 @@ static const hp_source HP3B57_JPSCI[] = {
       "11:45:00 +0900. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ127413234_3", .name = "Health Support Center, University of Shizuoka (research "
-      "institute) - 静岡県立大学ポータルサイト",
-    .name_ja = "Health Support Center, University of Shizuoka (research institute) - 静岡県立大学ポータルサイト",
-    .category = "research", .portal = "https://portal.u-shizuoka-ken.ac.jp/",
-    .record_type = "research-notice",
-    .tags = "\"jpsci\",\"japan\",\"research-institute\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://portal.u-shizuoka-ken.ac.jp/Plone/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 9 items, ATOM feed, newest "
-      "2019-08-27T19:35:59+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO57IQ127414059", .name = "Fuji-no-Kuni Center for Future Education, University of Shizuoka "
       "(research institute) - みなくる情報（静岡市地域福祉共生センター）受託事業",

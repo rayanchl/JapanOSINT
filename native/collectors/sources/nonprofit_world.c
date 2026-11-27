@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* cJSON number field as malloc'd string, or NULL. */
 static char *nw_num_str(const cJSON *o, const char *k) {
@@ -195,8 +196,9 @@ static int run_uk(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *key = jo_env("UK_CHARITY_KEY");
   if (!key) {
-    fprintf(stderr, "[uk_charities] gated (no UK_CHARITY_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "uk_charities",
+                                (const char *[]){ "UK_CHARITY_KEY", NULL },
+                                NULL, NULL);
   }
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
@@ -240,8 +242,9 @@ static int run_canada(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *key = jo_env("CANADA_CHARITY_KEY");
   if (!key) {
-    fprintf(stderr, "[canada_charities] gated (no CANADA_CHARITY_KEY)\n");
-    return 0;   /* honest empty — CRA has no free keyless search API */
+    return jo_needs_credential(sink, ctx->source_id, "canada_charities",
+                                (const char *[]){ "CANADA_CHARITY_KEY", NULL },
+                                NULL, NULL);   /* honest empty — CRA has no free keyless search API */
   }
   (void)sink;
   /* No universally-available keyless CRA charity search endpoint exists; keep

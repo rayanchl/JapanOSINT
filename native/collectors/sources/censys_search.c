@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "_credential_notice.inc"
 
 #define CENSYS_BASE "https://search.censys.io/api/v2"
 
@@ -341,8 +342,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *id = getenv("CENSYS_API_ID");
   const char *secret = getenv("CENSYS_API_SECRET");
   if (!(id && secret && *id && *secret)) {
-    fprintf(stderr, "[CENSYS_SEARCH] gated (no CENSYS_API_ID/SECRET)\n");
-    return 0;                              /* key-gated: emit nothing */
+    return jo_needs_credential(sink, ctx->source_id, "CENSYS_SEARCH",
+                                (const char *[]){ "CENSYS_API_ID", "CENSYS_API_SECRET", NULL },
+                                NULL, NULL);                              /* key-gated: emit nothing */
   }
 
   char raw[512];

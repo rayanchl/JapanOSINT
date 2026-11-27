@@ -194,7 +194,9 @@ static const hp_source HP3B25_JPFINANCE[] = {
       "Member admission and sanction items are the SRO's own record of "
       "which exchanges are inside the regulated perimeter." },
 
-  { .id = "JP25_JPFIN_JVCEA_SITEMAP_RSS", .name = "JVCEA - site page index (sitemap RSS)",
+  { .id = "JP25_JPFIN_JVCEA_SITEMAP_RSS",
+    /* feed-format-twin-ok: a SITEMAP RSS, not the news feed: measured 2026-11-05, 50 records against the /feed/ row's 10 */
+    .name = "JVCEA - site page index (sitemap RSS)",
     .name_ja = "日本暗号資産等取引業協会 ページ一覧",
     .category = "finance", .portal = "https://jvcea.or.jp",
     .record_type = "site-page",
@@ -310,7 +312,9 @@ static const hp_source HP3B25_JPFINANCE[] = {
       "parameter. Listing approvals and issuer disclosures back to the "
       "site's start." },
 
-  { .id = "JP25_JPFIN_SSE_SITEMAP_RSS", .name = "Sapporo Securities Exchange - page index incl. listed-company "
+  { .id = "JP25_JPFIN_SSE_SITEMAP_RSS",
+    /* feed-format-twin-ok: a SITEMAP RSS, not the news feed: measured 2026-11-05, 50 records against the /feed/ row's 10 */
+    .name = "Sapporo Securities Exchange - page index incl. listed-company "
       "pages",
     .name_ja = "札幌証券取引所 ページ一覧",
     .category = "finance", .portal = "https://www.sse.or.jp",
@@ -330,7 +334,9 @@ static const hp_source HP3B25_JPFINANCE[] = {
       "title and URL; the issuer pages make it a usable index of "
       "Sapporo-listed companies." },
 
-  { .id = "JP25_JPFIN_KABUCOM_SITEMAP_RSS", .name = "au Kabucom Securities - page index RSS",
+  { .id = "JP25_JPFIN_KABUCOM_SITEMAP_RSS",
+    /* feed-format-twin-ok: a SITEMAP RSS, not the news feed: measured 2026-11-05, 50 records against the /feed/ row's 10 */
+    .name = "au Kabucom Securities - page index RSS",
     .name_ja = "auカブコム証券 ページ一覧RSS",
     .category = "finance", .portal = "https://kabu.com",
     .record_type = "broker-notice",

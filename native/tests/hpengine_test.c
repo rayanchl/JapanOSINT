@@ -291,6 +291,12 @@ static const hp_source T[] = {
     .detail_url = "https://x.test/detail/{v}", .detail_key = "num", .detail_max = 2,
     .record_type = "t-deep", .free_tier = 1, .description = "d" },
 
+  { .id = "T_DEEP_PATH", .name = "detail value is a site-relative path",
+    .url = "https://x.test/plist?q={q}", .array_path = "items",
+    .title_keys = "name", .id_keys = "link",
+    .detail_url = "https://x.test/api/content{v}", .detail_key = "link",
+    .record_type = "t-deep", .free_tier = 1, .description = "d" },
+
   { .id = "T_AUTO", .name = "auto array discovery", .url = "https://x.test/auto?q={q}",
     .record_type = "t-auto", .free_tier = 1, .description = "d" },
 
@@ -1318,6 +1324,20 @@ int main(void) {
   ok(strstr(g_cap[0].props, "\"detail.person.name\":\"Nils\"") != NULL, "detail hop merged (1)");
   ok(strstr(g_cap[1].props, "\"detail.role\":\"ceo\"") != NULL, "detail hop merged (2)");
   ok(g_ncalls == 3, "one list call + one detail call per record");
+
+  /* 2a-path. A detail value that is a site-relative path keeps its slashes
+   * (GOV.UK's `link`); each segment is still encoded. Fails against the old
+   * line, which asked for /api/content%2Fcma-cases%2Fa%20b and merged nothing.
+   * The control is every other detail test here: a value with no leading
+   * slash is encoded whole, as before. */
+  fx_reset();
+  fx_add("/plist", 200, "{\"items\":[{\"name\":\"A\",\"link\":\"/cma-cases/a b\"}]}");
+  fx_add("/api/content/cma-cases/a%20b", 200, "{\"role\":\"case\"}");
+  rc = run_source("T_DEEP_PATH", "acme");
+  ok(rc == 0 && g_ncap == 1 && g_ncalls == 2 &&
+     strstr(g_cap[0].props, "\"detail.role\":\"case\"") != NULL &&
+     !strstr(g_cap[0].props, "_detail_error"),
+     "2a-path: a path-valued detail key keeps its slashes");
 
   /* 2b. the detail hop is sent with the row's own headers. It used to be sent
    * with none, so a row that authenticates by header got 401/403 on every hop
@@ -4434,7 +4454,11 @@ int main(void) {
   { const cap *nt = NULL;
     ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
        strstr(nt->props, "BOT-WALL interstitial") != NULL &&
-       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       /* The table moved to core/host_agents.def on 2026-10-21 and this remedy
+        * still named core/httpclient.c's UA_OVERRIDE — a remedy pointing at a
+        * knob that is not there any more, which this file calls worse than
+        * none. The assertion is on the name that exists. */
+       strstr(nt->props, "core/host_agents.def") != NULL &&
        strstr(nt->props, "the endpoint may have moved") == NULL &&
        strstr(nt->props, "RATE-LIMIT") == NULL,
        "45: a bot wall served as 200 is named as one, and the remedy is the "
@@ -4500,6 +4524,37 @@ int main(void) {
   rc = run_source("T_URLSIZE", NULL);
   ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
      "46c: a 204 with no body is an honest empty, not a refused fetch");
+
+  /* 46e. AND THE PHRASE MUST BE THE BODY'S OWN MESSAGE, NOT A STRING BURIED IN
+   *      A WEB PAGE — 46b's dangerous direction, reached anyway (2026-11-05).
+   *      `JO47_IT_AUSL_MO` reads an Italian health authority's `/feed/`, which
+   *      answers HTTP 404 with 604,031 bytes of a React 404 page whose bundle
+   *      carries the WordPress block editor's translation table — and in it the
+   *      string "No matching blocks". So a dead feed was filed as a healthy
+   *      empty: rc=0, no records, no notice, with `bytes=604031` on the run
+   *      line the whole time. A service's declared-empty reply is its own short
+   *      message; none answers with a page. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "<!DOCTYPE html><html lang=\"it\"><head><title>Pagina non trovata"
+         "</title><script>var t={\"No matching blocks\":\"Nessun blocco "
+         "corrispondente\"};</script></head><body>404</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "the upstream refused the request") != NULL,
+       "46e: a 404 HTML page that merely contains 'no matching' is a refusal, "
+       "not the upstream's own no-data answer");
+    (void)rc; }
+
+  /* 46f. THE CONTROL for 46e: the real FDSN wording is plain text and must
+   *      still read as an honest empty. Narrowing 46e by excluding HTML is only
+   *      safe if it leaves this case exactly as 46 found it. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404, "Error 404: Not Found\n\nno data available\n");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46f: a plain-text 404 saying 'no data available' is still an honest empty");
 
   /* 46d. A WINDOW ROW MUST ADVANCE over a declared empty. The window was read
    *      and held nothing; not advancing would re-read that one empty window
@@ -5161,6 +5216,470 @@ int main(void) {
   ok(rc == 0 && cap_count("t-nextnum", NULL) == 3 && g_ncalls == 3,
      "39: a numeric next_path cursor walks on (after=2, after=3) instead of stopping at page 1");
 
+  /* ── 58. A REFUSAL SERVED AS 200 REACHES EVERY MODE DRIVER, not just JSON ──
+   *
+   * Tests 44 and 45 pin the rate-limit page and the bot wall — both through
+   * T_URLSIZE, an HP_JSON row, because the discriminators lived inside
+   * hp_run_json and nowhere else. So the fixes this file records as done on
+   * 2026-10-06 and 2026-10-20 each went into ONE of five mode drivers, and an
+   * HP_XML row handed a challenge page found no records, filed at most an
+   * `array-path-missing` notice whose remedy says RE-POINT THE PATH, and
+   * returned 0: the third reader sent hunting a move that never happened.
+   *
+   * Measured 2026-11-03 on the largest remaining family of the 2026-10-25
+   * sweep — 15 UK parish-council `/feed` rows, every one HP_XML with
+   * `array_path = "channel.item"`, whose bodies were byte-identical at 33,245
+   * bytes across 15 unrelated domains. Probed: Cloudflare's
+   * `<title>Just a moment...</title>`, which is also why that phrase is in the
+   * word list now — the two spellings the list already carried are its older
+   * interstitial, so even a JSON row behind current Cloudflare got the wrong
+   * remedy. T_XML_DOTTED is deliberately the same shape as those rows. */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment..."
+         "</title></head><body><div id=\"cf-wrapper\"><div>Enable JavaScript "
+         "and cookies to continue</div></div></body></html>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "58: an XML row served a bot wall as 200 discloses the wall, with the "
+       "User-Agent as the remedy rather than a re-point");
+    ok(cap_count("collector-shape-notice", NULL) == 0,
+       "58b: and it does NOT file array-path-missing — there is no path to "
+       "re-point when the endpoint stopped serving XML");
+    (void)rc; }
+
+  /* 58c. THE CONTROL that keeps it narrow. A real feed holding zero items is
+   *      an honest empty and must stay silent: the finding there is the
+   *      upstream's, which is the same line lib/rss_atom.c draws for
+   *      news24-za (424 bytes of valid RSS, today's lastBuildDate, no items). */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<?xml version=\"1.0\"?><rss version=\"2.0\"><channel>"
+         "<title>Parish notices</title><lastBuildDate>Mon, 03 Nov 2026 09:00:00 "
+         "GMT</lastBuildDate></channel></rss>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0 &&
+     g_ncap == 0,
+     "58c: a well-formed feed with zero items is an honest empty — no records "
+     "and no disclosure");
+
+  /* 58d. And the XML path's OWN schema-drift notice is unchanged: a body that
+   *      really is XML and really repeats some other element is drift, and
+   *      array-path-missing is the right answer there. The additive
+   *      guarantee — this is the case 58b must not have swallowed. */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<?xml version=\"1.0\"?><feed><notice><t>a</t></notice>"
+         "<notice><t>b</t></notice></feed>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "notice") != NULL &&
+       cap_count("collector-fetch-failure", NULL) == 0,
+       "58d: a declared element absent from a body that IS XML is still "
+       "reported as drift, not as a refusal");
+    (void)rc; }
+
+  /* 58e. CSV, where the stakes are highest: an HTML page PARSES as CSV — every
+   *      line becomes one unqueryable cell — so the parse cannot refuse it and
+   *      the row reports records it does not have. That is the `csv_delim`
+   *      lesson (one field per line, a correct record count on every run) with
+   *      a web page in place of a wrong delimiter. */
+  fx_reset();
+  fx_add("/d.csv", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body>Checking your browser before you continue.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_DELIM_COMMA", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL,
+       "58e: a CSV row served an HTML page discloses it instead of storing "
+       "the page's lines as records");
+    /* The disclosure is the only record: the page's lines are NOT stored. */
+    ok(g_ncap == 1, "58e-bis: and nothing but the disclosure reaches the sink");
+    (void)rc; }
+
+  /* 58f. The CSV control: a real CSV whose CELLS carry markup is not an HTML
+   *      document, and the test must not read one as the other — which is why
+   *      hp_body_is_html wants a doctype or an <html> root and reads only the
+   *      leading bytes. A register of web pages is an ordinary thing to
+   *      publish. */
+  fx_reset();
+  fx_add("/d.csv", 200,
+         "ward,method\nOgaki,\"<html>bicycle</html>\"\n");
+  g_ncap = 0;
+  rc = run_source("T_DELIM_COMMA", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0 &&
+     g_ncap == 1 && strstr(g_cap[0].props, "\"ward\":\"Ogaki\"") != NULL,
+     "58f: a CSV whose cells contain markup still stores its records");
+
+  /* 58g. HTML mode, where hp_body_is_html cannot discriminate because the data
+   *      IS a page — so only the refusal's own WORDS can, and `unreadable` is
+   *      set only when one of them fires. A listing that simply matched no
+   *      anchor stays an honest empty (the T_HTML_CAL calendar of test 57 is
+   *      the row, and 57's own fixture is the control for that half). */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body>Enable JavaScript and cookies to continue</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL,
+       "58g: an HTML row whose page is a wall discloses the wall rather than "
+       "reading it as a listing with nothing on it");
+    (void)rc; }
+
+  /* ── 59. A SITE IN MAINTENANCE SERVES ONE PAGE TO EVERY PATH ────────────
+   *
+   * Measured 2026-11-07 on www.finmac.or.jp: `/news/` answers HTTP 200,
+   * `/tokei-siryo/index_03/` answers 200, and a path that cannot exist answers
+   * 404 — all three the same 7,249 bytes, md5 d5b3d549,
+   * `<title>メンテナンス中｜FINMAC</title>`. Two registered rows sat on those
+   * paths reading `rc=0 records=0` with no notice at all, and the identical
+   * byte count was the only hint that it was one host-level cause rather than
+   * two row bugs.
+   *
+   * Its remedy is the opposite of every other shape in hp_body_refusal: WAIT.
+   * A reader told "the endpoint may have moved" re-points a row whose
+   * publisher is back the next morning, which turns a validated row into an
+   * unvalidated one — so the three flags stay three flags.
+   *
+   * 59c is the control that makes the whole thing safe, and it is the reason
+   * the test reads the <title> and not the body: "maintenance" is ordinary
+   * data in this tree (road maintenance, aircraft maintenance, maintenance of
+   * a register), so a substring test over a body would read a works register
+   * as a refusal — the mistake 45b already blocks for "access denied". */
+
+  /* 59. The measured case, in Japanese, on an HTML row. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head>"
+         "<title>\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83\x8a\xe3\x83\xb3"
+         "\xe3\x82\xb9\xe4\xb8\xad\xef\xbd\x9c" "FINMAC</title></head>"
+         "<body><p>ただいまメンテナンス中です</p></body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL &&
+       strstr(nt->props, "WAIT AND RE-READ THE ROW") != NULL,
+       "59: a maintenance page served as 200 is disclosed, with 'wait' as the "
+       "remedy rather than 're-point'");
+    (void)rc; }
+
+  /* 59b. The English spelling, and on a JSON row — the flag is shared by all
+   *      five mode drivers through hp_body_refusal, so a JSON endpoint behind
+   *      a maintenance page gets the same reading. */
+  fx_reset();
+  fx_add("/s?q=", 200,
+         "<!doctype html><html><head><title>Site Maintenance</title></head>"
+         "<body>We will be back shortly.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL,
+       "59b: the same reading on a JSON row — the test is shared, not per mode");
+    (void)rc; }
+
+  /* 59c. THE CONTROL. A page whose DATA is about maintenance, with a
+   *      data-shaped title. It must stay silent: this is a listing, and
+   *      reading it as a refusal would discard real records. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head>"
+         "<title>Road maintenance notices 2026</title></head><body>"
+         "<p>Scheduled maintenance of the bridge deck is under maintenance "
+         "review this quarter.</p>"
+         "<a href=\"/ev/2026/0101\">Bridge deck maintenance closure</a>"
+         "</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59c: a page ABOUT maintenance with a data-shaped title is not a refusal");
+
+  /* 59d. The second half of the control: a body with no <title> at all cannot
+   *      make a statement about itself, so it stays silent too. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><body>maintenance mode</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59d: the phrase outside a <title> is data, not a self-description");
+
+  /* 59e. Precedence: a maintenance page that ALSO says "rate limit" is read as
+   *      the rate limit, because that remedy (a measured per-host gap) is
+   *      actionable while "wait" is not. The order in hp_body_refusal is the
+   *      assertion. */
+  fx_reset();
+  fx_add("/s?q=", 200,
+         "<!doctype html><html><head><title>Under Maintenance</title></head>"
+         "<body>rate limit exceeded</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT") != NULL &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL,
+       "59e: rate limit wins over maintenance — the actionable remedy first");
+    (void)rc; }
+
+  /* ── 60. A WALL DOES NOT ALWAYS PICK A 200 ──────────────────────────────
+   *
+   * hp_body_refusal() reached all five mode drivers on 2026-11-05, which fixed
+   * WHERE it runs and left WHEN: every caller was a 2xx whose body would not
+   * parse, so a 403 never got the test and its remedy came from the status
+   * alone — "check whether the row needs a credential (key_env) or a
+   * User-Agent it is not sending".
+   *
+   * Measured 2026-11-11 on the 738 rows carrying exactly that remedy
+   * (docs/refused-403-sample-2026-11-11.tsv): 555 hosts, 40 sampled across all
+   * four rungs of core/host_agents.def's ladder, and NOT ONE host recovered by
+   * any rung. Of the 27 refusing every agent, 22 answer 403 with a Cloudflare
+   * challenge, 1 with a 1005 ASN block, and only 4 with a plain server 403 —
+   * so the advice was wrong for 23 of 27, and told the row to try the agent it
+   * had already tried.
+   *
+   * 60d is the control that bounds the change: a plain 403 with no wall
+   * wording keeps the credential/agent remedy, because for those 4 of 27 it is
+   * the right advice. */
+
+  /* 60. A Cloudflare challenge served as 403 is named as the wall it is. */
+  fx_reset();
+  fx_add("/s?q=", 403,
+         "<!doctype html><html><head><title>Just a moment...</title></head>"
+         "<body>Enable JavaScript and cookies to continue</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") != NULL &&
+       strstr(nt->props, "credential (key_env)") == NULL,
+       "60: a 403 carrying a bot wall is reported as a wall, not as a missing "
+       "credential");
+    (void)rc; }
+
+  /* 60b. Cloudflare 1005 is an ASN block, named apart because nothing reaches
+   *      it — measured on machi.to: 403 with a 17-byte body. */
+  fx_reset();
+  fx_add("/s?q=", 403, "error code: 1005");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "1005") != NULL &&
+       strstr(nt->props, "unmeasurable from this network") != NULL,
+       "60b: Cloudflare 1005 is named as an ASN block whose remedy is to "
+       "record it, not to hunt an agent");
+    (void)rc; }
+
+  /* 60c. The same on an HTML row, so this is the shared test and not a
+   *      per-mode one. */
+  fx_reset();
+  fx_add("/cal.html", 403,
+         "<!doctype html><html><head><title>Just a moment...</title></head>"
+         "<body>cf-browser-verification</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") != NULL,
+       "60c: the refusing-status test is shared by the mode drivers");
+    (void)rc; }
+
+  /* 60d. THE CONTROL. A plain server 403 with no wall wording keeps the
+   *      credential/agent remedy — right for the 4 of 27 that are genuinely
+   *      a server-level deny, and the thing this change must not break. */
+  fx_reset();
+  fx_add("/s?q=", 403,
+         "<html><head><title>403 Forbidden</title></head><body>"
+         "<h1>403 Forbidden</h1><hr>nginx</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "credential (key_env)") != NULL &&
+       strstr(nt->props, "BOT-WALL") == NULL,
+       "60d: a plain 403 keeps the credential/agent remedy — the change is "
+       "bounded to bodies that carry a wall's own words");
+    (void)rc; }
+
+  /* 60e. THE SECOND CONTROL, and the one that keeps rule 1 safe: a 404 whose
+   *      body is a service's own no-data wording is still an HONEST EMPTY and
+   *      files nothing, even though 404 is now a status the words test sees. */
+  fx_reset();
+  fx_add("/s?q=", 404, "No data available for the requested window\n");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "60e: a declared-empty 404 stays an honest empty and files nothing");
+
+  /* ── 61. A MAINTENANCE NOTICE WITH NO <title> AT ALL ────────────────────
+   *
+   * 59 reads the body's own <title> and 59d pins that the phrase outside one
+   * is data. That is right for a 200 — and it could not see the largest
+   * instance of this shape in the tree.
+   *
+   * Measured 2026-11-12: 164 of the 463 rows the 2026-10-25 sweep read SLOW
+   * are JAIRO Cloud / WEKO3 institutional repositories on 164 distinct
+   * `*.repo.nii.ac.jp` subdomains (226 such rows are registered), and all 164
+   * answer **HTTP 503 with the same 690 bytes**, md5 1c018096, whose entire
+   * <head> is one `<meta charset>`:
+   *
+   *   現在システムメンテナンスのためリポジトリをご利用いただけません。
+   *   停止期間： 2026年10月28日 (15:00-)
+   *   Repository is temporary unavaliable due to system maintenance.
+   *
+   * So the publisher names the cause in two languages with a start date and no
+   * end, and the engine's 5xx remedy said "re-run; if the status persists the
+   * endpoint has moved or retired". Fifteen days on, a reader following it
+   * re-points or retires 226 live rows.
+   *
+   * WHY THE BODY MAY BE READ HERE. 59's narrowness exists because reading a
+   * 200's body would reclassify a HEALTHY row — a works register — as a
+   * refusal. On a status that already failed there is no such move: the row
+   * failed either way and only the remedy changes, between two answers that
+   * both begin "re-run". 61c and 61d are the controls that hold that line, and
+   * 61d is the one that matters: the 200 case is unchanged, so 59d still
+   * passes beside this.
+   *
+   * 61 and 61b were confirmed to fail against the old code (no notice text
+   * mentioning maintenance; the remedy read "moved or retired"). */
+
+  /* 61. The measured case: a titleless 503 maintenance notice, on a JSON row
+   *     whose endpoint sits behind the platform. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "<!DOCTYPE html>\n<head>\n"
+         "<meta http-equiv=\"content-type\" charset=\"utf-8\">\n</head>\n<body>\n"
+         "\xe7\x8f\xbe\xe5\x9c\xa8\xe3\x82\xb7\xe3\x82\xb9\xe3\x83\x86\xe3\x83"
+         "\xa0\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83\x8a\xe3\x83\xb3\xe3"
+         "\x82\xb9\xe3\x81\xae\xe3\x81\x9f\xe3\x82\x81<br>\n"
+         "Repository is temporary unavaliable due to system maintenance.<br>\n"
+         "</body>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL &&
+       strstr(nt->props, "WAIT AND RE-READ THE ROW") != NULL &&
+       strstr(nt->props, "moved or retired") == NULL,
+       "61: a titleless maintenance notice on a 503 gets the WAIT remedy, not "
+       "\"moved or retired\"");
+    (void)rc; }
+
+  /* 61b. The record must not claim evidence it does not have. 59's text says
+   *      "the body's own <title> says"; this body has no title, so the cause
+   *      must say so instead — a disclosure that invents its own evidence is
+   *      the defect rule 1 exists to prevent. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "<!doctype html><html><body>Scheduled maintenance until further "
+         "notice.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "not \\nin a <title>") == NULL &&
+       strstr(nt->props, "in its text") != NULL,
+       "61b: the cause says the statement was in the text, not in a <title>");
+    (void)rc; }
+
+  /* 61c. CONTROL. The body must be an HTML DOCUMENT. A 503 carrying a DATA
+   *      payload that happens to mention system maintenance is not a notice
+   *      about itself — the 58f lesson, which caught the first version of the
+   *      markup test reading a CSV cell containing <html> as a page. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "{\"error\":\"backend down\",\"note\":\"system maintenance window "
+         "for the bridge deck register\"}");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL,
+       "61c: a 503 whose body is a DATA payload is not read as a notice about "
+       "itself");
+    (void)rc; }
+
+  /* 61d. THE CONTROL THAT BOUNDS THE CHANGE, and the reason 59's narrowness
+   *      survives: on a 200 the body is still not read for this. The very
+   *      body of 61b, served as a 200, must stay silent exactly as 59d does,
+   *      because there the row has NOT failed and reading it as a refusal
+   *      would discard a works register's real records. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!doctype html><html><body>Scheduled maintenance until further "
+         "notice.<a href=\"/ev/2026/0101\">Bridge deck closure notice</a>"
+         "</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "61d: on a 200 the body is still not read for maintenance — 59d's line "
+     "holds");
+
+  /* 61e. CONTROL. A plain 503 with no maintenance wording keeps the remedy it
+   *      had, so the change adds a reading and replaces none. */
+  fx_reset();
+  fx_add("/s?q=", 503, "<!doctype html><html><body>Service "
+                       "Unavailable</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL &&
+       strstr(nt->props, "moved or retired") != NULL,
+       "61e: a plain 503 keeps \"re-run; may have moved or retired\"");
+    (void)rc; }
+
+  /* ── 62. A DISCLOSURE MUST NOT REPORT A PARSE NOBODY ATTEMPTED ──────────
+   *
+   * `body_parsed` was `!st.unreadable`, and `unreadable` is only ever set by a
+   * mode driver — which only sees a 2xx body. So every refused fetch said
+   * `body_parsed: true` about bytes no parser had been handed. Found
+   * 2026-11-12 on the `*.repo.nii.ac.jp` family, where the same record now
+   * quotes what the body SAYS, which makes the contradiction visible.
+   *
+   * core/sourceapi.c has carried the third state since it was written
+   * (`-1 unknown`, served as JSON null), so omitting the field is what that
+   * layer already expects, and audit_registry_emit.py keys on `is False` and
+   * cannot read an absent field as a failed parse. */
+
+  /* 62. A 503: the parser never ran, so the field is absent rather than true. */
+  fx_reset();
+  fx_add("/s?q=", 503, "<!doctype html><html><body>Service "
+                       "Unavailable</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"body_parsed\"") == NULL,
+       "62: a refused fetch reports no body_parsed at all — the parser was "
+       "never called");
+    (void)rc; }
+
+  /* 62b. THE CONTROL. A 200 whose body does not parse still reports
+   *      `body_parsed: false`, which is a real measurement and the thing 3662
+   *      above already pins. The change removes a claim; it adds none. */
+  fx_reset();
+  fx_add("/s?q=", 200, "this is not JSON");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"body_parsed\":false") != NULL,
+       "62b: a 200 that did not parse still says so — only the unmeasured "
+       "case is dropped");
+    (void)rc; }
 
   /* LIB-03a. A next link naming ANOTHER host is followed, but without the
    * row's Authorization header. */

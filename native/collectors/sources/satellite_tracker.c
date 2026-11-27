@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "_credential_notice.inc"
 
 /* Emit one intel row for a single satellite. Returns 1 if emitted. */
 static int emit_satellite(intel_sink *sink, cJSON *s,
@@ -80,8 +81,9 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
 static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("N2YO_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[SATELLITE_TRACKER] gated (no N2YO_API_KEY)\n");
-    return 0;                              /* key-gated: emit nothing */
+    return jo_needs_credential(sink, ctx->source_id, "SATELLITE_TRACKER",
+                                (const char *[]){ "N2YO_API_KEY", NULL },
+                                NULL, NULL);                              /* key-gated: emit nothing */
   }
 
   /* The observer used to be hardcoded to 40.7128,-74.0060 (New York) while

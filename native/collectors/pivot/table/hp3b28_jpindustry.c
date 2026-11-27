@@ -828,23 +828,6 @@ static const hp_source HP3B28_JPINDUSTRY[] = {
       "file), not an individual company, since html mode extracts "
       "anchor links rather than PDF contents." },
 
-  { .id = "JO28_IT_SHIEN_GRANTDECISION", .name = "Digital/IT Introduction Subsidy — Grant-Decision Operator Lists",
-    .name_ja = "IT導入補助金 交付決定事業者一覧",
-    .category = "procurement", .portal = "https://it-shien.smrj.go.jp/",
-    .record_type = "subsidy-award-list",
-    .tags = "\"japan\",\"sme\",\"subsidy\",\"itshien\",\"procurement\",\"pdf\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://it-shien.smrj.go.jp/download/grantdecision_list/",
-    .base = "https://it-shien.smrj.go.jp",
-    .href_must = "/pdf/it2026_grantdecision_list",
-    .interval = 604800,
-    .description = "This download page links to 7 real PDF files (e.g. "
-      "/pdf/it2026_grantdecision_list_tsujyo.pdf, _invoice.pdf, "
-      "_security.pdf, _fukusu.pdf, some split into round-2 variants), "
-      "each a named list of SMEs approved for one FY2026 subsidy "
-      "category/round, last updated per the page as of 2026-07-23. "
-      "PDF-only, no CSV/Excel alternative; each PDF link is a record "
-      "here, not an individual company." },
 
   { .id = "JO28_JIGYOU_SAIKOUCHIKU_RESULT", .name = "Business Restructuring Subsidy — Adoption Result PDF Lists",
     .name_ja = "事業再構築補助金 採択結果",

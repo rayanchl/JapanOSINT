@@ -18,7 +18,13 @@
  * abolished_only = N05's `filter:(f)=>f.properties.status==='abolished'`
  * (pass 0 for every other dataset). Emits the first non-empty mirror's
  * normalized features via geojson_emit_features; returns #emitted (>=0) or -1
- * on hard failure. 0 rows when no mirror responds is success (return 0). */
+ * on hard failure.
+ *
+ * NO MIRROR RESPONDING IS A FAILURE (-1), not success. This line used to say
+ * the opposite and the .c implemented it, so six national registers fetched
+ * two 404 pages each and reported `rc=0 records=0` — the invisible nothing of
+ * rule 1. See the comment at the return site for the measurement. A mirror
+ * that really serves an EMPTY array is still an honest 0. */
 int mlit_ksj_collect(const source_ctx *ctx, intel_sink *sink,
                      const char *code, const char *env_key,
                      const char *const *mirrors, int n_mirrors,

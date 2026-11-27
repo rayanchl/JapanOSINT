@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const char *cell(cJSON *row, const char *k) {
   cJSON *v = cJSON_GetObjectItem(row, k);
@@ -43,8 +44,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!url || !*url) {
     /* Gated, not failed: -1 logs fetch_log status='error' and opens a
      * collector_anomaly every tick for a source that was never configured. */
-    fprintf(stderr, "[police-incidents] gated (no POLICE_INCIDENTS_CSV_URL)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "police-incidents",
+                                (const char *[]){ "POLICE_INCIDENTS_CSV_URL", NULL },
+                                NULL, NULL);
   }
   char *text = feed_get_text(ctx->http, url, 20000);
   if (!text || !*text) { free(text); fprintf(stderr, "[police-incidents] unavailable\n"); return -1; }

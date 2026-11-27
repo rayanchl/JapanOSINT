@@ -1,0 +1,424 @@
+key	action	id	file	url	stored	shape	why
+https://24newsclick.com/feed	KEEP	JO48_NEWS_Q141216614	hp3b48_news.c	https://24newsclick.com/feed.xml	20	feed_path_variant	keeps the base id
+https://24newsclick.com/feed	RETIRE	JO48_NEWS_Q141216614_2	hp3b48_news.c	https://24newsclick.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://3gtimes.com/feed	KEEP	JO48_NEWS_Q141216615	hp3b48_news.c	https://3gtimes.com/feed.xml	20	feed_path_variant	keeps the base id
+https://3gtimes.com/feed	RETIRE	JO48_NEWS_Q141216615_2	hp3b48_news.c	https://3gtimes.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://access-journal.jp/feed	KEEP	JO48_NEWS_Q86741222	hp3b48_news.c	https://access-journal.jp/feed	10	feed_path_variant	keeps the base id
+https://access-journal.jp/feed	RETIRE	JO48_NEWS_Q86741222_2	hp3b48_news.c	https://access-journal.jp/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://acorianooriental.pt/feed/feed	KEEP	JO48_NEWS_Q4350216	hp3b48_news.c	https://www.acorianooriental.pt/feed/rss.xml	25	feed_path_variant	keeps the base id
+https://acorianooriental.pt/feed/feed	RETIRE	JO48_NEWS_Q4350216_2	hp3b48_news.c	https://www.acorianooriental.pt/feed/atom.xml	25	feed_path_variant	same feed as the kept row, reached by another spelling
+https://adaptation-fund.org/feed	KEEP	JO48_IGO_Q352378	hp3b48_igo.c	https://www.adaptation-fund.org/feed/	10	feed_path_variant	keeps the base id
+https://adaptation-fund.org/feed	RETIRE	JO48_IGO_Q352378_2	hp3b48_igo.c	http://www.adaptation-fund.org/rss	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://afa.ad/feed	KEEP	JO47_WD_Q11926724_2	hp3b47_wdgov.c	https://www.afa.ad/rss.xml	500	feed_path_variant	keeps the base id
+https://afa.ad/feed	RETIRE	JO47_WD_Q11926724_3	hp3b47_wdgov.c	https://www.afa.ad/atom.xml	500	feed_path_variant	same feed as the kept row, reached by another spelling
+https://agi.it/economia/feed	KEEP	JO47_IT_FEDAF_6	hp3b47_itgov.c	http://www.agi.it/economia/rss	20	feed_path_variant	keeps the base id
+https://agi.it/economia/feed	RETIRE	JO48_NEWS_Q3606450_3	hp3b48_news.c	https://www.agi.it/economia/rss.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://agile-news.com/feed	KEEP	JO48_NEWS_Q141216621	hp3b48_news.c	https://agile-news.com/feed.xml	20	feed_path_variant	keeps the base id
+https://agile-news.com/feed	RETIRE	JO48_NEWS_Q141216621_2	hp3b48_news.c	https://agile-news.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://aglanews.com/feed	KEEP	JO48_NEWS_Q141216623	hp3b48_news.c	https://aglanews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://aglanews.com/feed	RETIRE	JO48_NEWS_Q141216623_2	hp3b48_news.c	https://aglanews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://aisne.com/news/feed	KEEP	JO47_FR_35C9FF41_7975_4F02_ACA4_BD212AD3DBDF	hp3b47_frgov.c	https://aisne.com/news/rss.xml	10	www	keeps the base id
+https://aisne.com/news/feed	RETIRE	JO47_FR_91B9CA84_B7C8_4B00_9549_FC033777E516	hp3b47_frgov.c	https://www.aisne.com/news/rss.xml	10	www	same feed as the kept row, reached by another spelling
+https://alfahir.hu/syndication/feed	KEEP	JO48_NEWS_Q97192831	hp3b48_news.c	https://alfahir.hu/syndication/rss.xml	10	feed_path_variant	keeps the base id
+https://alfahir.hu/syndication/feed	RETIRE	JO48_NEWS_Q97192831_2	hp3b48_news.c	https://alfahir.hu/syndication/atom.xml	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://amjilt.news/feed	KEEP	JO48_NEWS_Q141216626	hp3b48_news.c	https://amjilt.news/feed.xml	20	feed_path_variant	keeps the base id
+https://amjilt.news/feed	RETIRE	JO48_NEWS_Q141216626_2	hp3b48_news.c	https://amjilt.news/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://animux.es/feed	KEEP	JO48_NEWS_Q141580434	hp3b48_news.c	https://animux.es/rss.xml	30	feed_path_variant	keeps the base id
+https://animux.es/feed	RETIRE	JO48_NEWS_Q141580434_2	hp3b48_news.c	https://animux.es/atom.xml	30	feed_path_variant	same feed as the kept row, reached by another spelling
+https://asfromania.ro/ro/rss/feed	KEEP	JO47_WD_Q18537588	hp3b47_wdgov.c	https://www.asfromania.ro/ro/rss/rss.xml	0	www	no member stores today — one row kept, disclosing
+https://asfromania.ro/ro/rss/feed	RETIRE	JO47_WD_Q18537588_2	hp3b47_wdgov.c	https://asfromania.ro/ro/rss/rss.xml	0	www	same feed as the kept row, reached by another spelling
+https://associations37.org/feed	KEEP	JO47_FR_515D64C9_88DE_44D2_9BE6_C20D86805A4B	hp3b47_frgov.c	https://www.associations37.org/feed/	10	www	keeps the base id
+https://associations37.org/feed	RETIRE	JO47_FR_515D64C9_88DE_44D2_9BE6_C20D86805A4B_2	hp3b47_frgov.c	https://associations37.org/feed/	10	www	same feed as the kept row, reached by another spelling
+https://assr.regione.emilia-romagna.it/feed	KEEP	JO47_WD_Q43895470_2	hp3b47_wdgov.c	https://assr.regione.emilia-romagna.it/rss.xml	15	feed_path_variant	keeps the base id
+https://assr.regione.emilia-romagna.it/feed	RETIRE	JO47_WD_Q43895470_3	hp3b47_wdgov.c	https://assr.regione.emilia-romagna.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://auniao.pb.gov.br/feed	KEEP	JO48_NEWS_Q9559228_2	hp3b48_news.c	https://auniao.pb.gov.br/rss.xml	0	feed_path_variant	no member stores today — one row kept, disclosing
+https://auniao.pb.gov.br/feed	RETIRE	JO48_NEWS_Q9559228_3	hp3b48_news.c	https://auniao.pb.gov.br/atom.xml	0	feed_path_variant	same feed as the kept row, reached by another spelling
+https://batzendorf.fr	KEEP	JO47_FR_716426ED_FB98_40A3_BAA7_BF5479214286	hp3b47_frgov.c	https://www.batzendorf.fr/?feed=rss2	10	wp_feed_param	keeps the base id
+https://batzendorf.fr	RETIRE	JO47_FR_716426ED_FB98_40A3_BAA7_BF5479214286_2	hp3b47_frgov.c	https://www.batzendorf.fr/?feed=atom	10	wp_feed_param	same feed as the kept row, reached by another spelling
+https://beiradocampo.com.br/feed	KEEP	JO48_NEWS_Q139377657	hp3b48_news.c	https://beiradocampo.com.br/feed.xml	30	feed_path_variant	keeps the base id
+https://beiradocampo.com.br/feed	RETIRE	JO48_NEWS_Q139377657_2	hp3b48_news.c	https://beiradocampo.com.br/atom.xml	30	feed_path_variant	same feed as the kept row, reached by another spelling
+https://biron64.fr/flux-rss.php	KEEP	JO47_FR_0274BFB4_15E6_41F9_9C27_34A658F95CE0	hp3b47_frgov.c	https://biron64.fr/flux-rss.php	20	feed_path_variant	keeps the base id
+https://biron64.fr/flux-rss.php	RETIRE	JO47_FR_D66B74B7_3412_4608_B7C6_D8843D7966B8	hp3b47_frgov.c	http://www.biron64.fr/flux-rss.php	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://blogdaily.us/feed	KEEP	JO48_NEWS_Q141216652	hp3b48_news.c	https://blogdaily.us/feed.xml	20	feed_path_variant	keeps the base id
+https://blogdaily.us/feed	RETIRE	JO48_NEWS_Q141216652_2	hp3b48_news.c	https://blogdaily.us/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://boege.fr/spip.php?page=backend	KEEP	JO47_FR_D0E72DDB_5BF3_4C41_9BCD_15A9D75A090C	hp3b47_frgov.c	https://www.boege.fr/spip.php?page=backend	10	www	keeps the base id
+https://boege.fr/spip.php?page=backend	RETIRE	JO47_FR_D371C277_FCFE_42E7_AB85_A6439A0C66D9	hp3b47_frgov.c	https://boege.fr/spip.php?page=backend	10	www	same feed as the kept row, reached by another spelling
+https://boultsursuippe.fr/flux-rss.php	KEEP	JO47_FR_2E83F14D_9612_4239_8CE2_752FBB9192A8	hp3b47_frgov.c	https://boultsursuippe.fr/flux-rss.php	20	www	keeps the base id
+https://boultsursuippe.fr/flux-rss.php	RETIRE	JO47_FR_2E83F14D_9612_4239_8CE2_752FBB9192A8_2	hp3b47_frgov.c	https://www.boultsursuippe.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://bourgueil.fr/feed	KEEP	JO47_FR_5D07A543_A2E3_441D_90FE_4AF7324C49DC	hp3b47_frgov.c	https://www.bourgueil.fr/feed/	10	www	keeps the base id
+https://bourgueil.fr/feed	RETIRE	JO47_FR_86EE36C6_863F_4E86_9530_CE46FDD5A129	hp3b47_frgov.c	https://bourgueil.fr/feed/	10	www	same feed as the kept row, reached by another spelling
+https://brightonandhovenews.org/feed	KEEP	JO48_NEWS_Q122624545	hp3b48_news.c	https://www.brightonandhovenews.org/feed/	10	feed_path_variant	keeps the base id
+https://brightonandhovenews.org/feed	RETIRE	JO48_NEWS_Q122624545_2	hp3b48_news.c	https://brightonandhovenews.org/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://businessnews7.com/feed	KEEP	JO48_NEWS_Q141216654	hp3b48_news.c	https://businessnews7.com/feed.xml	20	feed_path_variant	keeps the base id
+https://businessnews7.com/feed	RETIRE	JO48_NEWS_Q141216654_2	hp3b48_news.c	https://businessnews7.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://buzznews10.com/feed	KEEP	JO48_NEWS_Q141216655	hp3b48_news.c	https://buzznews10.com/feed.xml	20	feed_path_variant	keeps the base id
+https://buzznews10.com/feed	RETIRE	JO48_NEWS_Q141216655_2	hp3b48_news.c	https://buzznews10.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://bygdebladet.com/feed	KEEP	JO48_NEWS_Q10971581	hp3b48_news.c	https://bygdebladet.com/atom.xml	100	feed_path_variant	keeps the base id
+https://bygdebladet.com/feed	RETIRE	JO48_NEWS_Q10971581_2	hp3b48_news.c	https://bygdebladet.com/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ccctimes.com/feed	KEEP	JO48_NEWS_Q141250170	hp3b48_news.c	https://ccctimes.com/feed.xml	20	feed_path_variant	keeps the base id
+https://ccctimes.com/feed	RETIRE	JO48_NEWS_Q141250170_2	hp3b48_news.c	https://ccctimes.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://cgh-iga.jp	KEEP	JO57IQ30929370	hp3b57_jpheal.c	https://www.cgh-iga.jp/?feed=rss2	10	wp_feed_param	keeps the base id
+https://cgh-iga.jp	RETIRE	JO57IQ30929370_2	hp3b57_jpheal.c	https://www.cgh-iga.jp/?feed=rss2&	10	wp_feed_param	same feed as the kept row, reached by another spelling
+https://chateaulavalliere.fr/feed	KEEP	JO47_FR_4EA4BC3C_7C2C_4B7C_833B_FD282C242FF1	hp3b47_frgov.c	https://chateaulavalliere.fr/feed/	10	www	keeps the base id
+https://chateaulavalliere.fr/feed	RETIRE	JO47_FR_C32356F0_90AA_416C_8F66_927BCC9E50DF	hp3b47_frgov.c	https://www.chateaulavalliere.fr/feed/	10	www	same feed as the kept row, reached by another spelling
+https://city.gujo.gifu.jp/feed	KEEP	JPMUNI_GUJO_UPDATE	hp3b23_jpmuni.c	https://www.city.gujo.gifu.jp/rss.xml	100	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://city.gujo.gifu.jp/feed	KEEP	JPMUNI_GUJO_UPDATE_2	hp3b25_jpmunireserve.c	https://www.city.gujo.gifu.jp/atom.xml	50	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://city.noshiro.lg.jp/feed	KEEP	JO43_MUNI_052027	hp3b43_jprss.c	https://www.city.noshiro.lg.jp/rss	20	feed_path_variant	keeps the base id
+https://city.noshiro.lg.jp/feed	RETIRE	JPMUNI_NOSHIRO_UPDATE	hp3b23_jpmuni.c	https://www.city.noshiro.lg.jp/rss.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://city.saito.lg.jp/feed	KEEP	JPMUNI_SAITO_UPDATE	hp3b25_jpmunireserve.c	https://www.city.saito.lg.jp/rss.xml	0	feed_path_variant	no member stores today — one row kept, disclosing
+https://city.saito.lg.jp/feed	RETIRE	JPMUNI_SAITO_UPDATE_2	hp3b25_jpmunireserve.c	https://www.city.saito.lg.jp/atom.xml	0	feed_path_variant	same feed as the kept row, reached by another spelling
+https://clerlande.fr/flux-rss.php	KEEP	JO47_FR_DBFD7C51_27C1_4F68_B86D_9D7EDB2AEAB4	hp3b47_frgov.c	https://clerlande.fr/flux-rss.php	20	www	keeps the base id
+https://clerlande.fr/flux-rss.php	RETIRE	JO47_FR_DBFD7C51_27C1_4F68_B86D_9D7EDB2AEAB4_2	hp3b47_frgov.c	https://www.clerlande.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://codot.gov/feed	KEEP	JO44_US_CODOT_GOV_2	hp3b44_usgov.c	https://www.codot.gov/rss.xml	500	feed_path_variant	keeps the base id
+https://codot.gov/feed	RETIRE	JO44_US_CODOT_GOV_3	hp3b44_usgov.c	https://www.codot.gov/atom.xml	500	feed_path_variant	same feed as the kept row, reached by another spelling
+https://comune.brandico.bs.it/feed	KEEP	JO47_IT_C_B120_2	hp3b47_itgov.c	https://www.comune.brandico.bs.it/rss.xml	15	feed_path_variant	keeps the base id
+https://comune.brandico.bs.it/feed	RETIRE	JO47_IT_C_B120_3	hp3b47_itgov.c	https://www.comune.brandico.bs.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://comune.pumenengo.bg.it/feed	KEEP	JO47_IT_C_H091_2	hp3b47_itgov.c	https://www.comune.pumenengo.bg.it/rss.xml	15	feed_path_variant	keeps the base id
+https://comune.pumenengo.bg.it/feed	RETIRE	JO47_IT_C_H091_3	hp3b47_itgov.c	https://www.comune.pumenengo.bg.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://consulentidellavoro.pa.it/feed	KEEP	JO47_IT_OCLPAL	hp3b47_itgov.c	https://consulentidellavoro.pa.it/feed/	20	feed_path_variant	keeps the base id
+https://consulentidellavoro.pa.it/feed	RETIRE	JO47_IT_OCLPAL_2	hp3b47_itgov.c	https://consulentidellavoro.pa.it/rss	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://corasse.com/feed	KEEP	JO57IQ61886264	hp3b57_jpcult.c	https://www.corasse.com/feed	10	feed_path_variant	keeps the base id
+https://corasse.com/feed	RETIRE	JO57IQ61886264_2	hp3b57_jpcult.c	https://www.corasse.com/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://couthenans.fr/feed	KEEP	JO47_FR_5275ABE4_5EAB_43A6_AF0A_E6269E70E4B3	hp3b47_frgov.c	https://couthenans.fr/feed.xml	10	feed_path_variant	keeps the base id
+https://couthenans.fr/feed	RETIRE	JO47_FR_5275ABE4_5EAB_43A6_AF0A_E6269E70E4B3_2	hp3b47_frgov.c	https://couthenans.fr/atom.xml	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dailydetectivenews.com/feed	KEEP	JO48_NEWS_Q141216658	hp3b48_news.c	https://dailydetectivenews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://dailydetectivenews.com/feed	RETIRE	JO48_NEWS_Q141216658_2	hp3b48_news.c	https://dailydetectivenews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dailynewsvoyage.com/feed	KEEP	JO48_NEWS_Q141216659	hp3b48_news.c	https://dailynewsvoyage.com/feed.xml	20	feed_path_variant	keeps the base id
+https://dailynewsvoyage.com/feed	RETIRE	JO48_NEWS_Q141216659_2	hp3b48_news.c	https://dailynewsvoyage.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dailypencil.com/feed	KEEP	JO48_NEWS_Q141216660	hp3b48_news.c	https://dailypencil.com/feed.xml	20	feed_path_variant	keeps the base id
+https://dailypencil.com/feed	RETIRE	JO48_NEWS_Q141216660_2	hp3b48_news.c	https://dailypencil.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dayuenews.com/feed	KEEP	JO48_NEWS_Q141216662	hp3b48_news.c	https://dayuenews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://dayuenews.com/feed	RETIRE	JO48_NEWS_Q141216662_2	hp3b48_news.c	https://dayuenews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://destinazioneromagna.emr.it/feed	KEEP	JO47_IT_DTROM_2	hp3b47_itgov.c	https://destinazioneromagna.emr.it/rss.xml	15	feed_path_variant	keeps the base id
+https://destinazioneromagna.emr.it/feed	RETIRE	JO47_IT_DTROM_3	hp3b47_itgov.c	https://destinazioneromagna.emr.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dgert.gov.pt/feed	KEEP	JO47_WD_Q86360599	hp3b47_wdgov.c	https://www.dgert.gov.pt/feed	0	feed_path_variant	no member stores today — one row kept, disclosing
+https://dgert.gov.pt/feed	RETIRE	JO47_WD_Q86360599_2	hp3b47_wdgov.c	http://www.dgert.gov.pt/feed/rss	0	feed_path_variant	same feed as the kept row, reached by another spelling
+https://dila.gouv.fr/spip.php?page=backend	KEEP	JO47_FR_68C54A12_2377_4D44_B170_C210312D37B6	hp3b47_frgov.c	https://dila.gouv.fr/spip.php?page=backend	10	www	keeps the base id
+https://dila.gouv.fr/spip.php?page=backend	RETIRE	JO47_FR_932DA84F_7BED_49E3_9991_55F9A26DE720	hp3b47_frgov.c	https://www.dila.gouv.fr/spip.php?page=backend	10	www	same feed as the kept row, reached by another spelling
+https://dsac.gov/feed	KEEP	JO44_US_DSAC_GOV_2	hp3b44_usgov.c	https://www.dsac.gov/rss.xml	12	feed_path_variant	keeps the base id
+https://dsac.gov/feed	RETIRE	JO44_US_DSAC_GOV_3	hp3b44_usgov.c	https://www.dsac.gov/atom.xml	12	feed_path_variant	same feed as the kept row, reached by another spelling
+https://echofm.online/feed	KEEP	JO48_NEWS_Q114398988	hp3b48_news.c	https://echofm.online/feed	50	feed_path_variant	keeps the base id
+https://echofm.online/feed	RETIRE	JO48_NEWS_Q114398988_2	hp3b48_news.c	https://echofm.online/feed/atom	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ecso.org/feed	KEEP	JO48_IGO_Q18553830	hp3b48_igo.c	https://www.ecso.org/feed/	9	feed_path_variant	keeps the base id
+https://ecso.org/feed	RETIRE	JO48_IGO_Q18553830_4	hp3b48_igo.c	https://www.ecso.org/rss	9	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ecso.org/news/feed	KEEP	JO48_IGO_Q18553830_2	hp3b48_igo.c	https://www.ecso.org/news/feed/	20	feed_path_variant	keeps the base id
+https://ecso.org/news/feed	RETIRE	JO48_IGO_Q18553830_3	hp3b48_igo.c	https://www.ecso.org/news/rss	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ednnews-12.com/feed	KEEP	JO48_NEWS_Q141216666	hp3b48_news.c	https://ednnews-12.com/feed.xml	20	feed_path_variant	keeps the base id
+https://ednnews-12.com/feed	RETIRE	JO48_NEWS_Q141216666_2	hp3b48_news.c	https://ednnews-12.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://engevitynews.com/feed	KEEP	JO48_NEWS_Q141216668	hp3b48_news.c	https://engevitynews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://engevitynews.com/feed	RETIRE	JO48_NEWS_Q141216668_2	hp3b48_news.c	https://engevitynews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://esa.act.gov.au/feed	KEEP	JO47_WD_Q4650880	hp3b47_wdgov.c	http://www.esa.act.gov.au/feed	10	www	keeps the base id
+https://esa.act.gov.au/feed	RETIRE	JO47_WD_Q4650880_2	hp3b47_wdgov.c	http://esa.act.gov.au/feed	10	www	same feed as the kept row, reached by another spelling
+https://fapesq.rpp.br/feed	KEEP	JO47_WD_Q30264215	hp3b47_wdgov.c	https://fapesq.rpp.br/rss.xml	0	feed_path_variant	no member stores today — one row kept, disclosing
+https://fapesq.rpp.br/feed	RETIRE	JO47_WD_Q30264215_2	hp3b47_wdgov.c	https://fapesq.rpp.br/atom.xml	0	feed_path_variant	same feed as the kept row, reached by another spelling
+https://farmpresstheme.com/feed	KEEP	JO48_NEWS_Q141216672	hp3b48_news.c	https://farmpresstheme.com/feed.xml	20	feed_path_variant	keeps the base id
+https://farmpresstheme.com/feed	RETIRE	JO48_NEWS_Q141216672_2	hp3b48_news.c	https://farmpresstheme.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://forcesarmees.gouv.sn/feed	KEEP	JO47_WD_Q120176333	hp3b47_wdgov.c	https://forcesarmees.gouv.sn/rss.xml	2	www	keeps the base id
+https://forcesarmees.gouv.sn/feed	RETIRE	JO47_WD_Q139497581	hp3b47_wdgov.c	https://www.forcesarmees.gouv.sn/rss.xml	2	www	same feed as the kept row, reached by another spelling
+https://frolendingen.no/feed	KEEP	JO48_NEWS_Q11970386	hp3b48_news.c	https://frolendingen.no/atom.xml	100	feed_path_variant	keeps the base id
+https://frolendingen.no/feed	RETIRE	JO48_NEWS_Q11970386_2	hp3b48_news.c	https://frolendingen.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://fuchuhp.jp/feed	KEEP	JO47_WD_Q137943560	hp3b47_wdgov.c	https://fuchuhp.jp/feed/atom	5	feed_path_variant	keeps the base id
+https://fuchuhp.jp/feed	RETIRE	JO47_WD_Q137943560_2	hp3b47_wdgov.c	https://fuchuhp.jp/feed	5	feed_path_variant	same feed as the kept row, reached by another spelling
+https://funnewsdaily.com/feed	KEEP	JO48_NEWS_Q141216673	hp3b48_news.c	https://funnewsdaily.com/feed.xml	20	feed_path_variant	keeps the base id
+https://funnewsdaily.com/feed	RETIRE	JO48_NEWS_Q141216673_2	hp3b48_news.c	https://funnewsdaily.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://gavrelle.fr/feed/index.html	KEEP	JO47_FR_0030C6D2_A58B_4695_B249_EFA5AEE36990	hp3b47_frgov.c	http://gavrelle.fr/feed/index.html	8	www	keeps the base id
+https://gavrelle.fr/feed/index.html	RETIRE	JO47_FR_C52379B7_F93A_4C35_A4E1_7E15C9832C31	hp3b47_frgov.c	http://www.gavrelle.fr/feed/index.html	8	www	same feed as the kept row, reached by another spelling
+https://gazetamercantil.com/feed	KEEP	JO48_NEWS_Q10288561	hp3b48_news.c	https://gazetamercantil.com/feed	50	feed_path_variant	keeps the base id
+https://gazetamercantil.com/feed	RETIRE	JO48_NEWS_Q10288561_2	hp3b48_news.c	https://gazetamercantil.com/feed/atom	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://gorron.org/index.php/fr	KEEP	JO47_FR_8CF44C36_C747_4D05_AE32_72CB635BE649	hp3b47_frgov.c	https://www.gorron.org/index.php/fr/?format=feed&type=rss	16	www	keeps the base id
+https://gorron.org/index.php/fr	RETIRE	JO47_FR_D0756FD9_75B6_411F_87FB_1CEF6785889E	hp3b47_frgov.c	https://gorron.org/index.php/fr/?format=feed&type=rss	16	www	same feed as the kept row, reached by another spelling
+https://halifaxexaminer.ca/feed	KEEP	JO48_NEWS_Q28233111	hp3b48_news.c	https://www.halifaxexaminer.ca/feed/	10	www	keeps the base id
+https://halifaxexaminer.ca/feed	RETIRE	JO48_NEWS_Q28233111_2	hp3b48_news.c	https://halifaxexaminer.ca/feed/	10	www	same feed as the kept row, reached by another spelling
+https://haraganka.com/feed	KEEP	JO57IQ30265217	hp3b57_jpheal.c	https://haraganka.com/feed/atom	10	feed_path_variant	keeps the base id
+https://haraganka.com/feed	RETIRE	JO57IQ30265217_2	hp3b57_jpheal.c	https://haraganka.com/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://haramsnytt.no/feed	KEEP	JO48_NEWS_Q3420557	hp3b48_news.c	https://haramsnytt.no/atom.xml	100	feed_path_variant	keeps the base id
+https://haramsnytt.no/feed	RETIRE	JO48_NEWS_Q3420557_2	hp3b48_news.c	https://haramsnytt.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://hita-k.org/feed	KEEP	JO57IQ61900975	hp3b57_jpcult.c	http://www.hita-k.org/feed/atom	10	feed_path_variant	keeps the base id
+https://hita-k.org/feed	RETIRE	JO57IQ61900975_2	hp3b57_jpcult.c	http://www.hita-k.org/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://hollandvt.gov/feed	KEEP	JO44_US_HOLLANDVT_GOV	hp3b44_usgov.c	https://hollandvt.gov/feed.xml	2	feed_path_variant	keeps the base id
+https://hollandvt.gov/feed	RETIRE	JO44_US_HOLLANDVT_GOV_2	hp3b44_usgov.c	https://hollandvt.gov/atom.xml	2	feed_path_variant	same feed as the kept row, reached by another spelling
+https://idag.no/feed	KEEP	JO48_NEWS_Q1759310	hp3b48_news.c	https://idag.no/atom.xml	100	feed_path_variant	keeps the base id
+https://idag.no/feed	RETIRE	JO48_NEWS_Q1759310_2	hp3b48_news.c	https://idag.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://info.fr/feed	KEEP	JO48_NEWS_Q138678830	hp3b48_news.c	https://info.fr/feed/	50	feed_path_variant	keeps the base id
+https://info.fr/feed	RETIRE	JO48_NEWS_Q138678830_2	hp3b48_news.c	https://info.fr/rss	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://iprcenter.gov/feed	KEEP	JO44_US_IPRCENTER_GOV_2	hp3b44_usgov.c	https://www.iprcenter.gov/rss.xml	15	feed_path_variant	keeps the base id
+https://iprcenter.gov/feed	RETIRE	JO44_US_IPRCENTER_GOV_3	hp3b44_usgov.c	https://www.iprcenter.gov/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://isa.org.jm/feed	KEEP	JO48_IGO_Q333727	hp3b48_igo.c	https://isa.org.jm/feed/	9	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://isa.org.jm/feed	KEEP	JO48_IGO_Q333727_2	hp3b48_igo.c	https://isa.org.jm/rss.xml	50	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://ithome.com.tw/feed	KEEP	JO48_NEWS_Q123398745	hp3b48_news.c	https://www.ithome.com.tw/rss.xml	10	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://ithome.com.tw/feed	KEEP	JO48_NEWS_Q123398745_2	hp3b48_news.c	https://www.ithome.com.tw/rss	30	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://ja-kyoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	KEEP	JO49_WP_JAKYOTO_PAGES	hp3b49_jpwpagri.c	http://ja-kyoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	7	feed_path_variant	keeps the base id
+https://ja-kyoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	RETIRE	JO49_WP_JAKYOTO_PAGES2	hp3b49_jpwpagri.c	https://www.ja-kyoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	7	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ja-kyoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	KEEP	JO49_WP_JAKYOTO_POSTS	hp3b49_jpwpagri.c	http://ja-kyoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	4	feed_path_variant	keeps the base id
+https://ja-kyoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	RETIRE	JO49_WP_JAKYOTO_POSTS2	hp3b49_jpwpagri.c	https://www.ja-kyoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	4	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ja-kyoto.jp/wp-json/wp/v2/users?per_page=100	KEEP	JO49_WP_JAKYOTO_USERS	hp3b49_jpwpagri.c	http://ja-kyoto.jp/wp-json/wp/v2/users?per_page=100	2	feed_path_variant	keeps the base id
+https://ja-kyoto.jp/wp-json/wp/v2/users?per_page=100	RETIRE	JO49_WP_JAKYOTO_USERS2	hp3b49_jpwpagri.c	https://www.ja-kyoto.jp/wp-json/wp/v2/users?per_page=100	2	feed_path_variant	same feed as the kept row, reached by another spelling
+https://jinken-fureai.jp	KEEP	JO57IQ61888327	hp3b57_jpcult.c	https://jinken-fureai.jp/?feed=atom	2	wp_feed_param	keeps the base id
+https://jinken-fureai.jp	RETIRE	JO57IQ61888327_2	hp3b57_jpcult.c	https://jinken-fureai.jp/?feed=rss2	2	wp_feed_param	same feed as the kept row, reached by another spelling
+https://jornaldaparaiba.com.br/feed	KEEP	JO48_NEWS_Q18285222	hp3b48_news.c	https://jornaldaparaiba.com.br/rss	50	feed_path_variant	keeps the base id
+https://jornaldaparaiba.com.br/feed	RETIRE	JO48_NEWS_Q18285222_2	hp3b48_news.c	https://jornaldaparaiba.com.br/feed	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://jugeals-nazareth.fr/flux-rss.php	KEEP	JO47_FR_6415BF41_AEED_41B0_949C_7BB9E0829B78	hp3b47_frgov.c	https://jugeals-nazareth.fr/flux-rss.php	16	www	keeps the base id
+https://jugeals-nazareth.fr/flux-rss.php	RETIRE	JO47_FR_6415BF41_AEED_41B0_949C_7BB9E0829B78_2	hp3b47_frgov.c	https://www.jugeals-nazareth.fr/flux-rss.php	16	www	same feed as the kept row, reached by another spelling
+https://juvenile-pre-post.com/feed	KEEP	JO48_NEWS_Q141216683	hp3b48_news.c	https://juvenile-pre-post.com/feed.xml	20	feed_path_variant	keeps the base id
+https://juvenile-pre-post.com/feed	RETIRE	JO48_NEWS_Q141216683_2	hp3b48_news.c	https://juvenile-pre-post.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://jvcea.or.jp/feed	KEEP	JP25_JPFIN_JVCEA_FEED	hp3b25_jpfinance.c	https://jvcea.or.jp/feed/	10	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://jvcea.or.jp/feed	KEEP	JP25_JPFIN_JVCEA_SITEMAP_RSS	hp3b25_jpfinance.c	https://jvcea.or.jp/rss.xml	50	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://kabu.com/feed	RETIRE	JO30_BANK_KABUCOM_RSS	hp3b30_jpbank2.c	https://www.kabu.com/rss.xml	50	feed_path_variant	the www variant of a sibling reading the same rss.xml; the groups third row is a different feed and stays
+https://kabu.com/feed	KEEP	JP25_JPFIN_KABUCOM_FEED	hp3b25_jpfinance.c	https://kabu.com/feed/	10	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://kabu.com/feed	KEEP	JP25_JPFIN_KABUCOM_SITEMAP_RSS	hp3b25_jpfinance.c	https://kabu.com/rss.xml	50	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://kajnews.com/feed	KEEP	JO48_NEWS_Q141216684	hp3b48_news.c	https://kajnews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://kajnews.com/feed	RETIRE	JO48_NEWS_Q141216684_2	hp3b48_news.c	https://kajnews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://karuizawataliesin.com/feed	KEEP	JO57IQ11560128	hp3b57_jpcult.c	http://www.karuizawataliesin.com/feed/atom	10	feed_path_variant	keeps the base id
+https://karuizawataliesin.com/feed	RETIRE	JO57IQ11560128_2	hp3b57_jpcult.c	http://www.karuizawataliesin.com/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://kazehaku.jp	KEEP	JO57IQ123536443	hp3b57_jpcult.c	https://kazehaku.jp/?feed=rss2	10	wp_feed_param	keeps the base id
+https://kazehaku.jp	RETIRE	JO57IQ123536443_2	hp3b57_jpcult.c	https://kazehaku.jp/?feed=rss2&	10	wp_feed_param	same feed as the kept row, reached by another spelling
+https://keiwa-c.ac.jp/wp-json/wp/v2/keiwabadminton?per_page=100&orderby=date&order=desc	KEEP	JO42_WP_UNIV_KEIWAC_KEIWABADMINTON	hp3b42_jpcptuni.c	https://www.keiwa-c.ac.jp/wp-json/wp/v2/keiwabadminton?per_page=100&orderby=date&order=desc	551	www	keeps the base id
+https://keiwa-c.ac.jp/wp-json/wp/v2/keiwabadminton?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_KEIWAC_KEIWABADMINTON	hp3b57_jpedu.c	https://keiwa-c.ac.jp/wp-json/wp/v2/keiwabadminton?per_page=100&orderby=date&order=desc	551	www	same feed as the kept row, reached by another spelling
+https://keiwa-c.ac.jp/wp-json/wp/v2/librarynews?per_page=100&orderby=date&order=desc	KEEP	JO42_WP_UNIV_KEIWAC_LIBRARYNEWS	hp3b42_jpcptuni.c	https://www.keiwa-c.ac.jp/wp-json/wp/v2/librarynews?per_page=100&orderby=date&order=desc	36	www	keeps the base id
+https://keiwa-c.ac.jp/wp-json/wp/v2/librarynews?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_KEIWAC_LIBRARYNEWS	hp3b57_jpedu.c	https://keiwa-c.ac.jp/wp-json/wp/v2/librarynews?per_page=100&orderby=date&order=desc	36	www	same feed as the kept row, reached by another spelling
+https://keiwa-c.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	KEEP	JO42_WP_UNIV_KEIWAC_PAGES	hp3b42_jppages.c	https://www.keiwa-c.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	259	www	keeps the base id
+https://keiwa-c.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_KEIWAC_PAGES	hp3b57_jpedu.c	https://keiwa-c.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	259	www	same feed as the kept row, reached by another spelling
+https://keiwa-c.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	KEEP	JO41_WP_UNIV_KEIWAC	hp3b41_jpuniwp.c	https://www.keiwa-c.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	3	www	keeps the base id
+https://keiwa-c.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_KEIWAC_POSTS	hp3b57_jpedu.c	https://keiwa-c.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	3	www	same feed as the kept row, reached by another spelling
+https://keiwa-c.ac.jp/wp-json/wp/v2/users?per_page=100	KEEP	JO42_WP_UNIV_KEIWAC_USERS	hp3b42_jpusers.c	https://www.keiwa-c.ac.jp/wp-json/wp/v2/users?per_page=100	6	www	keeps the base id
+https://keiwa-c.ac.jp/wp-json/wp/v2/users?per_page=100	RETIRE	JO57_WP_KEIWAC_USERS	hp3b57_jpedu.c	https://keiwa-c.ac.jp/wp-json/wp/v2/users?per_page=100	6	www	same feed as the kept row, reached by another spelling
+https://kerlouan.fr/feed	KEEP	JO47_FR_161C0765_3D68_44DC_87DB_498B26565B8A	hp3b47_frgov.c	https://www.kerlouan.fr/feed/	10	feed_path_variant	keeps the base id
+https://kerlouan.fr/feed	RETIRE	JO47_FR_161C0765_3D68_44DC_87DB_498B26565B8A_2	hp3b47_frgov.c	https://kerlouan.fr/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://khbr.me/feed	KEEP	JO48_NEWS_Q12251185	hp3b48_news.c	https://www.khbr.me/rss.xml	50	feed_path_variant	keeps the base id
+https://khbr.me/feed	RETIRE	JO48_NEWS_Q12251185_2	hp3b48_news.c	https://www.khbr.me/atom.xml	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://kitashimin.fuchuhp.jp/feed	KEEP	JO57IQ38279155	hp3b57_jpheal.c	https://kitashimin.fuchuhp.jp/feed/atom	10	feed_path_variant	keeps the base id
+https://kitashimin.fuchuhp.jp/feed	RETIRE	JO57IQ38279155_2	hp3b57_jpheal.c	https://kitashimin.fuchuhp.jp/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://l4news.com/feed	KEEP	JO48_NEWS_Q141216685	hp3b48_news.c	https://l4news.com/feed.xml	20	feed_path_variant	keeps the base id
+https://l4news.com/feed	RETIRE	JO48_NEWS_Q141216685_2	hp3b48_news.c	https://l4news.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://larivieredrugeon.fr/flux-rss.php	KEEP	JO47_FR_329C1A68_8D59_4858_9225_4B6EF891B073	hp3b47_frgov.c	https://larivieredrugeon.fr/flux-rss.php	20	www	keeps the base id
+https://larivieredrugeon.fr/flux-rss.php	RETIRE	JO47_FR_329C1A68_8D59_4858_9225_4B6EF891B073_2	hp3b47_frgov.c	https://www.larivieredrugeon.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://legacyvillagenews.com/feed	KEEP	JO48_NEWS_Q141216686	hp3b48_news.c	https://legacyvillagenews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://legacyvillagenews.com/feed	RETIRE	JO48_NEWS_Q141216686_2	hp3b48_news.c	https://legacyvillagenews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://lesauthieuxsurcalonne.fr/flux-rss.php	KEEP	JO47_FR_6B2E8E45_585F_45C2_9E0B_545043DBD8E6	hp3b47_frgov.c	https://lesauthieuxsurcalonne.fr/flux-rss.php	20	www	keeps the base id
+https://lesauthieuxsurcalonne.fr/flux-rss.php	RETIRE	JO47_FR_6B2E8E45_585F_45C2_9E0B_545043DBD8E6_2	hp3b47_frgov.c	https://www.lesauthieuxsurcalonne.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://licht-journal.com/feed	KEEP	JO48_NEWS_Q141216687	hp3b48_news.c	https://licht-journal.com/feed.xml	20	feed_path_variant	keeps the base id
+https://licht-journal.com/feed	RETIRE	JO48_NEWS_Q141216687_2	hp3b48_news.c	https://licht-journal.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://lmhnews.com/feed	KEEP	JO48_NEWS_Q141216690	hp3b48_news.c	https://lmhnews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://lmhnews.com/feed	RETIRE	JO48_NEWS_Q141216690_2	hp3b48_news.c	https://lmhnews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mairie-arzviller.hautetfort.com/feed	KEEP	JO47_FR_92AC8D63_3E5C_4173_831C_3CF69956D69F	hp3b47_frgov.c	http://mairie-arzviller.hautetfort.com/atom.xml	8	feed_path_variant	keeps the base id
+https://mairie-arzviller.hautetfort.com/feed	RETIRE	JO47_FR_92AC8D63_3E5C_4173_831C_3CF69956D69F_2	hp3b47_frgov.c	http://mairie-arzviller.hautetfort.com/index.rss	8	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mairie-bazoches-les-bray.fr/?q=rss.xml	KEEP	JO47_FR_A29A7925_47EF_4067_A238_4DDE33496E13	hp3b47_frgov.c	http://www.mairie-bazoches-les-bray.fr/?q=rss.xml	10	www	keeps the base id
+https://mairie-bazoches-les-bray.fr/?q=rss.xml	RETIRE	JO47_FR_C472EBDD_3B95_42E9_B22F_1FB37941F8F6	hp3b47_frgov.c	http://mairie-bazoches-les-bray.fr/?q=rss.xml	10	www	same feed as the kept row, reached by another spelling
+https://mairie-dammarie-les-lys.fr/fr/actualites.xml	KEEP	JO47_FR_1CEA2DE4_79D9_4FED_B97B_6099153D1734	hp3b47_frgov.c	https://www.mairie-dammarie-les-lys.fr/fr/actualites.xml	13	www	keeps the base id
+https://mairie-dammarie-les-lys.fr/fr/actualites.xml	RETIRE	JO47_FR_95B408B7_4C73_4E9C_B8FF_9E8B2103D6D6	hp3b47_frgov.c	https://mairie-dammarie-les-lys.fr/fr/actualites.xml	13	www	same feed as the kept row, reached by another spelling
+https://mairie-dammarie-les-lys.fr/fr/agenda.xml	KEEP	JO47_FR_1CEA2DE4_79D9_4FED_B97B_6099153D1734_2	hp3b47_frgov.c	https://www.mairie-dammarie-les-lys.fr/fr/agenda.xml	48	www	keeps the base id
+https://mairie-dammarie-les-lys.fr/fr/agenda.xml	RETIRE	JO47_FR_95B408B7_4C73_4E9C_B8FF_9E8B2103D6D6_2	hp3b47_frgov.c	https://mairie-dammarie-les-lys.fr/fr/agenda.xml	48	www	same feed as the kept row, reached by another spelling
+https://mairie-mornac-sur-seudre.fr/v2/feed	KEEP	JO47_FR_5CAB80EA_D103_4236_9A5E_1D7CDB10EE6F	hp3b47_frgov.c	https://mairie-mornac-sur-seudre.fr/v2/feed/	10	feed_path_variant	keeps the base id
+https://mairie-mornac-sur-seudre.fr/v2/feed	RETIRE	JO47_FR_5CAB80EA_D103_4236_9A5E_1D7CDB10EE6F_2	hp3b47_frgov.c	http://mairie-mornac-sur-seudre.fr/v2/feed/rss/	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mairie-nersac.fr/feed	KEEP	JO47_FR_DDBD8709_06A9_4194_8BAF_49043D3B9B67	hp3b47_frgov.c	https://mairie-nersac.fr/feed/	10	feed_path_variant	keeps the base id
+https://mairie-nersac.fr/feed	RETIRE	JO47_FR_DDBD8709_06A9_4194_8BAF_49043D3B9B67_2	hp3b47_frgov.c	http://mairie-nersac.fr/feed/rss/	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mairie-orleix.fr/flux-rss.php	KEEP	JO47_FR_59DC22CE_14A1_47DA_83CE_41F72A9CE447	hp3b47_frgov.c	https://mairie-orleix.fr/flux-rss.php	20	www	keeps the base id
+https://mairie-orleix.fr/flux-rss.php	RETIRE	JO47_FR_59DC22CE_14A1_47DA_83CE_41F72A9CE447_2	hp3b47_frgov.c	https://www.mairie-orleix.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://mairie-penne-tarn.fr/flux-rss.php	KEEP	JO47_FR_844A545D_D81F_4A17_8FE2_59D1215A34DD	hp3b47_frgov.c	https://mairie-penne-tarn.fr/flux-rss.php	20	www	keeps the base id
+https://mairie-penne-tarn.fr/flux-rss.php	RETIRE	JO47_FR_844A545D_D81F_4A17_8FE2_59D1215A34DD_2	hp3b47_frgov.c	https://www.mairie-penne-tarn.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://mairie.cherisey.free.fr	KEEP	JO47_FR_0AF16469_FC34_42EC_815B_F9AE8F0C9D70	hp3b47_frgov.c	http://mairie.cherisey.free.fr/?feed=rss2	2	wp_feed_param	keeps the base id
+https://mairie.cherisey.free.fr	RETIRE	JO47_FR_0AF16469_FC34_42EC_815B_F9AE8F0C9D70_2	hp3b47_frgov.c	http://mairie.cherisey.free.fr/?feed=atom	2	wp_feed_param	same feed as the kept row, reached by another spelling
+https://marche.camcom.it/feed	KEEP	JO47_IT_CCIAAN_2	hp3b47_itgov.c	https://www.marche.camcom.it/rss.xml	15	feed_path_variant	keeps the base id
+https://marche.camcom.it/feed	RETIRE	JO47_IT_CCIAAN_3	hp3b47_itgov.c	https://www.marche.camcom.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://marketpostcenter.com/feed	KEEP	JO48_NEWS_Q141216693	hp3b48_news.c	https://marketpostcenter.com/feed.xml	20	feed_path_variant	keeps the base id
+https://marketpostcenter.com/feed	RETIRE	JO48_NEWS_Q141216693_2	hp3b48_news.c	https://marketpostcenter.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://marugameuchiwa.jp/feed	KEEP	JO57IQ123521104	hp3b57_jpcult.c	https://marugameuchiwa.jp/feed/atom	10	feed_path_variant	keeps the base id
+https://marugameuchiwa.jp/feed	RETIRE	JO57IQ123521104_2	hp3b57_jpcult.c	https://marugameuchiwa.jp/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://massaguel.fr/feed	KEEP	JO47_FR_EC7772CE_DD96_4531_B6F5_F5967C85C682	hp3b47_frgov.c	https://www.massaguel.fr/feed/	9	feed_path_variant	keeps the base id
+https://massaguel.fr/feed	RETIRE	JO47_FR_EC7772CE_DD96_4531_B6F5_F5967C85C682_2	hp3b47_frgov.c	http://www.massaguel.fr/feed/rss/	9	feed_path_variant	same feed as the kept row, reached by another spelling
+https://medianewswatch.com/feed	KEEP	JO48_NEWS_Q141216695	hp3b48_news.c	https://medianewswatch.com/feed.xml	20	feed_path_variant	keeps the base id
+https://medianewswatch.com/feed	RETIRE	JO48_NEWS_Q141216695_2	hp3b48_news.c	https://medianewswatch.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://miamiinnews.com/feed	KEEP	JO48_NEWS_Q141216697	hp3b48_news.c	https://miamiinnews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://miamiinnews.com/feed	RETIRE	JO48_NEWS_Q141216697_2	hp3b48_news.c	https://miamiinnews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://minaraad.be/feed	KEEP	JO47_WD_Q2103415_2	hp3b47_wdgov.c	https://www.minaraad.be/rss.xml	15	feed_path_variant	keeps the base id
+https://minaraad.be/feed	RETIRE	JO47_WD_Q2103415_3	hp3b47_wdgov.c	https://www.minaraad.be/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://miyasankei-u.ac.jp/feed	KEEP	JO57IQ6884458_2	hp3b57_jpedu.c	https://www.miyasankei-u.ac.jp/feed/atom/	50	feed_path_variant	keeps the base id
+https://miyasankei-u.ac.jp/feed	RETIRE	JO57IQ6884458_3	hp3b57_jpedu.c	http://www.miyasankei-u.ac.jp/feed/rss/	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mo.camcom.it/collezione-news-di-tutto-il-sito/feed	KEEP	JO47_IT_CCIAA_MO_2	hp3b47_itgov.c	https://www.mo.camcom.it/collezione-news-di-tutto-il-sito/rss.xml	15	feed_path_variant	keeps the base id
+https://mo.camcom.it/collezione-news-di-tutto-il-sito/feed	RETIRE	JO47_IT_CCIAA_MO_3	hp3b47_itgov.c	https://www.mo.camcom.it/collezione-news-di-tutto-il-sito/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mo.camcom.it/feed	KEEP	JO47_IT_CCIAA_MO_8	hp3b47_itgov.c	https://www.mo.camcom.it/rss.xml	15	feed_path_variant	keeps the base id
+https://mo.camcom.it/feed	RETIRE	JO47_IT_CCIAA_MO_9	hp3b47_itgov.c	https://www.mo.camcom.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://mo.camcom.it/modena-economica/news/feed	KEEP	JO47_IT_CCIAA_MO_5	hp3b47_itgov.c	https://www.mo.camcom.it/modena-economica/news/rss.xml	15	feed_path_variant	keeps the base id
+https://mo.camcom.it/modena-economica/news/feed	RETIRE	JO47_IT_CCIAA_MO_6	hp3b47_itgov.c	https://www.mo.camcom.it/modena-economica/news/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://montmoreau.fr/rss/fr/news/news.xml	KEEP	JO47_FR_27CA87A4_BF62_41F6_BCA4_347A3352C2D9	hp3b47_frgov.c	https://montmoreau.fr/rss/fr/news/news.xml	5	www	keeps the base id
+https://montmoreau.fr/rss/fr/news/news.xml	RETIRE	JO47_FR_70804251_8518_4A14_9C81_CF2B2B52EAE7	hp3b47_frgov.c	https://www.montmoreau.fr/rss/fr/news/news.xml	5	www	same feed as the kept row, reached by another spelling
+https://morcourt.fr/flux-rss.php	KEEP	JO47_FR_091F319A_BAB2_4B97_AE20_501AA49BF876	hp3b47_frgov.c	https://morcourt.fr/flux-rss.php	19	www	keeps the base id
+https://morcourt.fr/flux-rss.php	RETIRE	JO47_FR_091F319A_BAB2_4B97_AE20_501AA49BF876_2	hp3b47_frgov.c	https://www.morcourt.fr/flux-rss.php	19	www	same feed as the kept row, reached by another spelling
+https://moussy51.fr/flux-rss.php	KEEP	JO47_FR_77182191_1BD1_400A_8513_D5CFE513A77D	hp3b47_frgov.c	https://moussy51.fr/flux-rss.php	20	www	keeps the base id
+https://moussy51.fr/flux-rss.php	RETIRE	JO47_FR_77182191_1BD1_400A_8513_D5CFE513A77D_2	hp3b47_frgov.c	https://www.moussy51.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://mulsans.fr/flux-rss.php	KEEP	JO47_FR_F18C550B_EA1D_4A2B_A526_4AB2B5675C81	hp3b47_frgov.c	https://mulsans.fr/flux-rss.php	20	www	keeps the base id
+https://mulsans.fr/flux-rss.php	RETIRE	JO47_FR_F18C550B_EA1D_4A2B_A526_4AB2B5675C81_2	hp3b47_frgov.c	https://www.mulsans.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://multiacademicjournal.com/feed	KEEP	JO48_NEWS_Q141250172	hp3b48_news.c	https://multiacademicjournal.com/feed.xml	20	feed_path_variant	keeps the base id
+https://multiacademicjournal.com/feed	RETIRE	JO48_NEWS_Q141250172_2	hp3b48_news.c	https://multiacademicjournal.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://n-seikei.jp/feed	KEEP	JP25_JPBIZ_JCNET_ATOM	hp3b25_jpbizreg.c	https://n-seikei.jp/atom.xml	15	feed_path_variant	keeps the base id
+https://n-seikei.jp/feed	RETIRE	JP25_JPBIZ_JCNET_RSS	hp3b25_jpbizreg.c	https://n-seikei.jp/rss.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://naval-pages.com/feed	KEEP	JO48_NEWS_Q141216702	hp3b48_news.c	https://naval-pages.com/feed.xml	20	feed_path_variant	keeps the base id
+https://naval-pages.com/feed	RETIRE	JO48_NEWS_Q141216702_2	hp3b48_news.c	https://naval-pages.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://news-abc.com/feed	KEEP	JO48_NEWS_Q141216703	hp3b48_news.c	https://news-abc.com/feed.xml	20	feed_path_variant	keeps the base id
+https://news-abc.com/feed	RETIRE	JO48_NEWS_Q141216703_2	hp3b48_news.c	https://news-abc.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://news-choice.com/feed	KEEP	JO48_NEWS_Q141216704	hp3b48_news.c	https://news-choice.com/feed.xml	20	feed_path_variant	keeps the base id
+https://news-choice.com/feed	RETIRE	JO48_NEWS_Q141216704_2	hp3b48_news.c	https://news-choice.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://news7channel.com/feed	KEEP	JO48_NEWS_Q141216705	hp3b48_news.c	https://news7channel.com/feed.xml	20	feed_path_variant	keeps the base id
+https://news7channel.com/feed	RETIRE	JO48_NEWS_Q141216705_2	hp3b48_news.c	https://news7channel.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://newsbay71.com/feed	KEEP	JO48_NEWS_Q141216706	hp3b48_news.c	https://newsbay71.com/feed.xml	20	feed_path_variant	keeps the base id
+https://newsbay71.com/feed	RETIRE	JO48_NEWS_Q141216706_2	hp3b48_news.c	https://newsbay71.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://newspaper-daily.com/feed	KEEP	JO48_NEWS_Q141216708	hp3b48_news.c	https://newspaper-daily.com/feed.xml	20	feed_path_variant	keeps the base id
+https://newspaper-daily.com/feed	RETIRE	JO48_NEWS_Q141216708_2	hp3b48_news.c	https://newspaper-daily.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://norlynews.com/feed	KEEP	JO48_NEWS_Q141216713	hp3b48_news.c	https://norlynews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://norlynews.com/feed	RETIRE	JO48_NEWS_Q141216713_2	hp3b48_news.c	https://norlynews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://northnorthants.gov.uk/rss/feed	KEEP	JO44_UK_KETTERING_GOV_UK	hp3b44_ukgov.c	https://www.northnorthants.gov.uk/rss/feed.xml	614	feed_path_variant	keeps the base id
+https://northnorthants.gov.uk/rss/feed	RETIRE	JO44_UK_KETTERING_GOV_UK_2	hp3b44_ukgov.c	https://www.northnorthants.gov.uk/rss/atom.xml	614	feed_path_variant	same feed as the kept row, reached by another spelling
+https://novas.gal/feed	KEEP	JO48_NEWS_Q10337927	hp3b48_news.c	https://novas.gal/feed/	10	feed_path_variant	keeps the base id
+https://novas.gal/feed	RETIRE	JO48_NEWS_Q10337927_2	hp3b48_news.c	http://www.novas.gal/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://oldpostbooks.com/feed	KEEP	JO48_NEWS_Q141216716	hp3b48_news.c	https://oldpostbooks.com/feed.xml	20	feed_path_variant	keeps the base id
+https://oldpostbooks.com/feed	RETIRE	JO48_NEWS_Q141216716_2	hp3b48_news.c	https://oldpostbooks.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://omnicomprensivoguglionesi.edu.it/feed	KEEP	JO47_IT_ISTSC_CBPM01000C	hp3b47_itgov.c	https://www.omnicomprensivoguglionesi.edu.it/feed/	10	feed_path_variant	keeps the base id
+https://omnicomprensivoguglionesi.edu.it/feed	RETIRE	JO47_IT_ISTSC_CBPM01000C_2	hp3b47_itgov.c	https://www.omnicomprensivoguglionesi.edu.it/rss	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://oniongames.jp/feed	KEEP	JO48_IGO_Q108304729	hp3b48_igo.c	https://oniongames.jp/feed	10	feed_path_variant	keeps the base id
+https://oniongames.jp/feed	RETIRE	JO48_IGO_Q108304729_2	hp3b48_igo.c	https://oniongames.jp/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://onomichi-library.jp	KEEP	JO57IQ61888749	hp3b57_jpcult.c	https://www.onomichi-library.jp/?feed=atom	10	wp_feed_param	keeps the base id
+https://onomichi-library.jp	RETIRE	JO57IQ61888749_2	hp3b57_jpcult.c	https://www.onomichi-library.jp/?feed=rss2	10	wp_feed_param	same feed as the kept row, reached by another spelling
+https://ordineveterinaririeti.it	KEEP	JO47_IT_OMVP_057	hp3b47_itgov.c	https://www.ordineveterinaririeti.it/?feed=rss2	0	wp_feed_param	no member stores today — one row kept, disclosing
+https://ordineveterinaririeti.it	RETIRE	JO47_IT_OMVP_057_2	hp3b47_itgov.c	https://www.ordineveterinaririeti.it/?feed=atom	0	wp_feed_param	same feed as the kept row, reached by another spelling
+https://orer.news/feed	KEEP	JO48_NEWS_Q141216717	hp3b48_news.c	https://orer.news/feed.xml	20	feed_path_variant	keeps the base id
+https://orer.news/feed	RETIRE	JO48_NEWS_Q141216717_2	hp3b48_news.c	https://orer.news/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://ougney-douvot.com/feed	KEEP	JO47_FR_8446271C_5C8B_4F6E_A5BA_CB7A8801B60B	hp3b47_frgov.c	https://www.ougney-douvot.com/feed	10	feed_path_variant	keeps the base id
+https://ougney-douvot.com/feed	RETIRE	JO47_FR_8446271C_5C8B_4F6E_A5BA_CB7A8801B60B_2	hp3b47_frgov.c	https://www.ougney-douvot.com/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://pacificpressnewyork.com/feed	KEEP	JO48_NEWS_Q141216718	hp3b48_news.c	https://pacificpressnewyork.com/feed.xml	20	feed_path_variant	keeps the base id
+https://pacificpressnewyork.com/feed	RETIRE	JO48_NEWS_Q141216718_2	hp3b48_news.c	https://pacificpressnewyork.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://paysdunois.fr/spip.php?page=backend	KEEP	JO47_FR_C70C29B7_DB0F_4A09_8626_77F9DD6304C1	hp3b47_frgov.c	https://www.paysdunois.fr/spip.php?page=backend	10	www	keeps the base id
+https://paysdunois.fr/spip.php?page=backend	RETIRE	JO47_FR_FC7F6856_CF6D_458D_ACA3_22381CCFD380	hp3b47_frgov.c	https://paysdunois.fr/spip.php?page=backend	10	www	same feed as the kept row, reached by another spelling
+https://peoplenews.tw/feed	KEEP	JO48_NEWS_Q20688689	hp3b48_news.c	https://www.peoplenews.tw/feed	10	feed_path_variant	keeps the base id
+https://peoplenews.tw/feed	RETIRE	JO48_NEWS_Q20688689_2	hp3b48_news.c	https://www.peoplenews.tw/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://portal.u-shizuoka-ken.ac.jp/Plone/feed	KEEP	JO57IQ127413234_2	hp3b57_jpsci.c	https://portal.u-shizuoka-ken.ac.jp/Plone/rss.xml	9	feed_path_variant	keeps the base id
+https://portal.u-shizuoka-ken.ac.jp/Plone/feed	RETIRE	JO57IQ127413234_3	hp3b57_jpsci.c	https://portal.u-shizuoka-ken.ac.jp/Plone/atom.xml	9	feed_path_variant	same feed as the kept row, reached by another spelling
+https://portofedmonds.gov/feed	KEEP	JO44_US_PORTOFEDMONDS_GOV	hp3b44_usgov.c	https://portofedmonds.gov/feed/	10	www	keeps the base id
+https://portofedmonds.gov/feed	RETIRE	JO44_US_PORTOFEDMONDS_GOV_2	hp3b44_usgov.c	https://www.portofedmonds.gov/feed/	10	www	same feed as the kept row, reached by another spelling
+https://portofinoamp.it/feed	KEEP	JO47_IT_CGAMPO_2	hp3b47_itgov.c	https://www.portofinoamp.it/rss.xml	15	feed_path_variant	keeps the base id
+https://portofinoamp.it/feed	RETIRE	JO47_IT_CGAMPO_3	hp3b47_itgov.c	https://www.portofinoamp.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://pravoslavie.ru/xml/full.xml	KEEP	JO48_NEWS_Q4376116	hp3b48_news.c	http://www.pravoslavie.ru/xml/full.xml	50	feed_path_variant	keeps the base id
+https://pravoslavie.ru/xml/full.xml	RETIRE	JO48_NEWS_Q4376116_2	hp3b48_news.c	https://pravoslavie.ru/xml/full.xml	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://pulsechronicles.com/feed	KEEP	JO48_NEWS_Q140402486	hp3b48_news.c	https://pulsechronicles.com/rss.xml	50	feed_path_variant	keeps the base id
+https://pulsechronicles.com/feed	RETIRE	JO48_NEWS_Q140402486_2	hp3b48_news.c	https://pulsechronicles.com/atom.xml	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://pvtimes.com/feed	KEEP	JO48_NEWS_Q55668233	hp3b48_news.c	https://pvtimes.com/feed/	30	feed_path_variant	keeps the base id
+https://pvtimes.com/feed	RETIRE	JO48_NEWS_Q55668233_2	hp3b48_news.c	https://pvtimes.com/rss	30	feed_path_variant	same feed as the kept row, reached by another spelling
+https://rcfl.gov/feed	KEEP	JO44_US_RCFL_GOV_2	hp3b44_usgov.c	https://www.rcfl.gov/rss.xml	15	feed_path_variant	keeps the base id
+https://rcfl.gov/feed	RETIRE	JO44_US_RCFL_GOV_3	hp3b44_usgov.c	https://www.rcfl.gov/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://redorbnews.com/feed	KEEP	JO48_NEWS_Q141216723	hp3b48_news.c	https://redorbnews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://redorbnews.com/feed	RETIRE	JO48_NEWS_Q141216723_2	hp3b48_news.c	https://redorbnews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://regdnews.tv/feed	KEEP	JO48_NEWS_Q141216724	hp3b48_news.c	https://regdnews.tv/feed.xml	20	feed_path_variant	keeps the base id
+https://regdnews.tv/feed	RETIRE	JO48_NEWS_Q141216724_2	hp3b48_news.c	https://regdnews.tv/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://reliable-news.com/feed	KEEP	JO48_NEWS_Q141216727	hp3b48_news.c	https://reliable-news.com/feed.xml	20	feed_path_variant	keeps the base id
+https://reliable-news.com/feed	RETIRE	JO48_NEWS_Q141216727_2	hp3b48_news.c	https://reliable-news.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://reuilly.fr/feed	KEEP	JO47_FR_DC366437_B64D_470D_ABC5_549C25C51D1B	hp3b47_frgov.c	https://www.reuilly.fr/feed	10	feed_path_variant	keeps the base id
+https://reuilly.fr/feed	RETIRE	JO47_FR_DC366437_B64D_470D_ABC5_549C25C51D1B_2	hp3b47_frgov.c	https://www.reuilly.fr/feed/rss	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://revigny-sur-ornain.fr/flux-rss.php	KEEP	JO47_FR_1525DD28_1080_484A_90C0_A23106D8C487	hp3b47_frgov.c	https://revigny-sur-ornain.fr/flux-rss.php	18	www	keeps the base id
+https://revigny-sur-ornain.fr/flux-rss.php	RETIRE	JO47_FR_1525DD28_1080_484A_90C0_A23106D8C487_2	hp3b47_frgov.c	https://www.revigny-sur-ornain.fr/flux-rss.php	18	www	same feed as the kept row, reached by another spelling
+https://rochechouart.com/feed	KEEP	JO47_FR_1EF168D5_63A3_4EDE_AE3F_D53F3C3957C5	hp3b47_frgov.c	https://www.rochechouart.com/feed	10	www	keeps the base id
+https://rochechouart.com/feed	RETIRE	JO47_FR_1EF168D5_63A3_4EDE_AE3F_D53F3C3957C5_2	hp3b47_frgov.c	https://rochechouart.com/feed	10	www	same feed as the kept row, reached by another spelling
+https://rocklandreviewnews.com/feed	KEEP	JO48_NEWS_Q141216728	hp3b48_news.c	https://rocklandreviewnews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://rocklandreviewnews.com/feed	RETIRE	JO48_NEWS_Q141216728_2	hp3b48_news.c	https://rocklandreviewnews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://sagat.no/feed	KEEP	JO48_NEWS_Q1049200	hp3b48_news.c	https://www.sagat.no/atom.xml	100	feed_path_variant	keeps the base id
+https://sagat.no/feed	RETIRE	JO48_NEWS_Q1049200_2	hp3b48_news.c	https://www.sagat.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://saint-martin-de-gurson.fr/flux-rss.php	KEEP	JO47_FR_6A124842_7358_443F_A5DA_7C6A93057BD8	hp3b47_frgov.c	https://saint-martin-de-gurson.fr/flux-rss.php	12	www	keeps the base id
+https://saint-martin-de-gurson.fr/flux-rss.php	RETIRE	JO47_FR_6A124842_7358_443F_A5DA_7C6A93057BD8_2	hp3b47_frgov.c	https://www.saint-martin-de-gurson.fr/flux-rss.php	12	www	same feed as the kept row, reached by another spelling
+https://saintgermainlaprade.fr/flux-rss.php	KEEP	JO47_FR_56695658_CC88_4E85_9314_0BB17A1A2FCB	hp3b47_frgov.c	https://saintgermainlaprade.fr/flux-rss.php	20	www	keeps the base id
+https://saintgermainlaprade.fr/flux-rss.php	RETIRE	JO47_FR_56695658_CC88_4E85_9314_0BB17A1A2FCB_2	hp3b47_frgov.c	https://www.saintgermainlaprade.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://saintjulienlesvillas.fr/feed	KEEP	JO47_FR_06B1468D_E2A3_4528_99C8_51F0AA0F4A07	hp3b47_frgov.c	https://www.saintjulienlesvillas.fr/feed/	5	www	keeps the base id
+https://saintjulienlesvillas.fr/feed	RETIRE	JO47_FR_06B1468D_E2A3_4528_99C8_51F0AA0F4A07_2	hp3b47_frgov.c	https://saintjulienlesvillas.fr/feed/	5	www	same feed as the kept row, reached by another spelling
+https://salute.regione.emilia-romagna.it/feed	KEEP	JO47_WD_Q3958117_2	hp3b47_wdgov.c	https://salute.regione.emilia-romagna.it/rss.xml	15	feed_path_variant	keeps the base id
+https://salute.regione.emilia-romagna.it/feed	RETIRE	JO47_WD_Q3958117_3	hp3b47_wdgov.c	https://salute.regione.emilia-romagna.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://sanry-mechy.fr/feed	KEEP	JO47_FR_EA88AC66_D0BB_4843_B5D1_500A77960BBC	hp3b47_frgov.c	https://sanry-mechy.fr/feed/	3	feed_path_variant	keeps the base id
+https://sanry-mechy.fr/feed	RETIRE	JO47_FR_EA88AC66_D0BB_4843_B5D1_500A77960BBC_2	hp3b47_frgov.c	http://www.sanry-mechy.fr/rss	3	feed_path_variant	same feed as the kept row, reached by another spelling
+https://santapost.org/feed	KEEP	JO48_NEWS_Q141216731	hp3b48_news.c	https://santapost.org/feed.xml	20	feed_path_variant	keeps the base id
+https://santapost.org/feed	RETIRE	JO48_NEWS_Q141216731_2	hp3b48_news.c	https://santapost.org/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://serre-les-sapins.fr/flux-rss.php	KEEP	JO47_FR_3E7120C1_60DE_4542_9A6F_FDDC4D9EFCC1	hp3b47_frgov.c	https://serre-les-sapins.fr/flux-rss.php	20	www	keeps the base id
+https://serre-les-sapins.fr/flux-rss.php	RETIRE	JO47_FR_3E7120C1_60DE_4542_9A6F_FDDC4D9EFCC1_2	hp3b47_frgov.c	https://www.serre-les-sapins.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://sguc.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	KEEP	JO42_WP_UNIV_SGUC_PAGES	hp3b42_jppages.c	https://www.sguc.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	63	www	keeps the base id
+https://sguc.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_SGUC_PAGES	hp3b57_jpedu.c	https://sguc.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	63	www	same feed as the kept row, reached by another spelling
+https://sguc.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	KEEP	JO41_WP_UNIV_SGUC	hp3b41_jpuniwp.c	https://www.sguc.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	1	www	keeps the base id
+https://sguc.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_SGUC_POSTS	hp3b57_jpedu.c	https://sguc.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	1	www	same feed as the kept row, reached by another spelling
+https://shimin.fuchuhp.jp/feed	KEEP	JO57IQ38279156	hp3b57_jpheal.c	https://shimin.fuchuhp.jp/feed/atom	10	feed_path_variant	keeps the base id
+https://shimin.fuchuhp.jp/feed	RETIRE	JO57IQ38279156_2	hp3b57_jpheal.c	https://shimin.fuchuhp.jp/feed	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://shorenewsnow.com/feed	KEEP	JO48_NEWS_Q141216732	hp3b48_news.c	https://shorenewsnow.com/feed.xml	20	feed_path_variant	keeps the base id
+https://shorenewsnow.com/feed	RETIRE	JO48_NEWS_Q141216732_2	hp3b48_news.c	https://shorenewsnow.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://solesmes72.fr/flux-rss.php	KEEP	JO47_FR_C4E13BD1_78F3_4A70_B745_DBBB5A110AA9	hp3b47_frgov.c	https://solesmes72.fr/flux-rss.php	20	www	keeps the base id
+https://solesmes72.fr/flux-rss.php	RETIRE	JO47_FR_C4E13BD1_78F3_4A70_B745_DBBB5A110AA9_2	hp3b47_frgov.c	https://www.solesmes72.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://spedtaculardailyliving.com/feed	KEEP	JO48_NEWS_Q141216735	hp3b48_news.c	https://spedtaculardailyliving.com/feed.xml	20	feed_path_variant	keeps the base id
+https://spedtaculardailyliving.com/feed	RETIRE	JO48_NEWS_Q141216735_2	hp3b48_news.c	https://spedtaculardailyliving.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://sse.or.jp/feed	KEEP	JP25_JPFIN_SSE_FEED	hp3b25_jpfinance.c	https://www.sse.or.jp/feed/	10	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://sse.or.jp/feed	KEEP	JP25_JPFIN_SSE_SITEMAP_RSS	hp3b25_jpfinance.c	https://www.sse.or.jp/rss.xml	50	feed_path_variant	members measured as DIFFERENT reads (a sitemap RSS beside a news feed, or differing record counts) — left alone
+https://sulaposten.no/feed	KEEP	JO48_NEWS_Q12718759	hp3b48_news.c	https://sulaposten.no/atom.xml	100	feed_path_variant	keeps the base id
+https://sulaposten.no/feed	RETIRE	JO48_NEWS_Q12718759_2	hp3b48_news.c	https://sulaposten.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://svt.vi.it/it/feed	KEEP	JO47_IT_SVTRL	hp3b47_itgov.c	https://www.svt.vi.it/it/rss.xml	10	www	keeps the base id
+https://svt.vi.it/it/feed	RETIRE	JO47_IT_SVTRL_2	hp3b47_itgov.c	https://svt.vi.it/it/rss.xml	10	www	same feed as the kept row, reached by another spelling
+https://tais.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	KEEP	JO41_WP_UNIV_TAIS	hp3b41_jpuniwp.c	https://www.tais.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	11	www	keeps the base id
+https://tais.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	RETIRE	JO57_WP_TAIS_POSTS	hp3b57_jpedu.c	https://tais.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	11	www	same feed as the kept row, reached by another spelling
+https://takasago-lib.jp/feed	KEEP	JO57IQ61888480	hp3b57_jpcult.c	https://takasago-lib.jp/feed	8	feed_path_variant	keeps the base id
+https://takasago-lib.jp/feed	RETIRE	JO57IQ61888480_2	hp3b57_jpcult.c	https://takasago-lib.jp/feed/atom	8	feed_path_variant	same feed as the kept row, reached by another spelling
+https://tgn.no/feed	KEEP	JO48_NEWS_Q12007336	hp3b48_news.c	https://tgn.no/atom.xml	100	feed_path_variant	keeps the base id
+https://tgn.no/feed	RETIRE	JO48_NEWS_Q12007336_2	hp3b48_news.c	https://tgn.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://thedailydealqueen.com/feed	KEEP	JO48_NEWS_Q141216739	hp3b48_news.c	https://thedailydealqueen.com/feed.xml	20	feed_path_variant	keeps the base id
+https://thedailydealqueen.com/feed	RETIRE	JO48_NEWS_Q141216739_2	hp3b48_news.c	https://thedailydealqueen.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://thedailynews24hr.com/feed	KEEP	JO48_NEWS_Q141216740	hp3b48_news.c	https://thedailynews24hr.com/feed.xml	20	feed_path_variant	keeps the base id
+https://thedailynews24hr.com/feed	RETIRE	JO48_NEWS_Q141216740_2	hp3b48_news.c	https://thedailynews24hr.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://thepresstimes.com/feed	KEEP	JO48_NEWS_Q141216742	hp3b48_news.c	https://thepresstimes.com/feed.xml	20	feed_path_variant	keeps the base id
+https://thepresstimes.com/feed	RETIRE	JO48_NEWS_Q141216742_2	hp3b48_news.c	https://thepresstimes.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://thiezac.fr/flux-rss.php	KEEP	JO47_FR_B4ADAA00_9B93_42A5_819D_AB9D1B4ED13B	hp3b47_frgov.c	https://thiezac.fr/flux-rss.php	20	www	keeps the base id
+https://thiezac.fr/flux-rss.php	RETIRE	JO47_FR_B4ADAA00_9B93_42A5_819D_AB9D1B4ED13B_2	hp3b47_frgov.c	https://www.thiezac.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://timesleader.com/feed	KEEP	JO48_NEWS_Q7769401	hp3b48_news.c	https://www.timesleader.com/feed	10	www	keeps the base id
+https://timesleader.com/feed	RETIRE	JO48_NEWS_Q7769401_2	hp3b48_news.c	https://timesleader.com/feed	10	www	same feed as the kept row, reached by another spelling
+https://tomanifesto.gr/feed	KEEP	JO48_NEWS_Q139901419	hp3b48_news.c	https://tomanifesto.gr/feed	50	feed_path_variant	keeps the base id
+https://tomanifesto.gr/feed	RETIRE	JO48_NEWS_Q139901419_2	hp3b48_news.c	https://tomanifesto.gr/feed/atom	50	feed_path_variant	same feed as the kept row, reached by another spelling
+https://toornews.com/feed	KEEP	JO48_NEWS_Q141216744	hp3b48_news.c	https://toornews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://toornews.com/feed	RETIRE	JO48_NEWS_Q141216744_2	hp3b48_news.c	https://toornews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://tourprom.ru/feed/feed	KEEP	JO48_NEWS_Q138975315	hp3b48_news.c	https://www.tourprom.ru/feed/atom.xml	30	feed_path_variant	keeps the base id
+https://tourprom.ru/feed/feed	RETIRE	JO48_NEWS_Q138975315_2	hp3b48_news.c	https://www.tourprom.ru/feed/rss.xml	30	feed_path_variant	same feed as the kept row, reached by another spelling
+https://town.biei.hokkaido.jp/rss/whatsnew.rdf	KEEP	JO43_MUNI_014591	hp3b43_jprss.c	https://town.biei.hokkaido.jp/rss/whatsnew.rdf	50	www	keeps the base id
+https://town.biei.hokkaido.jp/rss/whatsnew.rdf	RETIRE	JO57IQ61885977	hp3b57_jpmuni.c	https://www.town.biei.hokkaido.jp/rss/whatsnew.rdf	50	www	same feed as the kept row, reached by another spelling
+https://triplicate.com/feeds/all/feed	KEEP	JO48_NEWS_Q7728732	hp3b48_news.c	https://triplicate.com/feeds/all/rss.xml	30	feed_path_variant	keeps the base id
+https://triplicate.com/feeds/all/feed	RETIRE	JO48_NEWS_Q7728732_2	hp3b48_news.c	https://triplicate.com/feeds/all/atom.xml	30	feed_path_variant	same feed as the kept row, reached by another spelling
+https://tustimes.com/feed	KEEP	JO48_NEWS_Q141250174	hp3b48_news.c	https://tustimes.com/feed.xml	20	feed_path_variant	keeps the base id
+https://tustimes.com/feed	RETIRE	JO48_NEWS_Q141250174_2	hp3b48_news.c	https://tustimes.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://uniontimestoday.com/feed	KEEP	JO48_NEWS_Q141216746	hp3b48_news.c	https://uniontimestoday.com/feed.xml	20	feed_path_variant	keeps the base id
+https://uniontimestoday.com/feed	RETIRE	JO48_NEWS_Q141216746_2	hp3b48_news.c	https://uniontimestoday.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://universetoday.com/feed	KEEP	JO48_NEWS_Q7894217_4	hp3b48_news.c	https://www.universetoday.com/feed	20	feed_path_variant	keeps the base id
+https://universetoday.com/feed	RETIRE	JO48_NEWS_Q7894217_2	hp3b48_news.c	https://www.universetoday.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://usadailynews24.com/feed	KEEP	JO48_NEWS_Q141216747	hp3b48_news.c	https://usadailynews24.com/feed.xml	20	feed_path_variant	keeps the base id
+https://usadailynews24.com/feed	RETIRE	JO48_NEWS_Q141216747_2	hp3b48_news.c	https://usadailynews24.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://usapost2021.com/feed	KEEP	JO48_NEWS_Q141216748	hp3b48_news.c	https://usapost2021.com/feed.xml	20	feed_path_variant	keeps the base id
+https://usapost2021.com/feed	RETIRE	JO48_NEWS_Q141216748_2	hp3b48_news.c	https://usapost2021.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://uzunews.com/feed	KEEP	JO48_NEWS_Q141216750	hp3b48_news.c	https://uzunews.com/feed.xml	20	feed_path_variant	keeps the base id
+https://uzunews.com/feed	RETIRE	JO48_NEWS_Q141216750_2	hp3b48_news.c	https://uzunews.com/atom.xml	20	feed_path_variant	same feed as the kept row, reached by another spelling
+https://vallemarecchia.it/feed	KEEP	JO47_IT_UC_VALMA_2	hp3b47_itgov.c	https://www.vallemarecchia.it/rss.xml	15	feed_path_variant	keeps the base id
+https://vallemarecchia.it/feed	RETIRE	JO47_IT_UC_VALMA_3	hp3b47_itgov.c	https://www.vallemarecchia.it/atom.xml	15	feed_path_variant	same feed as the kept row, reached by another spelling
+https://valzsouschateauneuf.fr/feed	KEEP	JO47_FR_2ABE2ABC_0075_47E4_8C94_5F704CCEA762	hp3b47_frgov.c	http://www.valzsouschateauneuf.fr/feed	5	feed_path_variant	keeps the base id
+https://valzsouschateauneuf.fr/feed	RETIRE	JO47_FR_2ABE2ABC_0075_47E4_8C94_5F704CCEA762_2	hp3b47_frgov.c	http://www.valzsouschateauneuf.fr/feed/atom	5	feed_path_variant	same feed as the kept row, reached by another spelling
+https://veigne.fr/feed	KEEP	JO47_FR_2643D28E_6460_465B_9AEB_CCF649188D9C	hp3b47_frgov.c	https://www.veigne.fr/rss.xml	10	www	keeps the base id
+https://veigne.fr/feed	RETIRE	JO47_FR_953F31C9_50CD_4105_9069_0D3C032F4E3D	hp3b47_frgov.c	https://veigne.fr/rss.xml	10	www	same feed as the kept row, reached by another spelling
+https://verdinytt.no/feed	KEEP	JO48_NEWS_Q131842882	hp3b48_news.c	https://verdinytt.no/atom.xml	100	feed_path_variant	keeps the base id
+https://verdinytt.no/feed	RETIRE	JO48_NEWS_Q131842882_2	hp3b48_news.c	https://verdinytt.no/rss.xml	100	feed_path_variant	same feed as the kept row, reached by another spelling
+https://vieiros.com/rss/ultimas	KEEP	JO48_NEWS_Q9093581	hp3b48_news.c	http://www.vieiros.com/rss/ultimas	10	feed_path_variant	keeps the base id
+https://vieiros.com/rss/ultimas	RETIRE	JO48_NEWS_Q9093581_2	hp3b48_news.c	https://vieiros.com/rss/ultimas	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://villars-les-blamont.fr/flux-rss.php	KEEP	JO47_FR_12DD3078_B3A6_47F1_9684_B5AB68A0C210	hp3b47_frgov.c	https://villars-les-blamont.fr/flux-rss.php	20	www	keeps the base id
+https://villars-les-blamont.fr/flux-rss.php	RETIRE	JO47_FR_12DD3078_B3A6_47F1_9684_B5AB68A0C210_2	hp3b47_frgov.c	https://www.villars-les-blamont.fr/flux-rss.php	20	www	same feed as the kept row, reached by another spelling
+https://ville-verberie.org/feed	KEEP	JO47_FR_8694B385_2428_4DF1_85C3_558BA1C245F7	hp3b47_frgov.c	http://ville-verberie.org/feed/	10	feed_path_variant	keeps the base id
+https://ville-verberie.org/feed	RETIRE	JO47_FR_8694B385_2428_4DF1_85C3_558BA1C245F7_2	hp3b47_frgov.c	http://www.ville-verberie.org/rss	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://viriat.fr	KEEP	JO47_FR_69590620_3370_4D9C_BC34_3D9D5588030E	hp3b47_frgov.c	https://www.viriat.fr/?format=feed&type=rss	1	www	keeps the base id
+https://viriat.fr	RETIRE	JO47_FR_73743338_5C7B_4E51_8670_31C5CDF8677E	hp3b47_frgov.c	https://viriat.fr/?format=feed&type=rss	1	www	same feed as the kept row, reached by another spelling
+https://westnorthants.gov.uk/rss/feed	KEEP	JO44_UK_SOUTHNORTHANTS_GOV_UK	hp3b44_ukgov.c	https://www.westnorthants.gov.uk/rss/feed.xml	844	feed_path_variant	keeps the base id
+https://westnorthants.gov.uk/rss/feed	RETIRE	JO44_UK_SOUTHNORTHANTS_GOV_UK_2	hp3b44_ukgov.c	https://www.westnorthants.gov.uk/rss/atom.xml	844	feed_path_variant	same feed as the kept row, reached by another spelling
+https://wfo.bz.it	KEEP	JO47_IT_ISTB	hp3b47_itgov.c	https://wfo.bz.it/?format=feed&type=atom	14	feed_path_variant	keeps the base id
+https://wfo.bz.it	RETIRE	JO47_IT_ISTB_2	hp3b47_itgov.c	http://wfo.bz.it/?format=feed&type=rss	14	feed_path_variant	same feed as the kept row, reached by another spelling
+https://yamashiro-info.jp	KEEP	JO57IQ11641228	hp3b57_jpcult.c	https://yamashiro-info.jp/?feed=rss2	10	wp_feed_param	keeps the base id
+https://yamashiro-info.jp	RETIRE	JO57IQ11641228_2	hp3b57_jpcult.c	https://yamashiro-info.jp/?feed=rss2&	10	wp_feed_param	same feed as the kept row, reached by another spelling
+https://ytringen.no/feed	KEEP	JO48_NEWS_Q12011080	hp3b48_news.c	https://ytringen.no/atom.xml	0	feed_path_variant	no member stores today — one row kept, disclosing
+https://ytringen.no/feed	RETIRE	JO48_NEWS_Q12011080_2	hp3b48_news.c	https://ytringen.no/rss.xml	0	feed_path_variant	same feed as the kept row, reached by another spelling
+https://yumeji.or.jp/feed	KEEP	JO57IQ30933837	hp3b57_jpcult.c	https://yumeji.or.jp/feed	10	feed_path_variant	keeps the base id
+https://yumeji.or.jp/feed	RETIRE	JO57IQ30933837_2	hp3b57_jpcult.c	https://yumeji.or.jp/feed/atom	10	feed_path_variant	same feed as the kept row, reached by another spelling
+https://data.houstontx.gov/api/3/action/package_search	RETIRE	JO29A_FGT_HOUSTON_CKAN	hp3b29a_forgotten.c	(identical URL)	100	exact_url	same URL, array_path and id_keys as JO34_CKANRES_DATA_HOUSTONTX_GOV; measured 100 records / 803,495 bytes / 2 requests on BOTH. The JO34 row carries page_resume, timeout_ms and title_keys; this one does not
+https://data.milwaukee.gov/api/3/action/package_search	RETIRE	JO29A_FGT_MILWAUKEE_CKAN	hp3b29a_forgotten.c	(identical URL)	-	exact_url	same shape as Houston; keeper JO34_CKANRES_DATA_MILWAUKEE_GOV has page_resume
+https://data.ok.gov/api/3/action/package_search	RETIRE	JO29A_FGT_OKLAHOMA_CKAN	hp3b29a_forgotten.c	(identical URL)	-	exact_url	same shape; keeper JO34_CKANRES_DATA_OK_GOV has page_resume
+https://data.sanantonio.gov/api/3/action/package_search	RETIRE	JO29A_FGT_SANANTONIO_CKAN	hp3b29a_forgotten.c	(identical URL)	-	exact_url	same shape; keeper JO34_CKANRES_DATA_SANANTONIO_GOV has page_resume
+https://it-shien.smrj.go.jp/download/grantdecision_list/	RETIRE	JO28_IT_SHIEN_GRANTDECISION	hp3b28_jpindustry.c	(identical URL)	-	exact_url	same page as JP25_JPNATGOV_IT_SHIEN_GRANTS, with NO id_keys at all, so every uid is a content hash; the keeper keys on href
+https://searchapi.mrasservice.ca/Search/api/v1/search	RETIRE	CA_MRAS_SEARCH	hp_americas_deep.c	(identical URL)	-	exact_url	same URL and array_path=docs as CA_BUSINESS_REGISTRIES, whose key list is longer. NOTE: both key on Juri_ID with a COMMA, which chooses rather than composes; unmeasurable from this container (transport failure, 0 bytes, twice) so the key is left alone and the suspicion recorded in the row

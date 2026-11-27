@@ -168,6 +168,7 @@ static long pw_total_available(const cJSON *doc) {
   static const char *const keys[] = {
     "number_of_results", "totalResults", "total_count", "totalCount",
     "totalRecords", "numFound", "total_rows", "@odata.count", "totalFeatures",
+    "RecordCount",   /* DHS Program — added to this list and lib/jsonlist.c's together */
     /* `resultcount` is unambiguous in a way bare `count` is not: both APIs in
      * this tree that publish it (HUDOC, AUR) mean the size of the whole match
      * set, not the size of this page. Checked before adding — that is the only

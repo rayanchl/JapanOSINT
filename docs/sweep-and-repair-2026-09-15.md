@@ -1173,6 +1173,32 @@ real loss, concentrated in `sci-exoarchive-stellarhosts`, the three IOC
 sea-level registrations (one upstream registered three times — an issue-52 case
 as much as a 4b one), and the two `awc-*` rows.
 
+> **CORRECTION, 2026-11-12: strike the two `awc-*` rows from that list, and the
+> residual is roughly 5,600 rather than 7,500.** They are `awc-airport-info`
+> and `awc-pirep`, and they had been verified NOT a defect eleven days before
+> this pass ran — `docs/systemwide-audit-2026-09-04.md:822`:
+> "`awc-airport-info`/`awc-pirep`, whose quadtree re-queries a tile as four
+> children — now commented so nobody 'fixes' it later." Their collisions are
+> the sweep refining a full tile into four children covering the same ground,
+> and both key on the upstream's own identifier. Their share at the 2026-09-07
+> reading quoted in that comment is airport-info 1,102 and pirep 800, so about
+> 1,900/pass comes off this file's own figure. The subtraction is recomputed
+> from the numbers printed here because this pass kept no TSV.
+>
+> Two further things that line got wrong, both worth more than the number.
+> It says "the two `awc-*` rows" and `docs/OPEN_ITEMS_2026-10-20.md` later said
+> "the three `awc-*` bbox rows", while **four** of them collide — both counts
+> were inherited from a comment in `av_awc_bbox.c` that said "both bbox sweeps"
+> after two more sweeps had been added to the file. And the one row in that
+> family whose key is *not* the upstream's own, **`awc-obstacles`, was not in
+> this list at all** — it had never been measured, because every sweep that
+> reached it killed it on the clock first. It was read on 2026-11-12
+> (68,605 emitted / 43,035 stored) and its constructed `lat,lon|type` key
+> turned out to be a dimension: the feed publishes three decimals of
+> coordinate, so that is a ~111 m cell, and one tile of 401 records held 393
+> distinct keys. So this file's list was wrong in both directions at once —
+> naming two rows that were fine and omitting the one that was not.
+
 `audit_registry_emit`'s note is the reason this pass produced so few edits, and
 it deserves to be quoted:
 

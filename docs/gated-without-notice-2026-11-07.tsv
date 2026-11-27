@@ -1,0 +1,86 @@
+site	source_ids	display	env_vars_required	sweep_verdict_2026_11_07	outcome
+ag_commodity.c:77	usda-nass-quickstats	usda-nass-quickstats	USDA_NASS_KEY	GATED	CONVERTED
+agoop_flow.c:41	agoop-flow	agoop-flow	AGOOP_API_KEY	GATED	CONVERTED
+airquality_world.c:248	OPENAQ_GLOBAL,OPENMETEO_AQ,WAQI_GLOBAL	WAQI_GLOBAL	AQICN_TOKEN	-	CONVERTED
+breach_checker.c:77		BREACH_CHECKER	HIBP_API_KEY	-	CONVERTED
+censys_search.c:344	CENSYS_SEARCH	CENSYS_SEARCH	CENSYS_API_ID,CENSYS_API_SECRET	-	CONVERTED
+corp_financials.c:77	BUFFETT_CODE,SHIKIHO,UFOCATCH	buffett-code	BUFFETT_CODE_TOKEN	-	CONVERTED
+corp_financials.c:113	BUFFETT_CODE,SHIKIHO,UFOCATCH	shikiho	SHIKIHO_API_KEY	-	CONVERTED (how=paid)
+corp_registry.c:22	CONSTRUCTION_LICENSE,INVOICE_REGISTRY,MINPAKU_REGISTRY,NPO_PORTAL	invoice	INVOICE_APP_ID	-	CONVERTED
+credential_leak.c:62	CREDENTIAL_LEAK_SEARCH	CREDENTIAL_LEAK_SEARCH	GITHUB_TOKEN,GITHUB_API_TOKEN	-	CONVERTED
+docomo_insight.c:41	docomo-insight	docomo-insight	DOCOMO_INSIGHT_API_KEY	GATED	CONVERTED
+docomo_population.c:43	docomo-population	docomo-population	DOCOMO_POPULATION_API_KEY	GATED	CONVERTED
+domains_world.c:260	CERTSPOTTER,CIRCL_PDNS,HACKERTARGET,URLSCAN_SEARCH	circl_pdns	CIRCL_AUTH	-	CONVERTED
+econ_world.c:469		UN_COMTRADE	COMTRADE_KEY	-	CONVERTED
+econ_world.c:476		FRED_SERIES	FRED_KEY	-	CONVERTED
+edinet_filings.c:26	edinet-filings	edinet-filings	EDINET_API_KEY	GATED	CONVERTED
+eight_sansan.c:30	eight-sansan	eight-sansan	EIGHT_SESSION	GATED	CONVERTED
+flickr_geo.c:32	flickr-geo	flickr-geo	FLICKR_API_KEY	GATED	CONVERTED
+gbizinfo.c:79	GBIZINFO	gbizinfo	GBIZINFO_TOKEN	-	CONVERTED
+geo_property.c:43		touki	TOUKI_API_KEY	-	CONVERTED (how=paid)
+geo_property.c:49		zenrin	ZENRIN_API_KEY	-	CONVERTED (how=paid)
+geodata_world.c:349	NOMINATIM_GLOBAL,OVERPASS_GLOBAL,WIKIMAPIA_GLOBAL	wikimapia_global	WIKIMAPIA_KEY	-	CONVERTED
+github_leaks_jp.c:54	github-leaks-jp	github-leaks-jp	GITHUB_TOKEN	COLLISION	CONVERTED
+global_geonames.c:92	GEONAMES	geonames	GEONAMES_USER	-	CONVERTED
+global_mediacloud.c:86	MEDIACLOUD	mediacloud	MEDIACLOUD_API_KEY	-	CONVERTED
+google_dorking.c:28	google-dorking	google-dorking	GOOGLE_CSE_KEY,GOOGLE_CSE_CX,SERPAPI_KEY	GATED	CONVERTED
+grayhat_buckets.c:27	grayhat-buckets	grayhat-buckets	GRAYHAT_API_KEY	GATED	CONVERTED
+hazard_world.c:273		FIRMS_GLOBAL	FIRMS_MAP_KEY	-	CONVERTED
+here_japan.c:24	here-japan	here-japan	HERE_API_KEY	GATED	CONVERTED
+houjin_bangou.c:52	houjin-bangou	houjin-bangou	HOUJIN_BANGOU_KEY	GATED	CONVERTED
+houmukyoku_commercial.c:89	houmukyoku-commercial	houmukyoku-commercial	HOUMUKYOKU_API_KEY	GATED	CONVERTED
+houmukyoku_commercial.c:100	houmukyoku-commercial	houmukyoku-commercial	HOUMUKYOKU_WATCHLIST	GATED	CONVERTED
+infra_sensing.c:24		zoomeye	ZOOMEYE_API_KEY	-	CONVERTED
+infra_sensing.c:60		hunter	HUNTER_API_KEY	-	CONVERTED
+instagram_geo.c:41	instagram-geo	instagram-geo	INSTAGRAM_SESSION_COOKIE	GATED	CONVERTED
+instagram_locations.c:26	instagram-locations	instagram-locations	INSTAGRAM_SESSION_COOKIE	GATED	CONVERTED
+license_plate.c:24	LICENSE_PLATE_LOOKUP	LICENSE_PLATE_LOOKUP	PLATE_LOOKUP_URL	-	CONVERTED
+linkedin_jp_search.c:50	linkedin-jp-search	linkedin-jp-search	LINKEDIN_COOKIE	GATED	CONVERTED
+luup_private.c:63	luup-private	luup-private	LUUP_MOBILE_TOKEN	GATED	CONVERTED
+mapfan_api.c:42	mapfan-api	mapfan-api	MAPFAN_API_KEY	GATED	CONVERTED
+marinetraffic_jp.c:47	marinetraffic-jp	marinetraffic-jp	MARINETRAFFIC_API_KEY	GATED	CONVERTED
+maritime_world.c:48	AISSTREAM,EQUASIS,IMO_GISIS	aisstream	AISSTREAM_KEY	-	CONVERTED
+maritime_world.c:66	AISSTREAM,EQUASIS,IMO_GISIS	equasis	EQUASIS_USER,EQUASIS_PASS	-	CONVERTED
+navitime_api.c:26	navitime-api	navitime-api	NAVITIME_API_KEY	GATED	CONVERTED
+nlni_landuse.c:36	nlni-landuse	nlni-landuse	MLIT_L03B_GEOJSON_URL	GATED	CONVERTED
+nonprofit_world.c:198	CANADA_CHARITIES,PROPUBLICA_NONPROFIT,UK_CHARITIES	uk_charities	UK_CHARITY_KEY	-	CONVERTED
+nonprofit_world.c:243	CANADA_CHARITIES,PROPUBLICA_NONPROFIT,UK_CHARITIES	canada_charities	CANADA_CHARITY_KEY	-	CONVERTED
+odpt_bus.c:42	odpt-bus	odpt-bus	ODPT_TOKEN,ODPT_CONSUMER_KEY,ODPT_CHALLENGE_TOKEN	GATED	CONVERTED
+odpt_flight.c:61	odpt-flight	odpt-flight	ODPT_TOKEN,ODPT_CONSUMER_KEY,ODPT_CHALLENGE_TOKEN	GATED	CONVERTED
+patent_search.c:21	PATENT_SEARCH	patent-search	PATENTSVIEW_API_KEY	-	CONVERTED
+patents_world.c:129	EPO_OPS,LENS_PATENTS,PATENTSVIEW	epo_ops	EPO_OPS_KEY	-	CONVERTED
+patents_world.c:208	EPO_OPS,LENS_PATENTS,PATENTSVIEW	lens_patents	LENS_TOKEN	-	CONVERTED
+people_finder.c:493	COMPANY_SEARCH,PERSON_SEARCH	tdb-tsr	TDB_TSR_API_KEY	-	CONVERTED (how=paid)
+people_research.c:22		gplaces	GOOGLE_PLACES_API_KEY	-	CONVERTED
+pep_watchlist.c:27	PEP_CHECK,WATCHLIST_CHECK_NEW	%s	OPENSANCTIONS_API_KEY	-	CONVERTED
+police_incidents.c:46	police-incidents	police-incidents	POLICE_INCIDENTS_CSV_URL	GATED	CONVERTED
+procure_pivot.c:117	AWARD_SUPPLIER_SEARCH,CONTRACT_EXPIRY_WATCH,SAM_GOV_OPPORTUNITIES,TED_EU_TENDERS	sam-gov	SAM_GOV_API_KEY	-	CONVERTED
+psn_xbox_jp.c:43	psn-xbox-jp	psn-xbox-jp	PSN_NPSSO,XBOX_API_KEY	GATED	CONVERTED
+quake360_jp.c:45	quake360-jp	quake360-jp	QUAKE_API_KEY	GATED	CONVERTED
+reg_au_abr.c:35	AU_ABR	au_abr	ABR_GUID	-	CONVERTED
+reg_eu_more.c:82		NL_KVK	KVK_API_KEY	-	CONVERTED
+reg_ie_cro.c:131	IE_CRO	ie_cro	CRO_API_KEY	-	CONVERTED
+reg_in_mca.c:106	IN_MCA	in_mca	INDIA_DATA_KEY	-	CONVERTED
+reg_in_mca.c:111	IN_MCA	in_mca	INDIA_MCA_RESOURCE_ID	-	CONVERTED
+reg_kr_dart.c:137	KR_DART	kr_dart	DART_API_KEY	-	CONVERTED
+reg_uk_companies.c:112	UK_COMPANIES	uk_companies	COMPANIES_HOUSE_API_KEY	-	CONVERTED
+sanctions_world.c:686		%s	<r->token_env>	-	CONVERTED
+satellite_tracker.c:83	SATELLITE_TRACKER	SATELLITE_TRACKER	N2YO_API_KEY	-	CONVERTED
+shodan_cameras_jp.c:53	shodan-cameras-jp	shodan-cameras-jp	SHODAN_API_KEY	GATED	CONVERTED
+shodan_iot.c:36	shodan-iot	shodan-iot	SHODAN_API_KEY	GATED	CONVERTED
+shodan_japan.c:38	shodan-japan	shodan-japan	SHODAN_API_KEY	GATED	CONVERTED
+space_world.c:202		SPACETRACK	SPACETRACK_USER,SPACETRACK_PASS	-	CONVERTED
+space_world.c:309		N2YO	N2YO_KEY	-	CONVERTED
+tellus_satellite.c:17	tellus-satellite	tellus-satellite	TELLUS_TOKEN	GATED	CONVERTED
+threatfeeds_world.c:184		MALWAREBAZAAR	ABUSECH_AUTH_KEY,MALWAREBAZAAR_AUTH_KEY	-	CONVERTED
+tiktok_geo.c:26	tiktok-geo	tiktok-geo	TIKTOK_MS_TOKEN	GATED	CONVERTED
+transparency_world.c:320	EU_TRANSPARENCY,OPENSECRETS,UK_DONATIONS	opensecrets	OPENSECRETS_KEY	-	CONVERTED
+vessel_finder.c:33	vessel-finder	vessel-finder	VESSELFINDER_API_KEY	GATED	CONVERTED
+wdcgg_co2.c:53	wdcgg-co2	wdcgg-co2	WDCGG_REGISTRY_URL	GATED	CONVERTED
+wifi_networks_shodan.c:32	wifi-networks-shodan	wifi-networks-shodan	SHODAN_API_KEY	GATED	CONVERTED
+windy_japan.c:130	windy-japan	windy-japan	WINDY_API_KEY	GATED	CONVERTED
+yahoo_map_api.c:23	yahoo-map-api	yahoo-map-api	YAHOO_APP_ID	GATED	CONVERTED
+airquality_world.c:226	OPENAQ_GLOBAL	OPENAQ_GLOBAL	(none)	-	FETCH_FAILURE_MISLABELLED — the condition is !body on the KEYLESS v2 route; now returns -1
+telegram_jp_channels.c:45	telegram-jp-channels	telegram-jp-channels	TGSTAT_API_KEY	GATED	CONVERTED_BY_HAND — the inner if only chose the wording; both branches fell to one return 0
+global_aleph.c:134	ALEPH_SEARCH	ALEPH_SEARCH	ALEPH_API_KEY	-	CONVERTED_BY_HAND — logged "gated" and then spent the guaranteed-401 request anyway; requests 1 -> 0
+reg_ro.c:132	REG_RO	REG_RO	OPENAPI_RO_KEY	-	NOT_CHANGED — the keyless route is a real public scrape and jo_emit_anchors already stores a collector-fetch-error record

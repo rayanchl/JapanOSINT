@@ -17,7 +17,7 @@ static const hp_source T[] = {
     .name = "European Investment Bank — financed project list",
     .collector = "eu_procurement", .category = "procurement",
     .description = "Every EIB loan/financing operation back to 1959. Rows give project id, description of the works financed, status and signature date plus signed and disbursed amounts in additionalInformation, and primaryTags carrying the country (label + ISO code) and sector (label + code). The url field is the numeric project id used for the detail page.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"eu\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "procurement-record", .tags = "\"eu\",\"procurement\",\"batch16\"", .lang = "en",
     /* sortColumn=id, not projectStatusDate: the status date has ties, and EIB
      * breaks them differently on every request — pageNumber=1 repeated 4 of
      * pageNumber=0's 5 ids (live, 2026-10-02), so the walk fetched 50 records
@@ -26,8 +26,8 @@ static const hp_source T[] = {
      * 100 reads 2,000 of the 17,044 projects per run instead of 100, and the
      * engine's truncation notice states the rest. */
     .url = "https://www.eib.org/page-provider/projects/list?or=&pageNumber=0&itemPerPage=100&pageable=true&language=EN&sortColumn=id",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the detail answered 200 with HTML or XML, which a JSON hop cannot merge, so every hop was a request that stamped _detail_error. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://www.eib.org/en/projects/all/{v}", .detail_key = "id",
     /* pageNumber is 0-based: page_start = 0 alone reads as "unset" and the
      * engine coerced it to 1, so page 1 was never fetched. */
     .page_param = "pageNumber", .page_start = 0, .page_zero_based = 1, .page_max = 20,   /* declared by the row's own URL */

@@ -131,14 +131,19 @@ static const hp_source HP3B36_UK[] = {
     .record_type = "flood-monitoring",
     .tags = "\"uk\",\"environment\",\"flood\",\"hydrology\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://environment.data.gov.uk/flood-monitoring/id/stations?_limit=200",
+    /* ONE REQUEST, the whole register: `_limit=10000` answers 5,541 stations,
+       5,541 distinct @id and 5,541 distinct whole records (measured
+       2026-11-14). The row used to walk 200 at a time by `_offset` under a
+       cycle, on an endpoint whose `_sort` is accepted and IGNORED (CLAUDE.md:
+       `notation` and `-notation` answer the same records) — so the walk was
+       unordered, it collapsed 5 then 3 records on two readings, and each of
+       those was a station re-served while another was never served. A sort
+       could not fix that here; a read with no page seam can, and it also ends
+       the cycle: every station every run instead of 4,000 of them. */
+    .url = "https://environment.data.gov.uk/flood-monitoring/id/stations?_limit=10000",
     .array_path = "items",
     .id_keys = "@id",
     .interval = 86400,
-    .page_param = "_offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 200,
-    .page_zero_based = 1,
     .title_keys = "label",
     .description = "EA flood monitoring on environment.data.gov.uk. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 149 records in "
@@ -252,7 +257,8 @@ static const hp_source HP3B36_UK[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.beta.ons.gov.uk/v1/code-lists?limit=100",
     .array_path = "items",
-    .id_keys = "links",
+    .id_keys = "links.self.id",   /* id_keys "links.self.id", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       `links` is an OBJECT and matched no flattened field, so every uid was a content hash (the engine filed id-keys-unmatched each run). links.self.id is the code list's own id: 83 distinct = the ceiling of 84 records, one served twice byte for byte. */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,

@@ -14,100 +14,109 @@ VJSON(eas_datagojp_recent, "eas-datagojp-recent", "DATA GO JP — most recently 
   "ja", "[\"jpn\",\"opendata\",\"national\",\"catalog\"]", 21600,
   "Newest Japanese national open data records including their file resource URLs and formats.");
 
+/* THE 14 eas-datagojp-topic-* ROWS BELOW STORED ONE RESULT UNDER 14 NAMES until
+   2026-11-16 (tools/audit_scheduled_filter.py, FILTER_IGNORED): they asked
+   www.data.go.jp, which 301s to data.e-gov.go.jp and DROPS THE QUERY STRING,
+   so `q=AED`, `q=バス` and an impossible word each answered the same first 10
+   of 18,829 datasets (200 / 66,140 bytes / 10 records, three times). Asked of
+   data.e-gov.go.jp directly the search is honoured; measured through the
+   engine the same day: aed 1,800, bus 1,439, evacuation-shelters 1,606,
+   fire-service 1,592, landslide 967, and the other nine reach the 20-page
+   ceiling at 2,000 with a truncation notice. Rule 4d on scheduled rows. */
 VJSON(eas_datagojp_topic_aed, "eas-datagojp-topic-aed", "DATA GO JP — AED defibrillator locations datasets", "データカタログサイト DATA GO JP — 「AED」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=AED&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=AED&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"aed\"]", 86400,
   "Japanese national open data catalogue slice for AED defibrillator locations, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_bus, "eas-datagojp-topic-bus", "DATA GO JP — bus services datasets", "データカタログサイト DATA GO JP — 「バス」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E3%83%90%E3%82%B9&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E3%83%90%E3%82%B9&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"bus\"]", 86400,
   "Japanese national open data catalogue slice for bus services, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_disaster_prevention, "eas-datagojp-topic-disaster-prevention", "DATA GO JP — disaster prevention datasets", "データカタログサイト DATA GO JP — 「防災」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E9%98%B2%E7%81%BD&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E9%98%B2%E7%81%BD&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"disaster-prevention\"]", 64800,
   "Japanese national open data catalogue slice for disaster prevention, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_earthquake, "eas-datagojp-topic-earthquake", "DATA GO JP — earthquakes datasets", "データカタログサイト DATA GO JP — 「地震」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E5%9C%B0%E9%9C%87&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E5%9C%B0%E9%9C%87&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"earthquake\"]", 86400,
   "Japanese national open data catalogue slice for earthquakes, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_evacuation_shelters, "eas-datagojp-topic-evacuation-shelters", "DATA GO JP — evacuation shelters datasets", "データカタログサイト DATA GO JP — 「避難所」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E9%81%BF%E9%9B%A3%E6%89%80&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E9%81%BF%E9%9B%A3%E6%89%80&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"evacuation-shelters\"]", 43200,
   "Japanese national open data catalogue slice for evacuation shelters, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_fire_service, "eas-datagojp-topic-fire-service", "DATA GO JP — fire and rescue datasets", "データカタログサイト DATA GO JP — 「消防」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E6%B6%88%E9%98%B2&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E6%B6%88%E9%98%B2&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"fire-service\"]", 64800,
   "Japanese national open data catalogue slice for fire and rescue, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_landslide, "eas-datagojp-topic-landslide", "DATA GO JP — landslide hazard datasets", "データカタログサイト DATA GO JP — 「土砂災害」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E5%9C%9F%E7%A0%82%E7%81%BD%E5%AE%B3&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E5%9C%9F%E7%A0%82%E7%81%BD%E5%AE%B3&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"landslide\"]", 43200,
   "Japanese national open data catalogue slice for landslide hazard, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_medical, "eas-datagojp-topic-medical", "DATA GO JP — medical facilities datasets", "データカタログサイト DATA GO JP — 「医療」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E5%8C%BB%E7%99%82&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E5%8C%BB%E7%99%82&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"medical\"]", 43200,
   "Japanese national open data catalogue slice for medical facilities, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_population, "eas-datagojp-topic-population", "DATA GO JP — population statistics datasets", "データカタログサイト DATA GO JP — 「人口」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E4%BA%BA%E5%8F%A3&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E4%BA%BA%E5%8F%A3&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"population\"]", 43200,
   "Japanese national open data catalogue slice for population statistics, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_public_facilities, "eas-datagojp-topic-public-facilities", "DATA GO JP — public facilities datasets", "データカタログサイト DATA GO JP — 「公共施設」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E5%85%AC%E5%85%B1%E6%96%BD%E8%A8%AD&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E5%85%AC%E5%85%B1%E6%96%BD%E8%A8%AD&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"public-facilities\"]", 64800,
   "Japanese national open data catalogue slice for public facilities, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_rivers, "eas-datagojp-topic-rivers", "DATA GO JP — rivers and waterways datasets", "データカタログサイト DATA GO JP — 「河川」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E6%B2%B3%E5%B7%9D&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E6%B2%B3%E5%B7%9D&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"rivers\"]", 64800,
   "Japanese national open data catalogue slice for rivers and waterways, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_roads, "eas-datagojp-topic-roads", "DATA GO JP — roads datasets", "データカタログサイト DATA GO JP — 「道路」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E9%81%93%E8%B7%AF&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E9%81%93%E8%B7%AF&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"roads\"]", 43200,
   "Japanese national open data catalogue slice for roads, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_schools, "eas-datagojp-topic-schools", "DATA GO JP — schools datasets", "データカタログサイト DATA GO JP — 「学校」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E5%AD%A6%E6%A0%A1&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E5%AD%A6%E6%A0%A1&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"schools\"]", 86400,
   "Japanese national open data catalogue slice for schools, spanning every ministry and agency.");
 
 VJSON(eas_datagojp_topic_tourism, "eas-datagojp-topic-tourism", "DATA GO JP — tourism datasets", "データカタログサイト DATA GO JP — 「観光」関連データセット",
   "eastasia_data", "opendata",
-  "https://www.data.go.jp/data/api/3/action/package_search?q=%E8%A6%B3%E5%85%89&rows=100&sort=id%20asc",
+  "https://data.e-gov.go.jp/data/api/3/action/package_search?q=%E8%A6%B3%E5%85%89&rows=100&sort=id%20asc",
   "result.results",
   "ja", "[\"jpn\",\"opendata\",\"national\",\"tourism\"]", 64800,
   "Japanese national open data catalogue slice for tourism, spanning every ministry and agency.");

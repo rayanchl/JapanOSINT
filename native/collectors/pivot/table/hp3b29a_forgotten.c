@@ -51,92 +51,8 @@ static const hp_source HP3B29A_FORGOTTEN[] = {
       "others across 33 pages of 1000, while the id-sorted walk "
       "returned all 32458 distinct ids." },
 
-  { .id = "JO29A_FGT_SANANTONIO_CKAN", .name = "City of San Antonio — CKAN dataset catalogue",
-    .name_ja = "サンアントニオ市 オープンデータカタログ（CKAN）",
-    .category = "government", .portal = "https://data.sanantonio.gov",
-    .record_type = "dataset-record",
-    .tags = "\"opendata\",\"ckan\",\"catalog\",\"forgotten\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sanantonio.gov/api/3/action/package_search?rows=100&start=0&sort=id%20asc",
-    .headers = { "User-Agent: JapanOSINT/1.0" },
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified,metadata_created",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "start",
-    .page_size = 100,
-    .page_zero_based = 1,
-    .title_keys = "title",
-    .description = "The City of San Antonio open-data portal runs CKAN and exposes "
-      "package_search without authentication; at probe time "
-      "(2026-09-14) result.count was 164 datasets. Each record is one "
-      "published dataset with its id, name, title, publishing "
-      "organisation, notes, tags, licence, modification dates and the "
-      "resources array of downloadable files. Paged by start in steps "
-      "of 100 (2 pages). Walked with sort=id asc: the default CKAN "
-      "order (score desc, metadata_modified desc) was measured on "
-      "data.virginia.gov to repeat 2992 datasets and never return 3301 "
-      "others across 33 pages of 1000, while the id-sorted walk "
-      "returned all 32458 distinct ids." },
 
-  { .id = "JO29A_FGT_HOUSTON_CKAN", .name = "City of Houston — CKAN dataset catalogue",
-    .name_ja = "ヒューストン市 オープンデータカタログ（CKAN）",
-    .category = "government", .portal = "https://data.houstontx.gov",
-    .record_type = "dataset-record",
-    .tags = "\"opendata\",\"ckan\",\"catalog\",\"forgotten\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.houstontx.gov/api/3/action/package_search?rows=100&start=0&sort=id%20asc",
-    .headers = { "User-Agent: JapanOSINT/1.0" },
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified,metadata_created",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "start",
-    .page_size = 100,
-    .page_zero_based = 1,
-    .title_keys = "title",
-    .description = "The City of Houston open-data portal runs CKAN and exposes "
-      "package_search without authentication; at probe time "
-      "(2026-09-14) result.count was 94 datasets. Each record is one "
-      "published dataset with its id, name, title, publishing "
-      "organisation, notes, tags, licence, modification dates and the "
-      "resources array of downloadable files. Paged by start in steps "
-      "of 100 (1 page). Walked with sort=id asc: the default CKAN order "
-      "(score desc, metadata_modified desc) was measured on "
-      "data.virginia.gov to repeat 2992 datasets and never return 3301 "
-      "others across 33 pages of 1000, while the id-sorted walk "
-      "returned all 32458 distinct ids." },
 
-  { .id = "JO29A_FGT_MILWAUKEE_CKAN", .name = "City of Milwaukee — CKAN dataset catalogue",
-    .name_ja = "ミルウォーキー市 オープンデータカタログ（CKAN）",
-    .category = "government", .portal = "https://data.milwaukee.gov",
-    .record_type = "dataset-record",
-    .tags = "\"opendata\",\"ckan\",\"catalog\",\"forgotten\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.milwaukee.gov/api/3/action/package_search?rows=100&start=0&sort=id%20asc",
-    .headers = { "User-Agent: JapanOSINT/1.0" },
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified,metadata_created",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "start",
-    .page_size = 100,
-    .page_zero_based = 1,
-    .title_keys = "title",
-    .description = "The City of Milwaukee open-data portal runs CKAN and exposes "
-      "package_search without authentication; at probe time "
-      "(2026-09-14) result.count was 186 datasets. Each record is one "
-      "published dataset with its id, name, title, publishing "
-      "organisation, notes, tags, licence, modification dates and the "
-      "resources array of downloadable files. Paged by start in steps "
-      "of 100 (2 pages). Walked with sort=id asc: the default CKAN "
-      "order (score desc, metadata_modified desc) was measured on "
-      "data.virginia.gov to repeat 2992 datasets and never return 3301 "
-      "others across 33 pages of 1000, while the id-sorted walk "
-      "returned all 32458 distinct ids." },
 
   { .id = "JO29A_FGT_VIRGINIA_CKAN", .name = "Commonwealth of Virginia — CKAN dataset catalogue",
     .name_ja = "バージニア州 オープンデータカタログ（CKAN）",
@@ -281,34 +197,6 @@ static const hp_source HP3B29A_FORGOTTEN[] = {
       "others across 33 pages of 1000, while the id-sorted walk "
       "returned all 32458 distinct ids." },
 
-  { .id = "JO29A_FGT_OKLAHOMA_CKAN", .name = "State of Oklahoma — CKAN dataset catalogue",
-    .name_ja = "オクラホマ州 オープンデータカタログ（CKAN）",
-    .category = "government", .portal = "https://data.ok.gov",
-    .record_type = "dataset-record",
-    .tags = "\"opendata\",\"ckan\",\"catalog\",\"forgotten\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ok.gov/api/3/action/package_search?rows=100&start=0&sort=id%20asc",
-    .headers = { "User-Agent: JapanOSINT/1.0" },
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified,metadata_created",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "start",
-    .page_size = 100,
-    .page_zero_based = 1,
-    .title_keys = "title",
-    .description = "The State of Oklahoma open-data portal runs CKAN and exposes "
-      "package_search without authentication; at probe time "
-      "(2026-09-14) result.count was 395 datasets. Each record is one "
-      "published dataset with its id, name, title, publishing "
-      "organisation, notes, tags, licence, modification dates and the "
-      "resources array of downloadable files. Paged by start in steps "
-      "of 100 (4 pages). Walked with sort=id asc: the default CKAN "
-      "order (score desc, metadata_modified desc) was measured on "
-      "data.virginia.gov to repeat 2992 datasets and never return 3301 "
-      "others across 33 pages of 1000, while the id-sorted walk "
-      "returned all 32458 distinct ids." },
 
   { .id = "JO29A_FGT_KYIV_CITY_CKAN", .name = "Kyiv City State Administration — CKAN dataset catalogue",
     .name_ja = "キーウ市 オープンデータカタログ（CKAN）",

@@ -64,11 +64,12 @@ static const hp_source T[] = {
   { .id = "us-ca-dcc-cannabis-search",
     .name = "California Dept of Cannabis Control - licence search API",
     .collector = "us_corporate", .category = "corporate",
-    .description = "Undocumented public backend of search.cannabis.ca.gov (base URL published in /config.js). Paged results with metadata{currentPage,totalPages,totalCount} and data[] of id, licenseNumber, licenseStatus, licenseTerm, licenseType, licenseDesignation, issueDate, expirationDate, licensingAuthority, businessLegalName, businessDbaName, businessOwnerName, businessStructure, premise address. Also /licensetypes, /licensestatuses, /licenseterms, /licensedesignations, /licensingauthorities, /licensebusinesstypes.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Undocumented public backend of search.cannabis.ca.gov (base URL published in /config.js). Paged results with metadata{currentPage,totalPages,totalCount} and data[] of id, licenseNumber, licenseStatus, licenseTerm, licenseType, licenseDesignation, issueDate, expirationDate, licensingAuthority, businessLegalName, businessDbaName, businessOwnerName, businessStructure, premise address. Also /licensetypes, /licensestatuses, /licenseterms, /licensedesignations, /licensingauthorities, /licensebusinesstypes.",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/filteredSearch?searchQuery=green&pageSize=50&pageNumber=1",
     .array_path = "data",
-    .detail_url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_param = "pageNumber", .page_start = 1, .page_max = 20,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 

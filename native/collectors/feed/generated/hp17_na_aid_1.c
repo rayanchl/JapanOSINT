@@ -16,25 +16,41 @@ static const hp_source T[] = {
   { .id = "af-dportal-act-na",
     .name = "d-portal (IATI) — aid activities in Namibia",
     .collector = "na_aid", .category = "aid",
-    .description = "IATI aid activities with Namibia as recipient: aid, reporting org, funder_ref, title, description, status, dates and multi-currency amounts. Detail by aid.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"na\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "IATI aid activities with Namibia as recipient: aid, reporting org, funder_ref, title, description, status, dates and multi-currency amounts. Detail by aid.",
+    .record_type = "aid-record", .tags = "\"na\",\"aid\",\"batch17\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act&country_code=NA&limit=5000&form=json",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid",
-    .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-dportal-trans-na",
     .name = "d-portal (IATI) — aid transactions in Namibia",
     .collector = "na_aid", .category = "aid",
-    .description = "Namibia activity-plus-transaction rows with trans_ref and trans_description; detail hop by aid returns the transaction ledger.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"na\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://d-portal.org/q?from=act,trans&trans_country_code=NA&limit=5000&form=json",
+    .description = "Namibia activity-plus-transaction rows with trans_ref and trans_description; detail hop by aid returns the transaction ledger.",
+    .record_type = "aid-record", .tags = "\"na\",\"aid\",\"batch17\"", .lang = "en",
+    /* RE-POINTED 2026-11-14 — THIS ROW NEVER FILTERED BY COUNTRY (rule 4d).
+       It asked `from=act,trans&trans_country_code=NA`, and d-portal IGNORES
+       that parameter: NA, GH and an impossible ZZ each return the same first
+       rows, so all eleven af-dportal-trans-* rows stored the SAME global
+       transactions under eleven country names, 100,000 a run each, every gate
+       green. It was found because two "countries" came back within 13 KB of
+       each other on a 191 MB read. The form that filters is the JOIN:
+       `from=act,trans,country&country_code=XX` (select=count: BW 1,057,799,
+       GH 3,570,722, an impossible QQ 0 on the activity form).
+       orderby: the walk had NO order, so its pages were a different draw each
+       run. d-portal honours several columns — asc, desc (`col-`) and the
+       default all differ, a bogus column returns the default, two reads agree
+       and offset 0 / offset 8 are disjoint and continuous.
+       page_resume: the collection is in the millions, so it is read over a
+       cycle of 100,000 a run rather than its first slice re-read for ever. */
+    .url = "https://d-portal.org/q?from=act,trans,country&country_code=NA&limit=5000&form=json&orderby=aid,trans_day,trans_value,trans_code",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
-    .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
+    .page_resume = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

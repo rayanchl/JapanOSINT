@@ -40,6 +40,13 @@ static const hp_source T[] = {
     .description = "Every stop served by a line: naptanId, stationNaptan, hubNaptanCode, icsCode, stopType, modes, the lines and lineGroups served, lineModeGroups, lat/lon and additionalProperties. Line -> station roster hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"gb\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.tfl.gov.uk/Line/victoria/StopPoints",
+    /* array_path "." and id_keys naptanId, 2026-11-24. The body is a bare
+       array of 16 stop points, each carrying a longer nested array, so the
+       engine mined the densest one — 69 `additionalProperties` entries keyed
+       on `key` (27 distinct) — and the detail key naptanId resolved on none
+       of them (measured 2026-11-16). Declared, the records are the stops. */
+    .array_path = ".",
+    .id_keys = "naptanId",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}", .detail_key = "naptanId",
     .page_walk = 1,
     .interval = 3600, .free_tier = 1 },

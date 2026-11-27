@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 #define SOURCE_ID "instagram-locations"
 
@@ -23,8 +24,9 @@ static const char *LOCATION_IDS[] = {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cookie = getenv("INSTAGRAM_SESSION_COOKIE");
   if (!cookie || !*cookie) {
-    fprintf(stderr, "[instagram-locations] gated (no INSTAGRAM_SESSION_COOKIE)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "instagram-locations",
+                                (const char *[]){ "INSTAGRAM_SESSION_COOKIE", NULL },
+                                NULL, NULL);
   }
   char ch[2048];
   snprintf(ch, sizeof ch, "Cookie: %s", cookie);

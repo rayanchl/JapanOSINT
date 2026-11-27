@@ -141,11 +141,19 @@ VJSON(us_epa_echo_case_report, "us-epa-echo-case-report", "EPA ECHO — enforcem
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Full record behind one enforcement case, keyed on ActivityId (NOT case number). Returns ActivityId, CaseNumber, CaseName, CaseType, CaseStatus + date, RegionalDocketNumber, DOJDocketNumber, Lead agency, ReliefSought, EnforcementOutcome, HeadquartersDivision, Branch, ResultVolDisclosure (voluntary self-disclosure), MultiMediaCase flag, EnforcementType, TotalFederalPenalty, TotalStatePenalty, PenaltyCollected, plus defendant/facility linkage, statutes and sections violated, milestones and compliance-action amounts.");
 
-VCSV(us_fed_enforcement_actions_csv, "us-fed-enforcement-actions-csv", "Federal Reserve enforcement actions (full history CSV)", "Federal Reserve enforcement actions (full history CSV)",
+/* Keyed on ALL NINE columns: the file has no id, and MEASURED 2026-11-16 over
+   the whole file (2,899 rows, 2,897 distinct whole) the best four-column key
+   is 2,896 and reaching 2,897 needs eight of the nine. The key shim REPLACES
+   the uid, so the in-page guard's content-hash suffix does not survive it and
+   the key has to reach the ceiling on its own — a four-column key measured
+   in the engine stored 2,858 of 2,900 (also because the header carried a BOM
+   and `Effective Date` resolved on no row; lib/csv.c strips it now). */
+VCSV_IDKEYS(us_fed_enforcement_actions_csv, "us-fed-enforcement-actions-csv", "Federal Reserve enforcement actions (full history CSV)", "Federal Reserve enforcement actions (full history CSV)",
   "us_legal", "legal",
   "https://www.federalreserve.gov/supervisionreg/files/enforcementactions.csv",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "455 KB CSV, columns: Effective Date, Termination Date, Individual (the NAMED person barred or fined), Individual Affiliation (their bank and city/state), Banking Organization (for entity actions), Action (Prohibition from Banking, Written Agreement, Cease and Desist, Civil Money Penalty), URL to the press release, Name, Note. Both the institution-level and the named-individual-level enforcement record of the Federal Reserve, in one file, no scraping.");
+  "455 KB CSV, columns: Effective Date, Termination Date, Individual (the NAMED person barred or fined), Individual Affiliation (their bank and city/state), Banking Organization (for entity actions), Action (Prohibition from Banking, Written Agreement, Cease and Desist, Civil Money Penalty), URL to the press release, Name, Note. Both the institution-level and the named-individual-level enforcement record of the Federal Reserve, in one file, no scraping.",
+  "Effective Date+Termination Date+Individual+Individual Affiliation+Banking Organization+Action+URL+Name+Note");
 
 VJSON(us_federalregister_document_detail, "us-federalregister-document-detail", "Federal Register — document detail record", "Federal Register — document detail record",
   "us_legal", "legal",

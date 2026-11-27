@@ -77,23 +77,6 @@ static const hp_source HP3B57_JPMUNI[] = {
       "00:00:00+09:00. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ61885977", .name = "Bieicho Library (public library) - 美瑛町｜最新情報",
-    .name_ja = "Bieicho Library (public library) - 美瑛町｜最新情報",
-    .category = "government", .portal = "https://www.town.biei.hokkaido.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.biei.hokkaido.jp/rss/whatsnew.rdf",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 50 items, RSS1 feed, newest "
-      "2026-10-31T04:44:05JST. A feed the organisation itself declares "
-      "or links on its site root." },
 
   { .id = "JO57_Q290326", .name = "Nirasaki (city of Japan (shi)) - 韮崎市",
     .name_ja = "Nirasaki (city of Japan (shi)) - 韮崎市",
@@ -438,57 +421,6 @@ static const hp_source HP3B57_JPMUNI[] = {
     .description = "Fetched 2026-10-30: 30 items, RSS1 feed, newest "
       "2026-10-31T00:00:00+09:00. A feed the organisation itself "
       "declares or links on its site root." },
-
-  { .id = "JO57_Q750587", .name = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .name_ja = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.city.shirakawa.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=1",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 74 items, RSS2 feed, newest 2026-10-29. A "
-      "feed the organisation itself declares or links on its site root." },
-
-  { .id = "JO57_Q750587_2", .name = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .name_ja = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.city.shirakawa.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 74 items, RSS2 feed, newest 2026-10-29. A "
-      "feed the organisation itself declares or links on its site root." },
-
-  { .id = "JO57_Q750587_3", .name = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .name_ja = "Shirakawa (city of Japan (shi)) - 白河市公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.city.shirakawa.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=3",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 74 items, RSS2 feed, newest 2026-10-29. A "
-      "feed the organisation itself declares or links on its site root." },
 
   { .id = "JO57_Q329790_2", .name = "Kamaishi (city of Japan (shi)) - 新着情報   釜石市",
     .name_ja = "Kamaishi (city of Japan (shi)) - 新着情報   釜石市",
@@ -4577,78 +4509,6 @@ static const hp_source HP3B57_JPMUNI[] = {
       "18:00:00+09:00. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57_Q905721", .name = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .name_ja = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .category = "government", .portal = "https://www.city.hidaka.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 20 items, RSS1 feed, newest "
-      "2024-12-16T18:49:52+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO57_Q905721_2", .name = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .name_ja = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .category = "government", .portal = "https://www.city.hidaka.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=1025&amp;includeShortcut=1&amp;ignore=1",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 20 items, RSS1 feed, newest "
-      "2024-12-16T18:49:52+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO57_Q905721_3", .name = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .name_ja = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .category = "government", .portal = "https://www.city.hidaka.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=710&amp;includeShortcut=1&amp;ignore=1",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 20 items, RSS1 feed, newest "
-      "2024-12-16T18:49:52+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO57_Q905721_4", .name = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .name_ja = "Hidaka (city of Japan (shi)) - 日高市ホームページ",
-    .category = "government", .portal = "https://www.city.hidaka.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=711&amp;includeShortcut=1&amp;ignore=1",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 20 items, RSS1 feed, newest "
-      "2024-12-16T18:49:52+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO57_Q15674_8", .name = "Kagoshima (city of Japan (shi)) - 鹿児島市 事業者の方へ",
     .name_ja = "Kagoshima (city of Japan (shi)) - 鹿児島市 事業者の方へ",
     .category = "government", .portal = "https://www.city.kagoshima.lg.jp/",
@@ -6254,57 +6114,6 @@ static const hp_source HP3B57_JPMUNI[] = {
       "04:00:11 +0900. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57_Q1205046", .name = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .name_ja = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.town.yabuki.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=0",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 53 items, RSS2 feed, newest 2026-10-23. A "
-      "feed the organisation itself declares or links on its site root." },
-
-  { .id = "JO57_Q1205046_2", .name = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .name_ja = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.town.yabuki.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=3",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 53 items, RSS2 feed, newest 2026-10-23. A "
-      "feed the organisation itself declares or links on its site root." },
-
-  { .id = "JO57_Q1205046_3", .name = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .name_ja = "Yabuki (town of Japan (machi/cho)) - 矢吹町公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.town.yabuki.fukushima.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=1",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 53 items, RSS2 feed, newest 2026-10-23. A "
-      "feed the organisation itself declares or links on its site root." },
-
   { .id = "JO57_Q1205163", .name = "Yamamoto (town of Japan (machi/cho)) - 山元町役場RSS（新着情報）",
     .name_ja = "Yamamoto (town of Japan (machi/cho)) - 山元町役場RSS（新着情報）",
     .category = "government", .portal = "https://www.town.yamamoto.miyagi.jp/",
@@ -6413,31 +6222,18 @@ static const hp_source HP3B57_JPMUNI[] = {
       "2026-10-28T11:17:09+09:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO57_Q1203337", .name = "Sakai (town of Japan (machi/cho)) - 境町公式ホームページお知らせ",
-    .name_ja = "Sakai (town of Japan (machi/cho)) - 境町公式ホームページお知らせ",
-    .category = "government", .portal = "https://www.town.ibaraki-sakai.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=0",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 67 items, RSS2 feed, newest Fri, 30 Oct 2026 "
-      "00:00:00 +0900. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO57_Q1203337_3", .name = "Sakai (town of Japan (machi/cho)) - 境町公式ホームページお知らせ",
     .name_ja = "Sakai (town of Japan (machi/cho)) - 境町公式ホームページお知らせ",
     .category = "government", .portal = "https://www.town.ibaraki-sakai.lg.jp/",
     .record_type = "government-notice",
     .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=2",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;type`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&type=2",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9841,25 +9637,12 @@ static const hp_source HP3B57_JPMUNI[] = {
     .record_type = "government-notice",
     .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=4370&amp;includeShortcut=1&amp;ignore=1",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 20 items, RSS1 feed, newest "
-      "2026-10-31T00:00:00+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO57_Q387136_2", .name = "Kawaguchi (core city of Japan) - 川口市ホームページ",
-    .name_ja = "Kawaguchi (core city of Japan) - 川口市ホームページ",
-    .category = "government", .portal = "https://www.city.kawaguchi.lg.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;dirId`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&dirId=4370&includeShortcut=1&ignore=1",
     .array_path = "item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9877,7 +9660,12 @@ static const hp_source HP3B57_JPMUNI[] = {
     .record_type = "government-notice",
     .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=4849&amp;includeShortcut=1&amp;ignore=1",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;dirId`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&dirId=4849&includeShortcut=1&ignore=1",
     .array_path = "item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9895,7 +9683,12 @@ static const hp_source HP3B57_JPMUNI[] = {
     .record_type = "government-notice",
     .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=4850&amp;includeShortcut=1&amp;ignore=1",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;dirId`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&dirId=4850&includeShortcut=1&ignore=1",
     .array_path = "item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",

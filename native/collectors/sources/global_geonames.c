@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* one geoname record → one intel_item. Returns 1 if emitted. */
 static int emit_place(intel_sink *sink, const cJSON *g) {
@@ -89,8 +90,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *user = jo_env("GEONAMES_USER");
   if (!user) {
-    fprintf(stderr, "[geonames] gated (no GEONAMES_USER)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "geonames",
+                                (const char *[]){ "GEONAMES_USER", NULL },
+                                NULL, NULL);
   }
 
   char *eq = jo_urlencode(q);

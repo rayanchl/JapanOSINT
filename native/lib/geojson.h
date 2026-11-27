@@ -19,6 +19,14 @@
 int geojson_emit_features(intel_sink *sink, const char *source_id,
                           cJSON *features);
 
+/* How many features of the LAST geojson_emit_features() call shared an upstream
+ * id and were disambiguated by content hash. Non-zero means that source's key
+ * is a DIMENSION rather than a record identity: the in-page guard keeps such
+ * features apart within one FeatureCollection, so the run's emitted/stored
+ * arithmetic shows nothing, and the cost falls at the page seam instead. The
+ * run line says it too; this accessor is what lets a test assert it. */
+int geojson_last_collisions(void);
+
 /* Convenience: parse a FeatureCollection / {features:[...]} / array and emit. */
 int geojson_emit_doc(intel_sink *sink, const char *source_id, cJSON *doc);
 

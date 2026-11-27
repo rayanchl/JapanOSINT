@@ -148,9 +148,9 @@ static int emit_author(intel_sink *sink, const cJSON *a) {
 
 static int fetch_and_emit(const source_ctx *ctx, intel_sink *sink,
                           const char *url, int is_author) {
-  const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (mailto:osint@example.org)",
-                         NULL };
+  /* No User-Agent here: it carried mailto:osint@example.org, an address
+   * nobody reads. $JO_CONTACT_MAILTO is the contact route (httpclient.c). */
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "openalex");
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body);

@@ -165,7 +165,7 @@ static cJSON *dedupe(cJSON *raw, const unified_keyfn *kf, int nk, int prec) {
 }
 
 int unified_capture(const source_ctx *ctx, const char *upstream_id,
-                    cJSON *out) {
+                    cJSON *out, int *served) {
   const source_def *def = registry_get(upstream_id);
   if (!def || !def->run || !cJSON_IsArray(out)) return 0;
   cJSON *cap_arr = cJSON_CreateArray();
@@ -175,6 +175,7 @@ int unified_capture(const source_ctx *ctx, const char *upstream_id,
   sub.source_id = upstream_id;
   int rc = def->run(&sub, &cap);
   int n = 0;
+  if (rc >= 0 && served) (*served)++;              /* it RAN; see unified.h */
   if (rc >= 0) {                                  /* allSettled: reject ⇒ none */
     cJSON *f;
     cJSON_ArrayForEach(f, cap_arr) {
@@ -196,17 +197,19 @@ int unified_collect(const source_ctx *ctx, intel_sink *sink,
                      int coord_precision,
                      unified_filterfn filter, unified_postfn post) {
   cJSON *merged = cJSON_CreateArray();
+  int served = 0, refused = 0, absent = 0;
 
   for (int i = 0; i < n_ups; i++) {
     const source_def *def = registry_get(ups[i].name);
-    if (!def || !def->run) continue;                    /* missing → 0 */
+    if (!def || !def->run) { absent++; continue; }      /* missing → 0 */
     cJSON *cap_arr = cJSON_CreateArray();
     cap_ctx cc = { cap_arr };
     intel_sink cap = { &cc, cap_emit };
     source_ctx sub = *ctx;
     sub.source_id = ups[i].name;
     int rc = def->run(&sub, &cap);
-    if (rc < 0) { cJSON_Delete(cap_arr); continue; }    /* allSettled reject */
+    if (rc < 0) { refused++; cJSON_Delete(cap_arr); continue; }
+    served++;
 
     cJSON *f;
     cJSON_ArrayForEach(f, cap_arr) {
@@ -242,6 +245,9 @@ int unified_collect(const source_ctx *ctx, intel_sink *sink,
 
   int n = geojson_emit_features(sink, source_id, features);
   cJSON_Delete(features);
-  fprintf(stderr, "[%s] emitted %d\n", source_id, n);
+  fprintf(stderr, "[%s] emitted %d (upstreams: %d served, %d refused, "
+                  "%d not registered)\n", source_id, n, served, refused,
+          absent);
+  if (n <= 0 && served == 0 && n_ups > 0) return -1;   /* see unified.h */
   return n >= 0 ? n : -1;
 }

@@ -45,10 +45,10 @@ static const hp_source T[] = {
     .name = "CMS Open Data — DCAT catalogue",
     .collector = "us_health", .category = "health",
     .description = "3 MB Project Open Data catalogue for data.cms.gov. Per dataset: title, description, accrualPeriodicity, contactPoint, describedBy (data dictionary URL), and distribution[] where the entry carrying description:'latest' holds the STABLE accessURL https://data.cms.gov/data-api/v1/dataset/{uuid}/data. This is the authoritative way to resolve the provider-enrollment, ownership, change-of-ownership and revalidation dataset uuids used below.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://data.cms.gov/data.json",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key holds a whole URL that was percent-encoded into a path segment (404/400 on every hop). docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "dataset",
-    .detail_url = "https://data.cms.gov/data-api/v1/dataset/{v}/data?size=100", .detail_key = "accessURL",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -75,10 +75,11 @@ static const hp_source T[] = {
   { .id = "us-cms-provider-enrollment",
     .name = "CMS — Medicare Fee-For-Service public provider enrollment",
     .collector = "us_health", .category = "health",
-    .description = "2,978,925 rows (confirmed via the /data/stats endpoint). Per provider: NPI, MULTIPLE_NPI_FLAG, PECOS_ASCT_CNTL_ID (the PECOS associate id that links individuals to organisations), ENRLMT_ID, PROVIDER_TYPE_CD and PROVIDER_TYPE_DESC, STATE_CD, FIRST_NAME/MDL_NAME/LAST_NAME, ORG_NAME. Server-side filtering works: ?filter[NPI]=... returns the single record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "2,978,925 rows (confirmed via the /data/stats endpoint). Per provider: NPI, MULTIPLE_NPI_FLAG, PECOS_ASCT_CNTL_ID (the PECOS associate id that links individuals to organisations), ENRLMT_ID, PROVIDER_TYPE_CD and PROVIDER_TYPE_DESC, STATE_CD, FIRST_NAME/MDL_NAME/LAST_NAME, ORG_NAME. Server-side filtering works: ?filter[NPI]=... returns the single record.",
+    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100",
-    .detail_url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100&filter[NPI]={v}", .detail_key = "NPI",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "PECOS_ASCT_CNTL_ID",   /* was the fallback (FIRST_SCALAR:NPI); declared so the uid no longer depends on what a merged detail body offered */
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .page_param = "offset",
     .page_size = 100,
@@ -99,10 +100,11 @@ static const hp_source T[] = {
   { .id = "us-cpsc-recall-by-product-name",
     .name = "CPSC SaferProducts — recall search by product name",
     .collector = "us_health", .category = "health",
-    .description = "85 recalls matching 'helmet', each a complete recall record (not a stub) with Products/Hazards/Injuries/Manufacturers/Importers/Retailers arrays. Free-text product pivot the tree lacks — the tree only carries the RecallDateStart form.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "85 recalls matching 'helmet', each a complete recall record (not a stub) with Products/Hazards/Injuries/Manufacturers/Importers/Retailers arrays. Free-text product pivot the tree lacks — the tree only carries the RecallDateStart form.",
+    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&ProductName=helmet",
-    .detail_url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallID={v}", .detail_key = "RecallID",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "RecallID",   /* was the fallback (TITLE:Products.0.Name); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

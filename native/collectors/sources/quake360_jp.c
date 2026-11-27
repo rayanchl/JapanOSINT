@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 #define API_URL "https://quake.360.net/api/v3/search/quake_service"
 #define TIMEOUT_MS 20000
@@ -42,8 +43,9 @@ static cJSON *str_pair_or_null(const cJSON *loc, const char *ka,
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("QUAKE_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[quake360-jp] gated (no QUAKE_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "quake360-jp",
+                                (const char *[]){ "QUAKE_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   const char *q = getenv("QUAKE_QUERY");

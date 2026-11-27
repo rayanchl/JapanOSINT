@@ -17,9 +17,9 @@ static const hp_source T[] = {
     .name = "Taiwan GCIS — company record with licensed business scope",
     .collector = "tw_registry", .category = "registry",
     .description = "Company record plus the nested Cmp_Business array: every licensed business item the company may legally conduct, with Business_Seq_NO, Business_Item (the MOEA code, e.g. CC01080) and Business_Item_Desc. TSMC alone returns 17 items. Reveals what a Taiwanese entity is actually permitted to do, which often contradicts its stated line of business.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"tw\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "zh-TW",
+    .record_type = "registry-record", .tags = "\"tw\",\"registry\",\"batch17\"", .lang = "zh-TW",
     .url = "https://data.gcis.nat.gov.tw/od/data/api/236EE382-4942-41A9-BD03-CA0709025E7C?%24format=json&%24filter=Business_Accounting_NO%20eq%20%2222099131%22&%24skip=0&%24top=5",
-    .detail_url = "https://data.gcis.nat.gov.tw/od/data/api/5F64D864-61CB-4D0D-8AD9-492047CC1EA6?%24format=json&%24filter=Business_Accounting_NO%20eq%20%22{v}%22", .detail_key = "Business_Accounting_NO",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

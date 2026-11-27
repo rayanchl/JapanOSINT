@@ -934,7 +934,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"rail\",\"usa\",\"fra\",\"crossing\",\"accident\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.transportation.gov/resource/uwah-u9bn.json?$limit=1000&$select=*,:id&$order=:id",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 12,537 of 12,537; reportkey alone 12,536, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "reportkey+gradecrossingid",
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -954,7 +955,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"rail\",\"usa\",\"fra\",\"operator\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.transportation.gov/resource/ks5j-3hdj.json?$limit=1000&$order=:id",
-    .id_keys = "railroadcompanycode",
+    .id_keys = "railroadcompanycode+rrcostartdate",   /* id_keys "railroadcompanycode+rrcostartdate", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       the company code alone is 2,983 distinct of 2,984: a code is REUSED by a later company, and the start date separates them (2,984 of 2,984). NOT `:id` — every row was created 2026-11-14, i.e. the dataset is replaced wholesale and a row id would re-key it on each refresh. */
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1045,7 +1047,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"rail\",\"london\",\"tfl\",\"accessibility\",\"asset\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.tfl.gov.uk/Disruptions/Lifts",
-    .id_keys = "icsCode",
+    .id_keys = "icsCode+outageStartArea+outageEndArea+message",   /* id_keys "icsCode+outageStartArea+outageEndArea+message", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       icsCode is the STATION (18 distinct of 27): a station has several lifts out at once. The feed publishes no lift or disruption id, so the identity is the station plus the two areas the lift connects plus the message — 27 of 27. */
     .interval = 600,
     .title_keys = "stopPointName",
     .description = "Individual lifts and escalators out of service by station, with "
@@ -1075,6 +1078,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"transit\",\"usa\",\"onebusaway\",\"agency\",\"gtfs\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.pugetsound.onebusaway.org/api/where/agencies-with-coverage.json?key=TEST",
+    /* id_keys MEASURED 2026-11-16 on one list page: 12/12; the uid came from detail.0.id, the id of the first of 134 merged sibling records. */
+    .id_keys = "agencyId",
     .array_path = "data.list",
     .detail_key = "agencyId",
     .detail_path = "data.list",

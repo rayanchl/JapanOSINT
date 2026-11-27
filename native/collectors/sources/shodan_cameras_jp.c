@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 /* QUERY (JS verbatim), percent-encoded by encodeURIComponent. */
 #define QUERY \
@@ -50,8 +51,9 @@ static const char *product_of(cJSON *m) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("SHODAN_API_KEY");
   if (!k || !*k) {
-    fprintf(stderr, "[shodan-cameras-jp] gated (no SHODAN_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "shodan-cameras-jp",
+                                (const char *[]){ "SHODAN_API_KEY", NULL },
+                                NULL, NULL);
   }
   char qenc[1024];
   jo_uri_encode_buf(QUERY, qenc, sizeof qenc);

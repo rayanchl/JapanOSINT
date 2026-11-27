@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "_credential_notice.inc"
 
 #define SOURCE_ID "instagram-geo"
 
@@ -38,8 +39,9 @@ static int loc_num(const cJSON *loc, const char *k, double *out) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cookie = getenv("INSTAGRAM_SESSION_COOKIE");
   if (!cookie || !*cookie) {
-    fprintf(stderr, "[instagram-geo] gated (no INSTAGRAM_SESSION_COOKIE)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "instagram-geo",
+                                (const char *[]){ "INSTAGRAM_SESSION_COOKIE", NULL },
+                                NULL, NULL);
   }
   char ch[2048];
   snprintf(ch, sizeof ch, "Cookie: %s", cookie);

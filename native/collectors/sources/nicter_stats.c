@@ -101,14 +101,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Every counter absent means the page carries no measurement at all (the
    * Atlas page is now a JS-rendered description with no server-side numbers).
    * Emitting a Feature whose three metrics are all null would be a row that
-   * shows a label and no data — an honest empty is the correct result. */
+   * shows a label and no data — so emitting nothing is right, and the first
+   * half of this comment stands.
+   *
+   * WHAT WAS WRONG IS CALLING IT "the correct result". An honest empty means
+   * the upstream ran and held nothing; NICTER holds plenty and this PAGE
+   * stopped carrying it, which this comment itself says and which the run line
+   * then reported as `rc=0 records=0 stored=0` — the invisible nothing of rule
+   * 1, with the diagnosis sitting in a log line nobody reads. The note even
+   * names where the figures moved to. Measured again 2026-11-05: HTTP 200,
+   * 12,066 bytes, no counter. Returns -1 so the database carries it, and the
+   * remedy a reader needs is `/top10` rather than a retry. */
   if (!hasToday && !hasTotal && !hasSensors) {
     fprintf(stderr, "[nicter-stats] no counters in %zu bytes of %s "
                     "(page is JS-rendered; live figures are served at "
-                    "https://www.nicter.jp/top10) — emitting 0\n",
+                    "https://www.nicter.jp/top10) — reporting a failed fetch, "
+                    "not an empty measurement\n",
             html_len, NICTER_STATS_URL);
     free(html);
-    return 0;
+    return -1;
   }
 
   /* observed_at = new Date().toISOString() */

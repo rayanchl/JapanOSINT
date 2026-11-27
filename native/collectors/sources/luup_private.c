@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "_credential_notice.inc"
 
 #define HOMEPAGE  "https://luup.sc/"
 #define PORTS_API "https://api.luup.sc/v1/ports"
@@ -50,20 +51,31 @@ static int emit_row(intel_sink *sink, intel_item *it) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("LUUP_MOBILE_TOKEN");
   int has_key = token && *token;
-  int portal_live = probe_head(ctx->http, HOMEPAGE);
-  char now[32]; probe_iso_now(now, sizeof now);
 
   if (!has_key) {
-    /* Gated: log it and emit NOTHING. This used to publish a "portal-pointer"
-     * row whose entire content was a link plus "Set LUUP_MOBILE_TOKEN to
-     * enable" — a row that reads as a result in every list and carries no
-     * measurement. An honest empty is the correct output for a source that
-     * cannot run; 0 (not -1) so the scheduler doesn't quarantine it. */
-    (void)portal_live; (void)now;
-    fprintf(stderr, "[luup-private] gated (no LUUP_MOBILE_TOKEN) — "
-                    "per-port reads need a bearer from LUUP mobile sign-up\n");
-    return 0;
+    /* Gated: emit NOTHING OF SUBSTANCE. This used to publish a
+     * "portal-pointer" row whose entire content was a link plus "Set
+     * LUUP_MOBILE_TOKEN to enable" — a row that reads as a result in every
+     * list and carries no measurement. The status notice is not that row: it
+     * carries record_type "collector-status-notice", which every findings
+     * surface filters out, and no observation at all. 0 (not -1) so the
+     * scheduler doesn't quarantine it.
+     *
+     * The homepage HEAD probe used to run ABOVE this gate and its result was
+     * then thrown away with `(void)portal_live` — one request every run, for a
+     * source that cannot do anything with the answer. It is below the gate
+     * now, so a gated run reads requests=0 instead of requests=1. */
+    return jo_needs_credential(sink, ctx->source_id, "luup-private",
+                                (const char *[]){ "LUUP_MOBILE_TOKEN", NULL },
+                                NULL, NULL);
   }
+
+  /* The homepage HEAD probe is gone rather than moved: `portal_live` was never
+   * read on EITHER path -- the gated path cast it to void and the keyed path
+   * below never mentions it -- so it was one request a run whose answer went
+   * nowhere, which the compiler says out loud once the gate stops consuming
+   * it. `now` is kept; it is this run's published_at. */
+  char now[32]; probe_iso_now(now, sizeof now);
 
   char authh[512];
   snprintf(authh, sizeof authh, "Authorization: Bearer %s", token);

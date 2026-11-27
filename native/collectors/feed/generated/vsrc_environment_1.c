@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 /* THE ELEVEN BfS ROWS: eight were reading one page of a million records.
  *
@@ -412,12 +413,15 @@ VJSON(geo_hubeau_hydro_sites, "geo-hubeau-hydro-sites", "Hub'Eau France — hydr
   "en", "[\"france\",\"hydrology\",\"sites\"]", 86400,
   "French hydrometric measurement sites (site-level aggregation of stations).");
 
-VJSON(geo_hubeau_hydro_stations, "geo-hubeau-hydro-stations", "Hub'Eau France — hydrometric stations", "Hub'Eau フランス — 水文観測所",
+/* id_keys "code_station", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+   Hub'Eau's own station code, 1,500 of 1,500 over three pages; the fallback hash(title, link, date) was 1,236. */
+VJSON_IDKEYS(geo_hubeau_hydro_stations, "geo-hubeau-hydro-stations", "Hub'Eau France — hydrometric stations", "Hub'Eau フランス — 水文観測所",
   "environment", "flood",
   "https://hubeau.eaufrance.fr/api/v2/hydrometrie/referentiel/stations?size=500&format=json",
   "data",
   "en", "[\"france\",\"hydrology\",\"stations\"]", 86400,
-  "French hydrometric station registry with coordinates.");
+  "French hydrometric station registry with coordinates.",
+  "code_station");
 
 VJSON(geo_hubeau_hydrobio, "geo-hubeau-hydrobio", "Hub'Eau France — fish population surveys", "Hub'Eau フランス — 魚類調査",
   "environment", "biodiversity",

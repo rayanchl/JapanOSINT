@@ -16,24 +16,74 @@ static const hp_source T[] = {
   { .id = "af-dportal-act-za",
     .name = "d-portal (IATI) — aid activities in South Africa",
     .collector = "za_aid", .category = "aid",
-    .description = "IATI aid activities with South Africa as recipient: aid, reporting org, funder_ref, title, description, status, dates, commitment/spend. Detail by aid returns the activity record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"za\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "IATI aid activities with South Africa as recipient: aid, reporting org, funder_ref, title, description, status, dates, commitment/spend. Detail by aid returns the activity record.",
+    .record_type = "aid-record", .tags = "\"za\",\"aid\",\"batch17\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act&country_code=ZA&limit=5000&form=json",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid",
-    .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
+  /* id_keys MEASURED, 2026-11-14, on Botswana's real body (5,000 rows at this
+     row's own limit=5000, 5,000 distinct WHOLE records): aid alone is 169
+     distinct (the activity — a dimension), trans_id alone is 492 and is NOT an
+     identity despite the name, aid+trans_id is 1,737, and this 8-part
+     composite is 5,000 — the ceiling. DO NOT shorten it to trans_id: that
+     collapses 90% of the ledger. The sibling tz/zm rows add
+     trans_sector_group, which measured 0 extra distinct and is redundant; they
+     are left as they are because re-keying them would change stored uids for
+     nothing. This row previously declared no id_keys at all and stored the
+     same 5,000 via the content-hash fallback — so this changes no count, only
+     identity: a revised transaction now updates its row instead of arriving as
+     a new one.
+
+     Across the FULL walk, not just one page: af-dportal-trans-bw reads 100,000
+     records over 20 pages and stores 99,975 — 27 collapsing, 0.027%, the same
+     order as the 0.035% this family's upstream duplicates were measured at.
+     Exact within a page, near-exact across the walk; the remainder is theirs.
+
+     AND THE DECIDING COMPARISON, made after this key shipped rather than
+     before: this row carried NO id_keys, so every uid was a content hash, and
+     a declared key is only right if it keeps at least as much. Fetched page by
+     page over the whole walk of af-dportal-trans-gh (20 pages, 100,000 rows):
+     distinct WHOLE records 99,915 and distinct 8-part keys 99,915 — IDENTICAL.
+     The hash and the key collapse the same 85 rows and those are the
+     upstream's own byte-identical duplicates, so the key costs nothing and
+     buys a stable identity. Do NOT revert it to the content hash.
+
+     The engine reports more than 85 collapsing (gh: 239 of 100,000) because
+     these rows page by offset with NO order parameter, so the walk is
+     unordered and re-serves rows across page boundaries which the key then
+     correctly collapses as the same transaction. Part of any collision count
+     here is our own paging; the remedy for that half is a sort, and whether
+     d-portal honours one is unmeasured. */
   { .id = "af-dportal-trans-za",
     .name = "d-portal (IATI) — aid transactions in South Africa",
     .collector = "za_aid", .category = "aid",
-    .description = "South Africa activity-plus-transaction rows with trans_ref and trans_description; detail by aid returns the transaction ledger.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"za\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://d-portal.org/q?from=act,trans&trans_country_code=ZA&limit=5000&form=json",
+    .description = "South Africa activity-plus-transaction rows with trans_ref and trans_description; detail by aid returns the transaction ledger.",
+    .record_type = "aid-record", .tags = "\"za\",\"aid\",\"batch17\"", .lang = "en",
+    /* RE-POINTED 2026-11-14 — THIS ROW NEVER FILTERED BY COUNTRY (rule 4d).
+       It asked `from=act,trans&trans_country_code=ZA`, and d-portal IGNORES
+       that parameter: ZA, GH and an impossible ZZ each return the same first
+       rows, so all eleven af-dportal-trans-* rows stored the SAME global
+       transactions under eleven country names, 100,000 a run each, every gate
+       green. It was found because two "countries" came back within 13 KB of
+       each other on a 191 MB read. The form that filters is the JOIN:
+       `from=act,trans,country&country_code=XX` (select=count: BW 1,057,799,
+       GH 3,570,722, an impossible QQ 0 on the activity form).
+       orderby: the walk had NO order, so its pages were a different draw each
+       run. d-portal honours several columns — asc, desc (`col-`) and the
+       default all differ, a bogus column returns the default, two reads agree
+       and offset 0 / offset 8 are disjoint and continuous.
+       page_resume: the collection is in the millions, so it is read over a
+       cycle of 100,000 a run rather than its first slice re-read for ever. */
+    .url = "https://d-portal.org/q?from=act,trans,country&country_code=ZA&limit=5000&form=json&orderby=aid,trans_day,trans_value,trans_code",
     .array_path = "rows",
-    .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .page_walk = 1,
+    .page_resume = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

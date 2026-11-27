@@ -287,12 +287,17 @@ VJSON(eur_soc_cat_ijf5_uiur, "eur-soc-cat-ijf5-uiur", "Generalitat de Catalunya 
   "ca", "[\"esp\",\"opendata\"]", 86400,
   "Rows of the 'Estabilitat i sostenibilitat de les finances públiques: regla de despesa de les comunitats autònomes' dataset published by Generalitat de Catalunya transparency portal.");
 
-VJSON(eur_soc_cat_jsgs_5iiu, "eur-soc-cat-jsgs-5iiu", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada",
+/* id_keys MEASURED 2026-11-16 over the whole dataset (4,229 rows, 4,199 distinct
+   whole): the report's own URL, enllac.url, is 4,199 with none missing, and no
+   top-level field reaches that (best 4,194). It is nested, so $select lifts it
+   to a top-level enllac_url. Not :id: every row was created 2026-11-12. */
+VJSON_IDKEYS(eur_soc_cat_jsgs_5iiu, "eur-soc-cat-jsgs-5iiu", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada",
   "europe_data", "opendata",
-  "https://analisi.transparenciacatalunya.cat/resource/jsgs-5iiu.json?$limit=1000&$order=:id",
+  "https://analisi.transparenciacatalunya.cat/resource/jsgs-5iiu.json?$limit=1000&$order=:id&$select=*,enllac.url%20as%20enllac_url",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Informes d’inspecció ambiental integrada' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Informes d’inspecció ambiental integrada' dataset published by Generalitat de Catalunya transparency portal.",
+  "enllac_url");
 
 VJSON(eur_soc_cat_jshe_z7mt, "eur-soc-cat-jshe-z7mt", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: Capacitat (+) o necessitat (-) de finançament per nivell d’administració", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: Capacitat (+) o necessitat (-) de finançament per nivell d’administració",
   "europe_data", "opendata",
@@ -318,19 +323,29 @@ VJSON_KEYED(eur_soc_cat_nh2x_3jq4, "eur-soc-cat-nh2x-3jq4", "Generalitat de Cata
   "Rows of the 'Inventari de béns i drets de la Generalitat de Catalunya' dataset published by Generalitat de Catalunya transparency portal.",
   ":id");
 
-VJSON(eur_soc_cat_qa4t_5ptr, "eur-soc-cat-qa4t-5ptr", "Generalitat de Catalunya transparency portal — Catàleg de Formació Professional - LOMLOE", "Generalitat de Catalunya transparency portal — Catàleg de Formació Professional - LOMLOE",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   1 of 3,000 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2026-07-08. */
+VJSON_IDKEYS(eur_soc_cat_qa4t_5ptr, "eur-soc-cat-qa4t-5ptr", "Generalitat de Catalunya transparency portal — Catàleg de Formació Professional - LOMLOE", "Generalitat de Catalunya transparency portal — Catàleg de Formació Professional - LOMLOE",
   "europe_data", "opendata",
-  "https://analisi.transparenciacatalunya.cat/resource/qa4t-5ptr.json?$limit=1000&$order=:id",
+  "https://analisi.transparenciacatalunya.cat/resource/qa4t-5ptr.json?$select=*,:id&$limit=1000&$order=:id",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Catàleg de Formació Professional - LOMLOE' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Catàleg de Formació Professional - LOMLOE' dataset published by Generalitat de Catalunya transparency portal.",
+  ":id");
 
-VJSON(eur_soc_cat_s3uc_x9bq, "eur-soc-cat-s3uc-x9bq", "Generalitat de Catalunya transparency portal — Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya", "Generalitat de Catalunya transparency portal — Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya",
+/* id_keys ":id", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+   rows accumulate (created on 2 days, newest 2026-11-14) so a row id survives; the fallback was 3 distinct of 3,000. */
+VJSON_IDKEYS(eur_soc_cat_s3uc_x9bq, "eur-soc-cat-s3uc-x9bq", "Generalitat de Catalunya transparency portal — Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya", "Generalitat de Catalunya transparency portal — Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya",
   "europe_data", "opendata",
-  "https://analisi.transparenciacatalunya.cat/resource/s3uc-x9bq.json?$limit=1000&$order=:id",
+  "https://analisi.transparenciacatalunya.cat/resource/s3uc-x9bq.json?$select=*,:id&$limit=1000&$order=:id",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Dictàmens emesos per la Comissió Jurídica Assessora, pel Consell de Garanties Estatutàries i pel Consell Consultiu publicats al Portal Jurídic de Catalunya' dataset published by Generalitat de Catalunya transparency portal.",
+  ":id");
 
 VJSON(eur_soc_cat_tg6d_kufh, "eur-soc-cat-tg6d-kufh", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: regla de despesa per nivell d’administració", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: regla de despesa per nivell d’administració",
   "europe_data", "opendata",

@@ -388,6 +388,14 @@ static const hp_source HP3B32_JPREGISTER[] = {
       "publication month (newest 2026-09). The header cells carry "
       "embedded English line breaks, so the row declares no key and the "
       "engine keys each record on its first field, the operator name." },
+  /* MEASURED 2026-11-16 and NOT keyed: name alone is 717 distinct with six
+     groups whose members differ; name+address is 728 of a 729 ceiling. It
+     cannot be DECLARED: the name column's header is "商号、名称又は氏名等\r\n
+     (Trade Name or Name, etc.)", and an id_keys list splits on the comma
+     inside it. The in-page guard keeps the six groups apart (one page, one
+     emit: 725 stored of 727 emitted, the two lost being byte-identical), so
+     no record is lost; what is not gained is a stable uid for those six. */
+
 
   { .id = "JO32_REG_FSA_UNREGISTERED_WARNED_OVERSEAS", .name = "FSA - unregistered overseas operators warned for soliciting "
       "Japanese investors",
@@ -524,6 +532,13 @@ static const hp_source HP3B32_JPREGISTER[] = {
     .record_type = "industrial-waste-licensee",
     .tags = "\"japan\",\"hokkaido\",\"industrial-waste\",\"licence\",\"registry\",\"environment\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
+    /* index_url, 2026-11-24: the workbook keeps its NAME and is re-attached
+       under a new numeric path (…/1/3/2/0/5/8/1/9/_/ answered 404; the landing
+       page links …/1/3/2/4/7/9/5/3/_/ for the same file name). The page lists
+       four workbooks, 01 to 04, and "_/01(" selects this one. The .url below
+       is replaced each run by the link found. */
+    .index_url = "https://www.pref.hokkaido.lg.jp/ks/jss/sanpai_1/meibo01/meibo_main.html",
+    .index_href_must = "_/01(",
     .url = "https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/5/8/1/9/_/01(2026.3.31%E7%8F%BE%E5%9C%A8)%E7%94%A3%E5%BB%83%E5%8F%8E%E9%81%8B%E6%A5%AD_%E5%85%AC%E9%96%8B%E7%89%88.xlsx",
     .csv_skip_lines = 0,
     .id_keys = "許可番号",

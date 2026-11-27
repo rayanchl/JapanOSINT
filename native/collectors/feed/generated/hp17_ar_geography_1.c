@@ -16,11 +16,12 @@ static const hp_source T[] = {
   { .id = "ar-georef-departamentos",
     .name = "Georef Argentina - departamentos",
     .collector = "ar_geography", .category = "geography",
-    .description = "529 departments with id, nombre, centroid and parent province (id + nombre). The ?id= detail hop was probed with a real id (06014) and returned the single matching record. Auto-labels on 'nombre'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "geography-record", .tags = "\"ar\",\"geography\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
+    .description = "529 departments with id, nombre, centroid and parent province (id + nombre). The ?id= detail hop was probed with a real id (06014) and returned the single matching record. Auto-labels on 'nombre'.",
+    .record_type = "geography-record", .tags = "\"ar\",\"geography\",\"batch17\"", .lang = "es",
     .url = "https://apis.datos.gob.ar/georef/api/departamentos?max=3",
     .array_path = "departamentos",
-    .detail_url = "https://apis.datos.gob.ar/georef/api/departamentos?id={v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 177,   /* 529 records at 3 a page, measured 2026-10-12; the 20-page default reached 60 */
     .interval = 86400, .free_tier = 1 },

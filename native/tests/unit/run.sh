@@ -171,8 +171,17 @@ else
 fi
 
 fail=0
+# $JO_UNIT_MATCH limits the loop to tests whose name contains it, for
+# iterating on ONE test: the whole suite is ~8 minutes (~40 under TSan) and a
+# new fixture is usually wrong three times before it is right. It is a
+# developer convenience and nothing reads it in CI, so `make unit` with the
+# variable unset is still every test — and a run that skipped some says so on
+# the last line rather than printing the same "all passed" as a full one.
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
+  if [ -n "${JO_UNIT_MATCH:-}" ]; then
+    case "$name" in *"$JO_UNIT_MATCH"*) ;; *) continue ;; esac
+  fi
   # JO_UNIT_ONLY=<regex>: run only the tests whose name matches (the suite is
   # ~8 minutes; a change to one module should not need all of it to iterate).
   if [ -n "${JO_UNIT_ONLY:-}" ] && ! [[ $name =~ $JO_UNIT_ONLY ]]; then continue; fi
@@ -213,4 +222,48 @@ python3 tools/cleanup_stale_uids.py --self-test || { echo "FAILED"; fail=1; }
 echo "--- measure_thresholds self-test ---"
 python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
 
+# tools/audit_registry_emit.py decides the verdict every registry sweep is read
+# by, and its COLLISION arithmetic was wrong for as long as it has had a
+# database reading: `emitted` counts engine notices and the database read
+# excludes them, so a row that DISCLOSED something was reported as having lost
+# records, by exactly the notice count. Measured 2026-11-12. Nothing could have
+# caught it, because the wrong answer looks exactly like the right one unless
+# you check the arithmetic — so the arithmetic is checked here, on four
+# fixtures, two of them real readings confirmed to come back COLLISION against
+# the old line. No binary and no network.
+echo "--- audit_registry_emit self-test ---"
+python3 tools/audit_registry_emit.py --self-test || { echo "FAILED"; fail=1; }
+
+# tools/audit_distinctness.py answers the question the COLLISION verdict only
+# RAISES: is a row's declared id_keys the record's identity, and does it beat
+# the content hash it replaces. Both halves matter and the second is the one
+# that gets skipped — a row with no id_keys already reaches the ceiling through
+# the content-hash fallback, so declaring a "real" id can make it WORSE, which
+# CLAUDE.md records for four Socrata rows measured, applied and reverted. Its
+# arithmetic has the same property as audit_registry_emit's: the wrong answer
+# looks exactly like the right one unless it is checked. Its fixtures need
+# no binary and no network (the count grows, so it is not written here — a
+# number in a comment went stale within a day); the first three were confirmed to FAIL when the piece
+# they cover is broken (the hp_flat_get resolver, `,` composing like `+`, and
+# the ceiling read as the record count), and that exercise found a real defect
+# — a key resolving on no record at all had read as KEY_IS_IDENTITY.
+echo "--- audit_distinctness self-test ---"
+python3 tools/audit_distinctness.py --self-test || { echo "FAILED"; fail=1; }
+
+# socrata_id_churn: whether a Socrata `:id` survives the publisher's refresh.
+# The comparison itself needs two readings a day apart; what is pinned here is
+# its judgement — that only a row whose CONTENT survived can say anything, and
+# that system fields never enter the content hash.
+echo "--- socrata_id_churn self-test ---"
+python3 tools/socrata_id_churn.py --self-test || { echo "FAILED"; fail=1; }
+# Rule 4d for SCHEDULED rows: the grouping of rows into filter families and the
+# three-request verdict (real / sibling / impossible value).
+python3 tools/audit_scheduled_filter.py --self-test || { echo "FAILED"; fail=1; }
+
+if [ -n "${JO_UNIT_MATCH:-}" ]; then
+  # Never let a filtered run be mistaken for a full one: a green partial run
+  # printing the same last line as a green suite is the shape this tree keeps
+  # correcting — a tool reporting on a set it never opened.
+  echo "PARTIAL RUN: only tests matching '$JO_UNIT_MATCH' were built and run."
+fi
 exit $fail

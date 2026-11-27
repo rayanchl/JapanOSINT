@@ -79,7 +79,7 @@ static int nw_extract_link(const char *start, const char *end, char *out, size_t
 /* Collect one feed. Returns #emitted. */
 static int nw_collect_feed(const source_ctx *ctx, intel_sink *sink,
                            const char *url, const char *publisher,
-                           const char *lang, const char *query, int max) {
+                           const char *lang, const char *query) {
   const char *hdrs[] = {
     "User-Agent: Mozilla/5.0 (JapanOSINT WorldNews)",
     "Accept: application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
@@ -91,7 +91,10 @@ static int nw_collect_feed(const source_ctx *ctx, intel_sink *sink,
   int emitted = 0;
   const char *cur = xml;
   const char *entry;
-  while (emitted < max && (entry = jo_next_entry(&cur)) != NULL) {
+  /* Every item the feed served. A 40-per-feed bound sat here until
+   * 2026-11-24 and dropped 249 of the 878 items thirty feeds served on one
+   * reading (rule 2): a feed is one request, and what it returned is used. */
+  while ((entry = jo_next_entry(&cur)) != NULL) {
     /* bound this entry: from `entry` up to the next entry (or EOF) */
     const char *after = entry + 5;
     const char *nxt_it = strstr(after, "<item");
@@ -163,9 +166,6 @@ struct nw_feed { const char *url; const char *pub; const char *lang; };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const struct nw_feed FEEDS[] = {
-    { "https://feeds.reuters.com/reuters/topNews",                          "Reuters",          "en" },
-    { "https://www.reutersagency.com/feed/?best-topics=top-news&post_type=best", "Reuters Agency", "en" },
-    { "https://apnews.com/index.rss",                                       "AP",               "en" },
     { "https://www.afp.com/en/rss.xml",                                     "AFP",              "en" },
     { "https://feeds.bbci.co.uk/news/world/rss.xml",                        "BBC",              "en" },
     { "https://rss.dw.com/rdf/rss-en-all",                                  "DW",               "en" },
@@ -188,8 +188,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * NHK still publishes a live feed at the domestic path below (verified 200
      * with real <item>s), so it is restored here as a ja feed. Reuters, AP and
      * Kyodo have no key-free replacement — they are left in place and reported
-     * rather than swapped for an invented endpoint. */
-    { "https://english.kyodonews.net/rss/news.xml",                         "Kyodo News",       "en" },
+     * rather than swapped for an invented endpoint.
+     *
+     * REMOVED 2026-11-24, on a third reading of the same four: Reuters topNews
+     * (no DNS), Reuters Agency (301 to a page), AP (403) and Kyodo (404) had
+     * each failed on every reading since that note, and "left in place and
+     * reported" cost four requests a run for nothing — the log line was the
+     * only report. AFP answers 403 from this container and stays: one host
+     * refusing this path is a reading, not a retirement. */
     { "https://www3.nhk.or.jp/rss/news/cat0.xml",                           "NHK",              "ja" },
     { "https://feeds.npr.org/1004/rss.xml",                                 "NPR",              "en" },
     { "http://rss.cnn.com/rss/edition_world.rss",                           "CNN",              "en" },
@@ -214,7 +220,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (int i = 0; i < NFEEDS; i++) {
     if (ctx->cancel && *ctx->cancel) break;
     total += nw_collect_feed(ctx, sink, FEEDS[i].url, FEEDS[i].pub,
-                             FEEDS[i].lang, query, 40);
+                             FEEDS[i].lang, query);
   }
   fprintf(stderr, "[world-news-rss] emitted %d across %d feeds\n", total, NFEEDS);
   return 0;   /* honest empty is not an error */

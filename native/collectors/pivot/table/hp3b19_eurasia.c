@@ -1704,9 +1704,8 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"ireland\",\"marine\",\"erddap\",\"oceanography\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://erddap.marine.ie/erddap/tabledap/allDatasets.json?datasetID,title,minTime,maxTime",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "table.rows",
-    .detail_key = "datasetID",
-    .detail_url = "https://erddap.marine.ie/erddap/info/{v}/index.json",
     .interval = 86400,
     .description = "Every dataset served by the Irish Marine Institute ERDDAP node, "
       "with its dataset identifier, human title and the first and last "
@@ -2570,6 +2569,8 @@ static const hp_source HP3B19_EURASIA[] = {
     .array_path = "dcat:Distribution",
     .date_keys = "dct:modified",
     .interval = 86400,
+    .id_keys = "dcat:accessURL.@rdf:resource",   /* id_keys "dcat:accessURL.@rdf:resource", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       no key was declared and the fallback landed on dct:title, 3,527 distinct of 4,059 distributions (one dataset's XLSX, CSV and JSON share a title). The access URL is 4,058 of 4,059. */
     .title_keys = "dct:title",
     .description = "The entire Cypriot national catalogue serialised as DCAT-AP 2.0 "
       "in a single document: six thousand datasets and four thousand "

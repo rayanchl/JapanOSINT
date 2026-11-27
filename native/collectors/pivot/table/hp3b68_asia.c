@@ -9082,29 +9082,6 @@ static const hp_source HP3B68_ASIA[] = {
       "set. tools/probe_hp_batch.py verdict 2026-11-16: PASS, 18 "
       "matching anchors." },
 
-  { .id = "JO68_ASIA_KR_NRC_RE_KR_BB004", .name = "NRC 경제인문사회연구회 - NRC 공식 홈페이지, NRC (www.nrc.re.kr) — homepage "
-      "notices",
-    .name_ja = "NRC 경제인문사회연구회 - NRC 공식 홈페이지, NRC",
-    .category = "research", .portal = "https://www.nrc.re.kr/",
-    .record_type = "research-notice",
-    .tags = "\"korea\",\"research\",\"kr\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.re.kr/",
-    .base = "https://www.nrc.re.kr",
-    .href_must = "list_no=",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.nrc.re.kr, the site that titles itself 'NRC 경제인문사회연구회 - NRC "
-      "공식 홈페이지, NRC'. Probe reading 2026-11-16: 128 anchors (124 "
-      "distinct hrefs) whose href carries the site's own article shape "
-      "'list_no=' and a label of 12+ bytes. Seeded from Wikidata's "
-      "official-website (P856) statement for a Republic of Korea body; "
-      "the site root declares no RSS feed that parsed, so the "
-      "homepage's own article links are the record set. "
-      "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 126 matching "
-      "anchors." },
-
   { .id = "JO68_ASIA_TW_NRM_GOV_TW_24392", .name = "國家鐵道博物館 (www.nrm.gov.tw) — homepage notices",
     .name_ja = "國家鐵道博物館",
     .category = "government", .portal = "https://www.nrm.gov.tw/",

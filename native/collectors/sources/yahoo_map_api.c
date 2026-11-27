@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const struct { double lat, lon; } SCAN[] = {
   { 35.6812, 139.7671 },  /* Tokyo */
@@ -20,8 +21,9 @@ static const struct { double lat, lon; } SCAN[] = {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("YAHOO_APP_ID");
   if (!appId || !*appId) {
-    fprintf(stderr, "[yahoo-map-api] gated (no YAHOO_APP_ID)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "yahoo-map-api",
+                                (const char *[]){ "YAHOO_APP_ID", NULL },
+                                NULL, NULL);
   }
 
   cJSON *features = cJSON_CreateArray();

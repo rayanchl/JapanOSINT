@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "_credential_notice.inc"
 
 /* Emit one intel row for a single HIBP breach. Returns 1 if emitted. */
 static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
@@ -74,8 +75,9 @@ int jo_breach_checker_run(const source_ctx *ctx, intel_sink *sink) {
   /* Key-gated: without HIBP_API_KEY, emit nothing (HIBP 401s anyway). */
   const char *key = getenv("HIBP_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[BREACH_CHECKER] gated (no HIBP_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "BREACH_CHECKER",
+                                (const char *[]){ "HIBP_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   char enc[256];

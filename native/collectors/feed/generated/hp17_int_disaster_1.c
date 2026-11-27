@@ -38,11 +38,12 @@ static const hp_source T[] = {
   { .id = "ifrc-go-project",
     .name = "IFRC GO — 3W national-society projects",
     .collector = "int_disaster", .category = "disaster",
-    .description = "Who-does-what-where: project name, reporting national society, beneficiary country and districts, sector, programme/operation type, budget_amount, actual_expenditure, target vs reached beneficiaries split by sex, start/end dates. Detail hop verified with id 2510.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "disaster-record", .tags = "\"int\",\"disaster\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Who-does-what-where: project name, reporting national society, beneficiary country and districts, sector, programme/operation type, budget_amount, actual_expenditure, target vs reached beneficiaries split by sex, start/end dates. Detail hop verified with id 2510.",
+    .record_type = "disaster-record", .tags = "\"int\",\"disaster\",\"batch17\"", .lang = "en",
     .url = "https://goadmin.ifrc.org/api/v2/project/?limit=200&format=json",
     .array_path = "results",
-    .detail_url = "https://goadmin.ifrc.org/api/v2/project/{v}/?format=json", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

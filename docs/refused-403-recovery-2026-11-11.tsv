@@ -1,0 +1,732 @@
+id	verdict	sched_rc	emitted	stored	db_rows	declared_available	secs	cause	remedy_or_note
+JO41_WP_CORP_2664	EMITS_NOTHING	0	0	0	0	-1	1.5	no records reached intel_items — it transferred 2 bytes over 1 request(s), so the upstream really did hand over nothing	
+JO44_UK_BARTONSTDAVIDPARISH_GOV_UK	EMITS_NOTHING	0	0	0	0	-1	6.1	no records reached intel_items — it transferred 1087 bytes over 1 request(s), so the upstream really did hand over nothing	
+JO49_WP_HIMEJIJC_PROJECTNOTICE	EMITS_NOTHING	0	0	0	0	-1	2.3	no records reached intel_items — it transferred 2 bytes over 1 request(s), so the upstream really did hand over nothing	
+AP19_SPREP_AMSAMOA	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_COOKIS	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_FIJI	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_FSM	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_NAURU	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_NIUE	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_PACIFIC	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_PALAU	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_PNG	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_SAMOA	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_TONGA	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_TUVALU	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+AP19_SPREP_VANUATU	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+BO_SEPREC_ARANCELES	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+DO_HACIENDA_ESTADISTICAS	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+DO_HACIENDA_MARCO_LEGAL	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO28_BMALL_FEATURED_COMPANIES	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO28_BMALL_TENDER_BOARD	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO28_KYOTO_CCI_BMALL_SEARCH	FETCH_FAILED	0	1	1	0	-1	1.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO28_SAPPORO_CCI_BMALL_SEARCH	FETCH_FAILED	0	1	1	0	-1	1.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO28_SENDAI_CCI_BMALL_SEARCH	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO29A_FGT_HELSINKI_HRI_CKAN	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO30_BANK_RAKUTEN_BANK_PRESS_RSS	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO30_CAM_YODOGAWA_LIVE	FETCH_FAILED	0	1	1	0	-1	1.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO39_JP_OKIDEN_AREA_SUPPLY_DEMAND	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO39_JP_OKIDEN_UNIT_GENERATION	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_2795	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_2927	FETCH_FAILED	0	1	1	0	-1	1.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_4055	FETCH_FAILED	0	1	1	0	-1	1.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_4256	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_4583	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_7183	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_8946	FETCH_FAILED	0	1	1	0	-1	2.6	HTTP 200; body did not parse	remedy: re-read the body by hand: the endpoint may have moved, started redirecting to an HTML page, or changed shape
+JO41_WP_CORP_8995	FETCH_FAILED	0	1	1	0	-1	2.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO41_WP_CORP_9687	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_220A_USERS	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_COMPANY	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_NEWS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_PAGES	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_SERVICE	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_USERS	FETCH_FAILED	0	1	1	0	-1	1.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_2927_WORKS	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_3612_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 404	remedy: re-run; if the status persists the endpoint has moved or retired
+JO42_WP_CORP_4055_PAGES	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4055_TECHNOLOGY	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4055_USERS	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4256_PAGES	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4256_USERS	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4583_NEWSLETTER	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4583_PAGES	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_4583_USERS	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_7183_PAGES	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_7183_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_8946_PAGES	FETCH_FAILED	0	1	1	0	-1	2.4	HTTP 200; body did not parse	remedy: re-read the body by hand: the endpoint may have moved, started redirecting to an HTML page, or changed shape
+JO42_WP_CORP_8946_USERS	FETCH_FAILED	0	1	1	0	-1	2.5	HTTP 200; body did not parse	remedy: re-read the body by hand: the endpoint may have moved, started redirecting to an HTML page, or changed shape
+JO42_WP_CORP_9687_BUSINESS	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_COMPANY	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_IR	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_PAGES	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_RECRUIT2026042	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_STAFF	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_SUSTAINABILITY	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_TOPICS	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO42_WP_CORP_9687_USERS	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ABINGDON_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ADDINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ALVELEYANDROMSLEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ARBORFIELDPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ASHBURYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ASHREIGNEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ASTONROWANTPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ATHERSTONE_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BAMPTONOXON_PARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BARKHAMPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BARNACK_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BEARSTEDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BECKERMETWITHTHORNHILL_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BENTLEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BLACKMORE_HOOKEND_WYATTSGREEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BOLDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BOURTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BRAILES_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BRAMPTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BRATTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BREADSALLPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BRYNINGWITHWARTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BUCKLANDMONACHORUM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BULCOTEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BURFORD_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BURLANDANDACTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BURRATOR_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_BURSTWICKPC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CAPELPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CARNFORTHTOWNCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CASSINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CAXTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CHILHAMPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CHIPPINGWARDENPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CHURCHILLANDSARSDEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CHURCHOVERPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CLAVERDON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CLEVEDON_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_COMBESTNICHOLASPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_COMPTONBISHOPPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CORNWORTHYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CORSTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_COTTINGHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CROFTPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CRONTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CULCHETHANDGLAZEBURY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CULLINGWORTHPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CULLOMPTONTOWNCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_CUXTONPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DESBOROUGHTOWNCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DODDINGHURST_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DOGMERSFIELD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DORMINGTONMORDIFORDGROUP_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DORNEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DRYBROOKPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_DUMBLETON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_EASTFARLEIGH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_EASTHENDRED_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_EASTRINGTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_EASTRY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ECCLESTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ELSENHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ELSWORTH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ETCHINGHAMPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_EVERDONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FAIRLIGHTPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FARINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FARNHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FAWKHAMPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FEATHERSTONEANDBRINSFORDPARISHCOUNCIL_GO	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FINSTOCKPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FOLKSWORTHWASHINGLEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FOLKTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FRANT_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FREELANDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FROXFIELDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_FULBROOKPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GEDNEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GILBERDYKEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GLINTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GOOSTREYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GOUDHURST_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GRASSMOORHW_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GREATBOUGHTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GREATMAPLESTEAD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GREATWISHFORD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GREATYELDHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GREAT_MONGEHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_GURNARDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HACCOMBEWITHCOMBE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HAILEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HARGRAVEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HARVINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HASLINGTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HEADLEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HENHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HESSAYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HICKLING_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HISIMP_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HOLMEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HOLTCOMMUNITYCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HOPTONANDCOTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HOUGHAMWITHOUT_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_HUCCLECOTEPC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ICKLESHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ILCHESTERPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_IPPLEPENPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_IRONVILLEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_IRTHINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KBS_PARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KEMBLEANDEWEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KILMERSDON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KILVE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KIMBERLEY_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KINGSWEARPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_KISLINGBURYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LAMESLEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LEIGHPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LEIGHTONBROMSWOLD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LEWLPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LIDDINGTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LITTLETHETFORDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LONGBOROUGH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LONGMANPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_LYDIARDTREGOZE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MAGHULL_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MARKSBURYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MARTLEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MATFEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MEARE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MEVAGISSEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MIDDLEHAMTOWNCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MIDHURST_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MILDENHALLWILTSHIREPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MILSONANDNEENSOLLARS_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MILVERTONPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MINETY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MOLESCROFT_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MONKTONFARLEIGH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_MSN_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_NETTLETON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_NEWICKPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_NEWTONSWARLANDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_NORTHIAMPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_NYTHEELDENELIDEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ODDRODE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_OFFLEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_OFFORDS_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_OLDSTRATFORDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ORTONLONGUEVILLE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ORTONWATERVILLE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PAPWORTHEVERARDPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PEASEMORE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PEMBURYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PEWSEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PICKMEREPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PIDDINGTONANDWHEELEREND_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PIDLEYCUMFENTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_POPPLETONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_PRESTBURY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_QUEENBOROUGH_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_QUEENSFERRYCOMMUNITYCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_QUEENSPARKCOMMUNITYCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RADLEYPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RAINFORDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RAINHILLPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RATTLESDEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_ROGATEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RUSCOMBE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_RYARSH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SCARCROFTPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SCOTTONLINGERFIELD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SEIGHFORDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SENELEYGREENPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SHEREPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SHERFIELDPARKPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SHIPTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SILVERDALE_STAFFS_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SIMPSONASHLAND_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SISTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SKELLINGTHORPEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SKIPWITH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SOUTHLEIGHANDHIGHCOGGES_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SOUTHNEWTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STAINING_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STAPENHILLPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STAPLEFORDPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STDAYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STEEPLELANGFORD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STEEPLEMORDEN_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STIPPOLYTS_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STISSEYPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STOKEGABRIELPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STONERURALPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STRATTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_STRETTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_SUTTONSTJAMES_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_THORNTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_THURCASTONANDCROPSTONPARISHCOUNCIL_GOV_U	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TIBBERTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TINTWISTLE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TRIMDONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TRUDOXHILLPARISH_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TRW_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TWEMLOWPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_TYDDSTMARY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_UPPERRISSINGTON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_UPTONWARRENPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_URCHFONT_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WADHURST_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WANSFORD_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WANTAGETOWNCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WARBSTOW_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WARLINGHAM_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WEETON_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WESTBY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WESTMALVERNPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WETHERAL_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WEXHAMCOURTPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WHITEHOUSE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WHYTELEAFEVILLAGECOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WILBURTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WINDLEPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WINSTERPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WINTERBOURNESTOKE_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WISTOWPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WITHAMFRIARY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WOODMANSEY_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WOODNESBOROUGH_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WOODSTOCK_TC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_WYNYARD_HARTLEPOOL_PC_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_UK_YEOVILTONPARISHCOUNCIL_GOV_UK	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_US_BROWARDTAX_GOV	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_US_SALEMCOUNTYNJ_GOV	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO44_US_TANGIPAHOA_GOV	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO45_WP_JAPANPOLICYFORUM_USERS	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO45_WP_NEWECONOMY_PAGES	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO45_WP_NEWECONOMY_POSTS	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_FR_003C9A99_B033_4773_A1A6_A6BC593255B1	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_FR_2176A5CA_0FB4_4FC5_A823_5688CD2820A5	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_FR_2D096A7E_D6E1_48D9_882B_B4623CFA5CD5	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_FR_86A16F7A_FC7A_47C1_8554_1C07ED77FF20	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_FR_99894199_5AED_474C_A64C_04BBF62B26E9	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 404	remedy: re-run; if the status persists the endpoint has moved or retired
+JO47_FR_DCE93534_D3B4_4AE2_ACFD_3FA70BFB6802	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 200; body did not parse	remedy: re-read the body by hand: the endpoint may have moved, started redirecting to an HTML page, or changed shape
+JO47_IT_7NB71QES	FETCH_FAILED	-1	1	1	0	-1	22.6	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours)	remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the
+JO47_IT_CPIAV_1	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_IT_C_L460	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_IT_IISEB	FETCH_FAILED	0	1	1	0	-1	2.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_IT_IPSOCA	FETCH_FAILED	-1	1	1	0	-1	22.9	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours)	remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the
+JO47_IT_ISTSC_BGIC80700G	FETCH_FAILED	-1	1	1	0	-1	22.2	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours)	remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the
+JO47_IT_ISTSC_MIIS01200T	FETCH_FAILED	-1	1	1	0	-1	22.6	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours)	remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the
+JO47_IT_ODDCD_1	FETCH_FAILED	-1	1	1	0	-1	1.2	HTTP 520	remedy: re-run; if the status persists the endpoint has moved or retired
+JO47_IT_P_AR	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_WD_Q116730318	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_WD_Q131620972	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 404	remedy: re-run; if the status persists the endpoint has moved or retired
+JO47_WD_Q17070528	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 404	remedy: re-run; if the status persists the endpoint has moved or retired
+JO47_WD_Q22080013	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_WD_Q6462132	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO47_WD_Q6866816	FETCH_FAILED	0	1	1	0	-1	0.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO48_NEWS_Q11324223	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO48_NEWS_Q12107094	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO48_NEWS_Q4821089	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO48_NEWS_Q697462_2	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO48_NEWS_Q7019394	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_AODOREN_USERS	FETCH_FAILED	0	1	1	0	-1	1.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_CKOUIKI_PAGES	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_CKOUIKI_POSTS	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_CKOUIKI_USERS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_FUKUSHINIIGATA_PAGES	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_FUKUSHINIIGATA_USERS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_EVENT	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_GAKKAICALENDAR	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_MMWR	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_NEWS	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_PAGES	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_RECRUIT	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_SERVICESELECTION	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_SERVICESELECTIONEN	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_IMIC_USERS	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_JAKYOUWA_USERS	FETCH_FAILED	0	1	1	0	-1	2.0	HTTP 404	remedy: re-run; if the status persists the endpoint has moved or retired
+JO49_WP_JPOISONIC_PAGES	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_JPOISONIC_POPUPS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_JPOISONIC_POPUPTHEMES	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_JPOISONIC_POSTS	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KAKAMIGAHARAGIFUMED_DOCTORINFO	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KAKAMIGAHARAGIFUMED_PAGES	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KAKAMIGAHARAGIFUMED_USERS	FETCH_FAILED	0	1	1	0	-1	1.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KENRENMIYAGICOOP_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KOCHIHOJINKAI_KAIHO	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KOCHIHOJINKAI_PAGES	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KOCHIHOJINKAI_POSTS	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KOCHIHOJINKAI_REPORT	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KOCHIHOJINKAI_USERS	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KUCOOP_PAGES	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KUCOOP_POSTS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_KUCOOP_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_MIDORINETSAGATOUBU_PAGES	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_MIDORINETSAGATOUBU_POSTS	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_MIDORINETSAGATOUBU_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_MUTSUCCI_USERS	FETCH_FAILED	0	1	1	0	-1	1.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_NOSAITOKUSHIMA_PAGES	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_NOSAITOKUSHIMA_POSTS	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_SRSAGA_MEMBERS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_SRSAGA_PAGES	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_SRSAGA_POSTS	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_SRSAGA_USERS	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_TOKUSIHOUSHOSIJPN_PAGES	FETCH_FAILED	0	1	1	0	-1	2.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_TOKUSIHOUSHOSIJPN_POSTS	FETCH_FAILED	0	1	1	0	-1	1.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_TOKUSIHOUSHOSIJPN_USERS	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_WELCOMEKYODAI_COLUMNJ	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_WELCOMEKYODAI_NEWS	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_WELCOMEKYODAI_PAGES	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_WELCOMEKYODAI_USERS	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPMEDIA_DEMPA_WP	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPNATGOV_JAEA_NEWS	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_AICHI	FETCH_FAILED	0	1	1	0	-1	0.8	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_CHIBA	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_FUKUOKA	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_HOKKAIDO	FETCH_FAILED	0	1	1	0	-1	1.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_HYOGO	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_KANAGAWA	FETCH_FAILED	0	1	1	0	-1	0.9	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_KYOTO	FETCH_FAILED	0	1	1	0	-1	1.0	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_OKINAWA	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_OSAKA	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_SAITAMA	FETCH_FAILED	0	1	1	0	-1	1.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_SHIZUOKA	FETCH_FAILED	0	1	1	0	-1	1.5	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JP25_JPPOLICE_M47_MAIL_TOKYO	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_CYUGOKU	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_HOKKAIDOU	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_KANA	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_KANTO	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_KINKI	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_KOUSINETU	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_KYUSYU	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_OKINAWA	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_OSAKA	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_SIKOKU	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_TAMA	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_TAWARA	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_TOKYO	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_TOUHOKU	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_MACHI_TOUKAI	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_OPEN2CH_LIVEJUPITER	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_OPEN2CH_NEWS4VIP	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPBBS_OPEN2CH_NEWSPLUS	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_KANSAI_AIRPORT_FLIGHTS_HTML	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_ARMY_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_BIZPLUS_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_CHINA_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_EQ_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_INTERNET_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_KOKUSAI_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_LIVEPLUS_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.4	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_MNEWSPLUS_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_PC_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_SCI_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_SEIJINEWSPLUS_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.3	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_SOFTWARE_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPC_OPEN2CH_STOCK_SUBJECT	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPMEDIA_CNET_JAPAN	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPMEDIA_ZDNET_JAPAN	FETCH_FAILED	0	1	1	0	-1	0.2	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPMUNI_TAMANA_UPDATE	FETCH_FAILED	0	1	1	0	-1	1.1	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JPMUNI_TAMANA_UPDATE_2	FETCH_FAILED	0	1	1	0	-1	0.7	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+pdh-microdata-catalog	FETCH_FAILED	0	1	1	0	-1	0.6	HTTP 403	remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+JO49_WP_NAGASAKICHUOKAI_POSTS	OK	0	2355	2355	2355	2355	32.4		
+JO42_WP_CORP_3612_NEWS	OK	0	2273	2273	2273	2273	29.8		
+au-asic-registered-auditors	OK	0	2000	2002	2000	2000	127.6		
+JO42_WP_CORP_2573_NEWSRELEASE	OK	0	1583	1583	1583	1583	62.5		
+KY_JUDICIAL_DOCUMENTS	OK	0	586	587	586	586	125.2		
+JO49_WP_JAKYOUWA_POSTS	OK	0	551	551	551	551	58.2		
+JO49_WP_JATOMAKOMAIKOUIKI_POSTS	OK	0	461	461	461	461	15.7		
+JO41_WP_CORP_9812	OK	0	430	430	430	430	5.0		
+JO42_WP_CORP_2573_NEWS	OK	0	359	359	359	359	15.7		
+CA_OURCOMMONS_MEMBERS	OK	0	337	337	337	337	0.6		
+JO49_WP_ONOCCI_POSTS	OK	0	330	330	330	330	28.4		
+JO49_WP_NAGASAKICHUOKAI_PAGES	OK	0	307	307	307	307	13.8		
+JO49_WP_JAFMA_POSTS	OK	0	253	253	253	253	30.7		
+JO49_WP_JANANPORO_POSTS	OK	0	233	233	233	233	22.5		
+JO41_WP_CORP_7212	OK	0	230	230	230	230	8.5		
+JP25_JPMEDIA_AGRINEWS	OK	0	209	209	209	209	1.7		
+JO49_WP_IZUMISANOCCI_NEWS	OK	0	176	176	176	176	4.8		
+JO42_WP_CORP_2573_FINANCIALSUMMA	OK	0	172	172	172	172	9.3		
+JO49_WP_JASORACHIMINAMI_POSTS	OK	0	142	142	142	142	19.2		
+JO49_WP_HIMEJIJC_MEMBERS	OK	0	111	111	111	111	4.3		
+JO42_WP_CORP_2664_NEWSIR	OK	0	103	103	103	103	2.4		
+JO41_WP_CORP_6227	OK	0	94	94	94	94	5.0		
+JO42_WP_CORP_2664_NEWSCORPORATE	OK	0	92	92	92	92	1.4		
+JO49_WP_YAMADOREN_POSTS	OK	0	89	89	89	89	4.7		
+JO42_WP_CORP_6227_PAGES	OK	0	83	83	83	83	4.9		
+JO42_WP_CORP_7212_PAGES	OK	0	67	67	67	67	4.3		
+JO49_WP_MOTOSUGIFUMED_MEDICAL	OK	0	63	63	63	63	3.8		
+JO49_WP_TOUYAKO_POSTS	OK	0	62	62	62	62	4.4		
+JO42_WP_CORP_2664_PAGES	OK	0	59	59	59	59	2.4		
+JO49_WP_JAESOYA_MEMBER	OK	0	59	59	59	59	4.8		
+JO49_WP_JAESOYA_POSTS	OK	0	48	48	48	48	4.8		
+JO49_WP_MOTOSUGIFUMED_PAGES	OK	0	48	48	48	48	5.7		
+JO49_WP_JANAGANUMA_POSTS	OK	0	46	46	46	46	6.6		
+JO42_WP_CORP_3612_WORLDFORFUTURE	OK	0	44	44	44	44	3.0		
+JO42_WP_CORP_2573_SECURITIES	OK	0	43	43	43	43	4.6		
+JO42_WP_CORP_2664_NEWSCSR	OK	0	41	41	41	41	1.5		
+JO41_WP_CORP_2480	OK	0	40	40	40	40	1.5		
+JO47_FR_BB78633C_D01F_4249_9A31_33A18D408A98	OK	0	40	40	40	40	2.7		
+JO42_WP_CORP_2573_PAGES	OK	0	35	35	35	35	5.3		
+JO49_WP_HASIMACITYGIFUMED_MEDICAL	OK	0	35	35	35	35	4.1		
+JO42_WP_CORP_2573_DOCUMENTS	OK	0	34	34	34	34	3.9		
+JO49_WP_TOUYAKO_PAGES	OK	0	34	34	34	34	4.0		
+JO49_WP_JANANPORO_PAGES	OK	0	30	30	30	30	6.3		
+JO49_WP_JAKYOUWA_PAGES	OK	0	28	28	28	28	6.1		
+JO42_WP_CORP_2480_PAGES	OK	0	26	26	26	26	1.3		
+JO49_WP_JAFMA_PAGES	OK	0	23	23	23	23	9.7		
+JO42_WP_CORP_2573_PRODUCTS	OK	0	22	22	22	22	4.5		
+JO49_WP_JASORACHIMINAMI_PAGES	OK	0	22	22	22	22	4.7		
+JO44_UK_WINTHORPEWITHLANGFORD_PC_GOV_UK	OK	0	20	20	20	20	1.4		
+JO47_FR_DBCCB1EC_D380_4849_8D5C_B91052682906	OK	0	20	20	20	20	1.9		
+JO48_NEWS_Q97618998	OK	0	20	20	20	20	1.8		
+JO49_WP_HASIMACITYGIFUMED_PAGES	OK	0	20	20	20	20	4.9		
+JO49_WP_JAESOYA_PAGES	OK	0	20	20	20	20	5.4		
+JO49_WP_JAIMAKANE_PAGES	OK	0	20	20	20	20	6.1		
+JO42_WP_CORP_9812_GROUPNOTICE	OK	0	18	18	18	18	1.8		
+JO42_WP_CORP_2573_ATTEMPT	OK	0	16	16	16	16	4.4		
+JO49_WP_HIMEJIJC_PROJECTREPORT	OK	0	16	16	16	16	3.1		
+JO49_WP_JAKITAHIBIKI_PAGES	OK	0	16	16	16	16	5.3		
+JO42_WP_CORP_7212_CONVOCATIONNOT	OK	0	15	15	15	15	2.1		
+JO44_UK_TOLLERTONPARISHCOUNCIL_GOV_UK	OK	0	15	15	15	15	0.6		
+JO44_UK_TOLLERTONPARISHCOUNCIL_GOV_UK_3	OK	0	15	15	15	15	6.1		
+JO47_FR_E8C52B19_6A4C_4C7A_98FC_299D1D0AF0EE	OK	0	15	15	15	15	1.5		
+JO47_WD_Q123929849	OK	0	15	15	15	15	0.8		
+JO49_WP_YAMADOREN_PAGES	OK	0	15	15	15	15	3.6		
+JO49_WP_HIMEJIJC_PAGES	OK	0	14	14	14	14	3.2		
+JO44_UK_BARNTON_PC_GOV_UK	OK	0	12	12	12	12	0.9		
+JO49_WP_JAKITAHIBIKI_POSTS	OK	0	12	12	12	12	4.9		
+JO49_WP_JANAGANUMA_PAGES	OK	0	12	12	12	12	3.5		
+JO49_WP_ONOCCI_PAGES	OK	0	11	11	11	11	5.0		
+JO43_MUNI_132152	OK	0	10	10	10	10	1.0		
+JO44_UK_ADLINGTONTOWNCOUNCIL_GOV_UK	OK	0	10	10	10	10	7.2		
+JO44_UK_ALSTONMOORPARISH_GOV_UK	OK	0	10	10	10	10	3.6		
+JO44_UK_AVONDASSETTPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	5.1		
+JO44_UK_BLYTHPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.7		
+JO44_UK_BRIGHTLINGSEATOWNCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.8		
+JO44_UK_BROCKWORTH_PC_GOV_UK	OK	0	10	10	10	10	4.4		
+JO44_UK_CARLTONWITHCHELLINGTON_PC_GOV_UK	OK	0	10	10	10	10	6.0		
+JO44_UK_CASTLEHEDINGHAM_PC_GOV_UK	OK	0	10	10	10	10	1.2		
+JO44_UK_CASTLERISINGPARISH_GOV_UK	OK	0	10	10	10	10	1.1		
+JO44_UK_CATWORTHPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.1		
+JO44_UK_CAVERSFIELD_PC_GOV_UK	OK	0	10	10	10	10	1.7		
+JO44_UK_CHORLEY_PC_GOV_UK	OK	0	10	10	10	10	4.7		
+JO44_UK_CLIFFORDPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	5.4		
+JO44_UK_COLERNE_PC_GOV_UK	OK	0	10	10	10	10	4.2		
+JO44_UK_COLMWORTH_PC_GOV_UK	OK	0	10	10	10	10	3.0		
+JO44_UK_DBWP_PC_GOV_UK	OK	0	10	10	10	10	1.8		
+JO44_UK_DEEPINGGATE_PC_GOV_UK	OK	0	10	10	10	10	4.2		
+JO44_UK_EALC_GOV_UK	OK	0	10	10	10	10	7.0		
+JO44_UK_EARDISLEYGROUP_PC_GOV_UK	OK	0	10	10	10	10	5.5		
+JO44_UK_EASTINGTON_PC_GOV_UK	OK	0	10	10	10	10	1.3		
+JO44_UK_ELDONPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.8		
+JO44_UK_ELSTOWPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	6.3		
+JO44_UK_FANGFOSSWITHBOLTON_PC_GOV_UK	OK	0	10	10	10	10	8.2		
+JO44_UK_FEATHERSTONE_TC_GOV_UK	OK	0	10	10	10	10	0.6		
+JO44_UK_FELTWELLPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.2		
+JO44_UK_FORDINGBRIDGE_GOV_UK	OK	0	10	10	10	10	2.4		
+JO44_UK_FORNCETTPARISH_GOV_UK	OK	0	10	10	10	10	3.0		
+JO44_UK_GAMSTONWESTDRAYTONEATON_PC_GOV_UK	OK	0	10	10	10	10	5.5		
+JO44_UK_GOODRICHANDWELSHBICKNOR_PC_GOV_UK	OK	0	10	10	10	10	2.5		
+JO44_UK_GREATANDLITTLEPRESTON_PC_GOV_UK	OK	0	10	10	10	10	5.4		
+JO44_UK_HALESANDHECKINGHAM_PC_GOV_UK	OK	0	10	10	10	10	1.9		
+JO44_UK_HAPPISBURGH_PC_GOV_UK	OK	0	10	10	10	10	4.0		
+JO44_UK_HETTONTOWNCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.7		
+JO44_UK_HEYBRIDGEPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.6		
+JO44_UK_ICKLEFORD_PC_GOV_UK	OK	0	10	10	10	10	11.4		
+JO44_UK_KEMPSTONRURAL_PC_GOV_UK	OK	0	10	10	10	10	2.2		
+JO44_UK_KINGSSUTTON_PC_GOV_UK	OK	0	10	10	10	10	1.2		
+JO44_UK_KINGSWOODPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	2.6		
+JO44_UK_KIRBYMUXLOE_PC_GOV_UK	OK	0	10	10	10	10	10.5		
+JO44_UK_KNIGHTONONTEMEPC_GOV_UK	OK	0	10	10	10	10	1.9		
+JO44_UK_LANGLEYWITHHARDLEY_PC_GOV_UK	OK	0	10	10	10	10	3.9		
+JO44_UK_LILLEY_PC_GOV_UK	OK	0	10	10	10	10	1.1		
+JO44_UK_MUCHCOWARNEGROUP_PC_GOV_UK	OK	0	10	10	10	10	2.9		
+JO44_UK_NAZEINGPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.4		
+JO44_UK_NESCREMATORIUM_GOV_UK	OK	0	10	10	10	10	3.1		
+JO44_UK_NETLEYMARSH_PC_GOV_UK	OK	0	10	10	10	10	6.9		
+JO44_UK_NORTHBADDESLEY_PC_GOV_UK	OK	0	10	10	10	10	8.4		
+JO44_UK_NORTHILLPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	2.1		
+JO44_UK_PAMBER_PC_GOV_UK	OK	0	10	10	10	10	10.6		
+JO44_UK_RETTENDON_PC_GOV_UK	OK	0	10	10	10	10	5.6		
+JO44_UK_RICHARDSCASTLE_SHROPSHIRE_PC_GOV_UK	OK	0	10	10	10	10	6.3		
+JO44_UK_ROYDON_SOUTHNORFOLK_PC_GOV_UK	OK	0	10	10	10	10	3.1		
+JO44_UK_RUNTON_PC_GOV_UK	OK	0	10	10	10	10	3.4		
+JO44_UK_RYDETOWNCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.1		
+JO44_UK_SALINGS_PC_GOV_UK	OK	0	10	10	10	10	1.3		
+JO44_UK_SANCREED_PC_GOV_UK	OK	0	10	10	10	10	1.7		
+JO44_UK_SHADOXHURST_PC_GOV_UK	OK	0	10	10	10	10	1.6		
+JO44_UK_SLIPENDPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	6.1		
+JO44_UK_SPROWSTON_TC_GOV_UK	OK	0	10	10	10	10	3.2		
+JO44_UK_STAGSDEN_PC_GOV_UK	OK	0	10	10	10	10	8.1		
+JO44_UK_STISTED_PC_GOV_UK	OK	0	10	10	10	10	4.4		
+JO44_UK_STMARYHOO_PC_GOV_UK	OK	0	10	10	10	10	0.6		
+JO44_UK_STMERRYNPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	3.1		
+JO44_UK_STOCKTONHEATH_PC_GOV_UK	OK	0	10	10	10	10	1.4		
+JO44_UK_STUDHAMPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.5		
+JO44_UK_SUNNINGHILLANDASCOTPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.4		
+JO44_UK_TASLEYPARISH_GOV_UK	OK	0	10	10	10	10	2.9		
+JO44_UK_TENBURYTOWNCOUNCIL_GOV_UK	OK	0	10	10	10	10	2.1		
+JO44_UK_TESTONPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	0.5		
+JO44_UK_THESAMPFORDS_PC_GOV_UK	OK	0	10	10	10	10	1.9		
+JO44_UK_THURLEIGH_PC_GOV_UK	OK	0	10	10	10	10	4.8		
+JO44_UK_WALSINGHAMPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	4.1		
+JO44_UK_WEETONPARISH_GOV_UK	OK	0	10	10	10	10	3.9		
+JO44_UK_WELDONPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	2.3		
+JO44_UK_WEMBURYPARISHCOUNCIL_GOV_UK	OK	0	10	10	10	10	5.5		
+JO44_UK_WENTLOOGECOMMUNITYCOUNCIL_GOV_UK	OK	0	10	10	10	10	1.6		
+JO44_UK_WENTWORTH_PC_GOV_UK	OK	0	10	10	10	10	5.6		
+JO44_UK_WESTRAINTONANDLEAMSIDEPC_GOV_UK	OK	0	10	10	10	10	0.7		
+JO44_US_911LUCASCOUNTYOH_GOV	OK	0	10	10	10	10	1.4		
+JO44_US_BOYCEVILLE_GOV	OK	0	10	10	10	10	0.3		
+JO44_US_CAMERONCOUNTYTX_GOV	OK	0	10	10	10	10	0.8		
+JO44_US_CLAYTONCOUNTYGA_GOV	OK	0	10	10	10	10	0.3		
+JO44_US_HARNEYCOUNTYOR_GOV	OK	0	10	10	10	10	0.6		
+JO44_US_JUSFC_GOV	OK	0	10	10	10	10	1.4		
+JO44_US_LACOUNTY_GOV	OK	0	10	10	10	10	0.5		
+JO44_US_NANO_GOV	OK	0	10	10	10	10	0.8		
+JO44_US_PENFIELDFD_GOV	OK	0	10	10	10	10	0.5		
+JO44_US_TOWNOFBARNESWI_GOV	OK	0	10	10	10	10	1.2		
+JO44_US_WESTSALEMWI_GOV	OK	0	10	10	10	10	0.4		
+JO47_FR_176EA559_DE16_41D4_94E0_AD9E87EC20E4	OK	0	10	10	10	10	0.6		
+JO47_FR_1D05BB6A_F2CB_44BC_9815_CA8DD2C9B953	OK	0	10	10	10	10	1.2		
+JO47_FR_1D2C4BDA_4024_4AF5_8892_D29ACB982CDB	OK	0	10	10	10	10	1.3		
+JO47_FR_2FDD383E_3587_43A4_8783_035E09091D5C	OK	0	10	10	10	10	1.4		
+JO47_FR_427E7896_3953_47F1_A441_5E198474670D	OK	0	10	10	10	10	2.2		
+JO47_FR_48D3725B_7B50_42D2_8DB4_5CE98754CC64	OK	0	10	10	10	10	0.9		
+JO47_FR_4E285764_1AE5_4A3B_8F05_7BA0434EFEF3	OK	0	10	10	10	10	2.1		
+JO47_FR_660060E5_DA87_4FBB_9121_39E4A1C6524A	OK	0	10	10	10	10	2.6		
+JO47_FR_7ADFE675_9B70_4134_AC54_BD088D9D1CF1	OK	0	10	10	10	10	2.0		
+JO47_FR_7E90996F_8601_4BDD_AF7F_DDF2864DDA5E	OK	0	10	10	10	10	2.3		
+JO47_FR_88F96CC6_1205_4368_9B24_06A510CBFBA7	OK	0	10	10	10	10	1.7		
+JO47_FR_8C95203B_664E_4B39_97FC_0D34D8D993A2	OK	0	10	10	10	10	1.8		
+JO47_FR_A64FF94F_B007_45B6_86EB_90579EB7FDCF	OK	0	10	10	10	10	0.9		
+JO47_FR_B692E8EC_9DA4_488A_A463_2B67B882200D	OK	0	10	10	10	10	3.3		
+JO47_FR_BC0879DD_97D7_4D4C_88D9_95D66CD3D6E9	OK	0	10	10	10	10	1.8		
+JO47_FR_BFFEDBD6_902A_45DC_B957_300CDDFA102E	OK	0	10	10	10	10	2.4		
+JO47_FR_C4E7AF1F_7CFE_4C53_BD92_8AA030147EEE	OK	0	10	10	10	10	2.2		
+JO47_FR_E0AE2DA5_A294_41BF_8F5F_38281167BC47	OK	0	10	10	10	10	1.8		
+JO47_FR_F491586C_98CC_4E34_A016_A3E9D492C48A	OK	0	10	10	10	10	1.6		
+JO47_IT_51XXY94X	OK	0	10	10	10	10	13.1		
+JO47_IT_ADBPO	OK	0	10	10	10	10	1.5		
+JO47_IT_ASPMT	OK	0	10	10	10	10	2.4		
+JO47_IT_EPAP	OK	0	10	10	10	10	1.5		
+JO47_IT_ICAQMO	OK	0	10	10	10	10	13.6		
+JO47_IT_ICGTL	OK	0	10	10	10	10	31.0		
+JO47_IT_ICNIC	OK	0	10	10	10	10	1.7		
+JO47_IT_IPABCOC	OK	0	10	10	10	10	2.6		
+JO47_IT_ISTSC_BSIC84000Q	OK	0	10	10	10	10	2.1		
+JO47_IT_ISTSC_COIC846001	OK	0	10	10	10	10	2.4		
+JO47_IT_ISTSC_FIIC85800C	OK	0	10	10	10	10	2.3		
+JO47_IT_ISTSC_IMIC80200R	OK	0	10	10	10	10	13.9		
+JO47_IT_ISTSC_MEIS01600T	OK	0	10	10	10	10	13.9		
+JO47_IT_ISTSC_MIIC8EM00Q	OK	0	10	10	10	10	2.6		
+JO47_IT_ISTSC_MOIC83500G	OK	0	10	10	10	10	2.0		
+JO47_IT_ISTSC_PAIC85100P	OK	0	10	10	10	10	12.8		
+JO47_IT_ISTSC_PIIC81300N	OK	0	10	10	10	10	2.5		
+JO47_IT_ISTSC_PSIS00700A	OK	0	10	10	10	10	13.1		
+JO47_IT_ISTSC_PSPC06000D	OK	0	10	10	10	10	3.6		
+JO47_IT_ISTSC_PVIC81600P	OK	0	10	10	10	10	2.1		
+JO47_IT_ISTSC_PZIC821008	OK	0	10	10	10	10	13.9		
+JO47_IT_ISTSC_TAIC84200E	OK	0	10	10	10	10	2.2		
+JO47_IT_ISTSC_TOIC87100D	OK	0	10	10	10	10	2.2		
+JO47_IT_ISTSC_VEIC832007	OK	0	10	10	10	10	2.3		
+JO47_IT_ISTSC_VTIC82300P	OK	0	10	10	10	10	2.2		
+JO47_IT_LANS	OK	0	10	10	10	10	2.3		
+JO47_IT_LSRT	OK	0	10	10	10	10	2.3		
+JO47_IT_ODAPPLC	OK	0	10	10	10	10	1.9		
+JO47_WD_Q138956658	OK	0	10	10	10	10	0.7		
+JO47_WD_Q25340025	OK	0	10	10	10	10	0.9		
+JO47_WD_Q28222753	OK	0	10	10	10	10	0.7		
+JO47_WD_Q5152798	OK	0	10	10	10	10	1.6		
+JO47_WD_Q6682074	OK	0	10	10	10	10	0.7		
+JO47_WD_Q6682075	OK	0	10	10	10	10	0.6		
+JO47_WD_Q7559149	OK	0	10	10	10	10	0.7		
+JO47_WD_Q7574476	OK	0	10	10	10	10	0.3		
+JO48_IGO_Q6048336	OK	0	10	10	10	10	2.1		
+JO48_IGO_Q986326	OK	0	10	10	10	10	0.4		
+JO48_NEWS_Q128639959	OK	0	10	10	10	10	2.4		
+JO48_NEWS_Q18452157	OK	0	10	10	10	10	1.1		
+JO48_NEWS_Q4821610	OK	0	10	10	10	10	0.5		
+JO49_WP_HASIMACITYGIFUMED_INFO	OK	0	10	10	10	10	4.0		
+JO49_WP_HIMEJIJC_COMMITTEE	OK	0	10	10	10	10	2.3		
+JO42_WP_CORP_2573_ENTRY	OK	0	9	9	9	9	4.5		
+JO47_FR_10DB85C5_CB01_42B8_AE4F_F017EEDE26F5	OK	0	9	9	9	9	1.6		
+JO47_IT_ISTSC_SAIS02200C	OK	0	9	9	9	9	2.1		
+JO44_UK_BIGBURYPARISHCOUNCIL_GOV_UK	OK	0	8	8	8	8	2.9		
+JO47_FR_512287C4_A91C_42E0_BD4C_7521DB601341	OK	0	8	8	8	8	1.4		
+JO49_WP_HASIMACITYGIFUMED_MEDICALCONFERENCE	OK	0	8	8	8	8	3.0		
+JO49_WP_GIFUKITA_PAGES	OK	0	7	7	7	7	3.2		
+JO44_UK_OVERTONPARISHCOUNCIL_GOV_UK	OK	0	6	6	6	6	6.9		
+JO44_UK_WESTENDPARISHCOUNCIL_GOV_UK	OK	0	6	6	6	6	4.8		
+JO47_FR_4FCE06F8_3DA5_4757_9B93_87BDB10057EF	OK	0	6	6	6	6	1.1		
+JO47_FR_9040E58E_CBA7_45F3_A639_5F7C07317850	OK	0	6	6	6	6	1.0		
+JO47_FR_962CA265_1E46_4CE7_89B5_E089FE577D5E	OK	0	6	6	6	6	2.6		
+JO49_WP_IZUMISANOCCI_POSTS	OK	0	6	6	6	6	2.9		
+JO49_WP_JAIMAKANE_POSTS	OK	0	6	6	6	6	3.6		
+JO42_WP_CORP_9812_USERS	OK	0	5	5	5	5	1.5		
+JO44_UK_BUILDWAS_PC_GOV_UK	OK	0	5	5	5	5	7.7		
+JO44_UK_GLUSBURNANDCROSSHILLS_PC_GOV_UK	OK	0	5	5	5	5	0.7		
+JO44_UK_HAUGHTONPARISHCOUNCIL_GOV_UK	OK	0	5	5	5	5	3.6		
+JO44_UK_INCEPARISHCOUNCIL_GOV_UK	OK	0	5	5	5	5	0.8		
+JO44_UK_KINGSTONPARISHCOUNCIL_GOV_UK	OK	0	5	5	5	5	5.9		
+JO42_WP_CORP_2664_INFOTOP	OK	0	4	4	4	4	1.5		
+JO47_FR_50E80107_760C_4B80_A1E7_6522E8E9E23B	OK	0	4	4	4	4	1.3		
+JO48_IGO_Q4654167	OK	0	4	4	4	4	1.7		
+JO42_WP_CORP_2480_RVDOCTOREN	OK	0	3	3	3	3	1.5		
+JO42_WP_CORP_2480_RVDOCTORJP	OK	0	3	3	3	3	1.4		
+JO42_WP_CORP_2573_EPUBLICNOTICE	OK	0	3	3	3	3	3.7		
+JO42_WP_CORP_3612_PAGES	OK	0	3	3	3	3	1.5		
+JO42_WP_CORP_7212_USERS	OK	0	3	3	3	3	2.1		
+JO44_UK_ENVILLE_PC_GOV_UK	OK	0	3	3	3	3	2.2		
+JO44_UK_FILBY_PC_GOV_UK	OK	0	3	3	3	3	3.4		
+JO44_UK_HOPEUNDERDINMORE_NEWTON_GPC_GOV_UK	OK	0	3	3	3	3	5.1		
+JO44_UK_HOUGHANDCHORLTON_PC_GOV_UK	OK	0	3	3	3	3	5.5		
+JO44_UK_MATLASKE_PC_GOV_UK	OK	0	3	3	3	3	4.1		
+JO44_UK_MORSTON_PC_GOV_UK	OK	0	3	3	3	3	4.4		
+JO44_UK_SOUTHCREAKE_PC_GOV_UK	OK	0	3	3	3	3	3.2		
+JO44_UK_STMARTIN_IN_MENEAGE_PC_GOV_UK	OK	0	3	3	3	3	4.3		
+JO44_UK_TETBURYUPTON_PC_GOV_UK	OK	0	3	3	3	3	4.1		
+JO44_US_TANNERSVILLENY_GOV	OK	0	3	3	3	3	0.8		
+JO41_WP_CORP_2573	OK	0	2	2	2	2	3.9		
+JO42_WP_CORP_2480_SOLUTIONEN	OK	0	2	2	2	2	1.3		
+JO42_WP_CORP_2480_SOLUTIONJP	OK	0	2	2	2	2	1.3		
+JO42_WP_CORP_2480_USERS	OK	0	2	2	2	2	1.3		
+JO42_WP_CORP_2573_INTERNSHIP	OK	0	2	2	2	2	3.5		
+JO42_WP_CORP_2573_RECOMMEND	OK	0	2	2	2	2	2.8		
+JO42_WP_CORP_2664_USERS	OK	0	2	2	2	2	1.3		
+JO42_WP_CORP_3612_NEWSEN	OK	0	2	2	2	2	1.7		
+JO42_WP_CORP_9812_PAGES	OK	0	2	2	2	2	1.7		
+JO44_UK_CLOUGHTON_PC_GOV_UK	OK	0	2	2	2	2	4.6		
+JO44_UK_CROXTON_PC_GOV_UK	OK	0	2	2	2	2	4.5		
+JO44_UK_KIRBYBEDON_PC_GOV_UK	OK	0	2	2	2	2	3.4		
+JO44_UK_LOVERSALLPARISHCOUNCIL_GOV_UK	OK	0	2	2	2	2	3.3		
+JO47_FR_795C6F48_82A2_4269_9EA3_EC9295A2C13F	OK	0	2	2	2	2	1.0		
+JO49_WP_HASIMACITYGIFUMED_USERS	OK	0	2	2	2	2	2.7		
+JO49_WP_HIMEJIJC_BELIEF	OK	0	2	2	2	2	2.2		
+JO49_WP_IZUMISANOCCI_USERS	OK	0	2	2	2	2	2.6		
+JO49_WP_MOTOSUGIFUMED_INFO	OK	0	2	2	2	2	2.8		
+JO49_WP_MOTOSUGIFUMED_USERS	OK	0	2	2	2	2	3.3		
+JO49_WP_YAMADOREN_USERS	OK	0	2	2	2	2	1.6		
+JO41_WP_CORP_3612	OK	0	1	1	1	1	1.8		
+JO42_WP_CORP_2664_INFOCSR	OK	0	1	1	1	1	1.5		
+JO42_WP_CORP_2664_INFOREC	OK	0	1	1	1	1	1.4		
+JO42_WP_CORP_6227_USERS	OK	0	1	1	1	1	4.3		
+JO44_UK_GUISTPARISHCOUNCIL_GOV_UK	OK	0	1	1	1	1	2.6		
+JO44_UK_KEEVILPARISHCOUNCIL_GOV_UK	OK	0	1	1	1	1	5.0		
+JO44_UK_ROSSTC_HEREFORDSHIRE_GOV_UK	OK	0	1	1	1	1	1.5		
+JO44_UK_SEAMERPARISHCOUNCIL_GOV_UK	OK	0	1	1	1	1	1.0		
+JO44_UK_WITHINGTONGROUPPARISHCOUNCIL_GOV_UK	OK	0	1	1	1	1	1.1		
+JO44_UK_WOODHAMWALTER_PC_GOV_UK	OK	0	1	1	1	1	1.0		
+JO47_FR_91C6BDD7_8A48_4834_AA13_1EAD8A86D987	OK	0	1	1	1	1	2.0		
+JO47_FR_B13845A2_830E_4420_918A_89F44AD79C44	OK	0	1	1	1	1	1.1		
+JO47_FR_B6910302_2502_4A63_A686_A57D6580F7AD	OK	0	1	1	1	1	1.5		
+JO47_FR_F4E16CD7_1D04_4C25_B1EC_113B1B259F1F	OK	0	1	1	1	1	1.8		
+JO47_IT_N1E53BZ6	OK	0	1	1	1	1	1.2		
+JO48_IGO_Q1142738	OK	0	1	1	1	1	1.7		
+JO49_WP_GIFUKITA_USERS	OK	0	1	1	1	1	1.7		
+JO49_WP_HIMEJIJC_USERS	OK	0	1	1	1	1	1.5		
+JO49_WP_JAFMA_USERS	OK	0	1	1	1	1	9.4		
+JO49_WP_NAGASAKICHUOKAI_USERS	OK	0	1	1	1	1	2.7		
+JO49_WP_GIFUKITA_POSTS	SLOW	0	-1	-1	1300	-1	150.1	hit --timeout 150.1s; 1300 rows already stored	

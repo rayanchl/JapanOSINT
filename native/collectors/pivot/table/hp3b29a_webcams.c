@@ -2700,8 +2700,21 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .record_type = "traffic-camera",
     .tags = "\"usa\",\"hawaii\",\"honolulu\",\"traffic\",\"camera\",\"socrata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.honolulu.gov/resource/cat5-2v98.json?$limit=1000&$order=:id",
-    .id_keys = "description+cameraimageurl+location.latitude+location.longitude",
+    .url = "https://data.honolulu.gov/resource/cat5-2v98.json?$select=*,:id&$limit=1000&$order=:id",
+    /* `:id`, Socrata's own row identifier, measured 2026-11-14 with
+       tools/audit_distinctness.py. The four-part composite before it resolved
+       on only 153 of 253 records — `cameraimageurl` and both coordinates are
+       present on 153 and ABSENT on 100 — so two thirds of the row keyed on the
+       composite and the rest fell through to a content hash: two identity
+       schemes in one row, and a camera the city revises in the hashed part
+       lands as a new record. `description` is the only field on all 253, and it
+       is 244 distinct, so it is not an identity either.
+       Socrata does not serve `:id` unless it is asked for, hence `$select=*,:id`
+       (the same repair TX_TCEQ_NOTICES_OF_ENFORCEMENT carries in this tree).
+       Measured with it: 253 records, 253 distinct `:id`, and the ceiling rises
+       from 249 to 253 because the four records that were byte-identical differ
+       in `:id` — four real cameras this row had been collapsing. */
+    .id_keys = ":id",
     .interval = 86400,
     .lat_key = "location.latitude",
     .lon_key = "location.longitude",

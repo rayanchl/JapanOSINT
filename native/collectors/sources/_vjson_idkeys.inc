@@ -157,6 +157,33 @@ static inline int vidk_prep_page(const source_ctx *c, intel_sink *s,
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
+/* As VCSV, keyed on IDKEYS (column names; `+` composes). VCSV itself takes no
+ * key, so a CSV whose columns are not named id/code/… was keyed on VJSON's
+ * fallback hash of (title, link, date): measured 2026-11-16, 1 distinct uid for
+ * Chiyoda's 229 facilities and 13 for Itabashi's 142, kept apart only by the
+ * in-page guard. Same shim as VJSON_IDKEYS, so the uid is the only thing that
+ * changes. */
+#define VCSV_IDKEYS(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC, IDKEYS) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    vidk_ctx kc = { s, ID, IDKEYS };                                          \
+    intel_sink ks = { &kc, vidk_emit };                                       \
+    char *du = vsrc_url_dates(URL);                                           \
+    char *t = feed_get_text(c->http, du ? du : URL, 25000);                   \
+    free(du);                                                                 \
+    if (!t) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
+    cJSON *d = csv_parse_dc(t, 1, ',', "#");                                  \
+    free(t);                                                                  \
+    int n = jsonlist_emit(&ks, ID, d, "", CAT, LANG, TAGS);                   \
+    cJSON_Delete(d);                                                          \
+    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .engine = "vcsv", .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "web_request", .url = URL,                       \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
 /* As VGEO, keyed on IDKEYS read off each feature's properties. */
 #define VGEO_IDKEYS(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC, IDKEYS) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \

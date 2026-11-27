@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VJSON(eur_soc_lomb_adzy_fbiz, "eur-soc-lomb-adzy-fbiz", "Regione Lombardia open data — Procedimenti ad istanza di parte Regione Lombardia (Art. 35 D.Lgs 33/2013) - aggiornato al 31 dicembre 2025", "Regione Lombardia open data — Procedimenti ad istanza di parte Regione Lombardia (Art. 35 D.Lgs 33/2013) - aggiornato al 31 dicembre 2025",
   "europe_data", "opendata",
@@ -49,12 +50,21 @@ VJSON(eur_soc_lomb_g3un_bcya, "eur-soc-lomb-g3un-bcya", "Regione Lombardia open 
   "it", "[\"ita\",\"opendata\"]", 86400,
   "Rows of the 'Rioni Lecco' dataset published by Regione Lombardia open data.");
 
-VJSON(eur_soc_lomb_jhpe_btug, "eur-soc-lomb-jhpe-btug", "Regione Lombardia open data — PROVINCIA MONZA BRIANZA Pozzi", "Regione Lombardia open data — PROVINCIA MONZA BRIANZA Pozzi",
+/* id_keys "codsif+coordx+coordy", MEASURED 2026-11-14 (tools/audit_distinctness.py,
+   the TINY pass). REPLACED wholesale (every row created 2026-11-11), so `:id`
+   would re-key the dataset on each refresh. `codsif` ALONE was applied first on
+   a two-page reading of 2,000 of 2,000 and the engine then collapsed 14 of
+   2,942: fourteen codes each name two wells at different coordinates, and none
+   of them falls in the first 2,000 rows. Over the whole dataset codsif is 2,928
+   and codsif+coordx+coordy is 2,942 of 2,942, with both coordinates present on
+   every row. "Two pages can be too few", met again within the hour. */
+VJSON_IDKEYS(eur_soc_lomb_jhpe_btug, "eur-soc-lomb-jhpe-btug", "Regione Lombardia open data — PROVINCIA MONZA BRIANZA Pozzi", "Regione Lombardia open data — PROVINCIA MONZA BRIANZA Pozzi",
   "europe_data", "opendata",
   "https://www.dati.lombardia.it/resource/jhpe-btug.json?$limit=1000&$order=:id",
   "",
   "it", "[\"ita\",\"opendata\"]", 86400,
-  "Rows of the 'PROVINCIA MONZA BRIANZA Pozzi' dataset published by Regione Lombardia open data.");
+  "Rows of the 'PROVINCIA MONZA BRIANZA Pozzi' dataset published by Regione Lombardia open data.",
+  "codsif+coordx+coordy");
 
 VJSON(eur_soc_lomb_ji52_5j3s, "eur-soc-lomb-ji52-5j3s", "Regione Lombardia open data — Procedimenti d’ufficio di Regione Lombardia (aggiornato al 30/04/2026) (Art. 35 D.Lgs 33/2013)", "Regione Lombardia open data — Procedimenti d’ufficio di Regione Lombardia (aggiornato al 30/04/2026) (Art. 35 D.Lgs 33/2013)",
   "europe_data", "opendata",

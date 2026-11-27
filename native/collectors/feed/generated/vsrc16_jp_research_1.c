@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 #include "lib/jocore.h"
 #include "lib/rss_atom.h"
 
@@ -125,9 +126,25 @@ VJSTAGE(jstage_volumes_by_journal, "jstage-volumes-by-journal", "J-STAGE volumes
   "377KB: every volume and issue of a Japanese journal with dates and issue-level urls - the journal->issue->article drilldown. Requires cdjournal or issn (ERR_011 otherwise).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 
-VJSON(global_ooni_measurements_jp, "global-ooni-measurements-jp", "OONI measurements list (country filtered)", "OONI measurements list (country filtered)",
+/* limit=100, not 3. `limit=3` was a PROBE's page size that shipped as the row
+   (CLAUDE.md, "a probe's limit that shipped"): twenty pages of three, 60
+   measurements a run for twenty requests. The API honours limit=100 — measured
+   2026-11-14, 100 records back — so the same twenty requests now read 2,000.
+   NOTE the overlap, recorded rather than resolved: collectors/sources/ooni_jp.c
+   (`ooni-jp`) reads this same probe_cc=JP collection at limit=200 ordered by
+   measurement_start_time desc, where this row takes the API's default order
+   (measured NOT to be that one). Two recency windows on one collection;
+   whether both should stay registered is a registry-count decision. */
+/* id_keys "measurement_uid", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   2 of 300 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: OONI's own measurement identifier, 300 of 300 over three pages. */
+VJSON_IDKEYS(global_ooni_measurements_jp, "global-ooni-measurements-jp", "OONI measurements list (country filtered)", "OONI measurements list (country filtered)",
   "jp_research", "research",
-  "https://api.ooni.io/api/v1/measurements?limit=3&probe_cc=JP",
+  "https://api.ooni.io/api/v1/measurements?limit=100&probe_cc=JP",
   "results",
   "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
+  "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
+  "measurement_uid");

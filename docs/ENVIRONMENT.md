@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-464 variables. A first-boot subset, with example values, is in `.env.example`.
+466 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -152,6 +152,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_CCHANGE_MAX_DOC_BYTES` |  | `core/content_change.c` |
 | `JO_CCHANGE_TEXT_MAX` |  | `core/content_change.c` |
 | `JO_CLIMATETRACE_PAGES` |  | `collectors/sources/eni_climatetrace_assets.c` |
+| `JO_CONTACT_MAILTO` |  | `core/httpclient.c` |
 | `JO_CONTRACT_EXPIRY_DAYS` |  | `collectors/sources/procure_pivot.c` |
 | `JO_COOPS_MAX_STATIONS` |  | `collectors/sources/geoeo_coops_water.c` |
 | `JO_CORS_ORIGINS` |  | `core/cors.c` |
@@ -370,6 +371,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `ODPT_CONSUMER_KEY` |  | `collectors/sources/odpt_bus.c`, `collectors/sources/odpt_flight.c`, `collectors/sources/odpt_station.c`, `collectors/sources/odpt_train.c` |
 | `ODPT_TOKEN` |  | `collectors/sources/odpt_bus.c`, `collectors/sources/odpt_flight.c`, `collectors/sources/odpt_station.c`, `collectors/sources/odpt_train.c` |
 | `ONYPHE_API_KEY` |  | `collectors/sources/attacksurface_world.c` |
+| `OPENALEX_API_KEY` |  | `core/httpclient.c` |
 | `OPENAPIRO_KEY` |  | `collectors/sources/reg_ro.c` |
 | `OPENAPI_RO_KEY` |  | `collectors/sources/reg_ro.c` |
 | `OPENAQ_KEY` |  | `collectors/sources/airquality_world.c` |

@@ -1164,7 +1164,16 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "landslide-record",
     .tags = "\"geology\",\"landslide\",\"hazard\",\"uk\",\"bgs\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ogcapi.bgs.ac.uk/collections/landslideindex/items?limit=100&f=json",
+    .url = "https://ogcapi.bgs.ac.uk/collections/landslideindex/items?limit=100&f=json&sortby=landslide_number"
+    /* sortby=landslide_number, measured 2026-11-14 with a control: ascending and
+       descending answer different pages, and sortby=frobnicate is HTTP 400, so
+       this endpoint validates the parameter and an accepted one is honoured.
+       The walk was unordered across ~187 pages before, and it collapsed 69 then
+       68 records on two readings three weeks apart with the key (this same
+       field) distinct on every sampled page — the signature of a walk
+       re-serving records across page boundaries, whose invisible half is a
+       record never served. The sort is on the row's own id_keys so order and
+       identity agree. */,
     .array_path = "features",
     .id_keys = "properties.landslide_number",
     .interval = 86400,

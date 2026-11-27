@@ -100,13 +100,10 @@ VJSON(cyb_wa_breaches, "cyb-wa-breaches", "Washington State AG Breach Register",
  * Keying on "id" collapsed every breach's data-type rows onto one. Socrata's
  * own row identifier ":id" is unique per row and is exposed by asking for it
  * in $select, so the record is keyed on that. */
-VJSON_KEYED(cyb_wa_breaches_pi, "cyb-wa-breaches-pi", "Washington Breaches by Data Type", "ワシントン州 漏洩データ種別",
-  "threat-intel", "ransomware",
-  "https://data.wa.gov/resource/padd-mby7.json?$limit=2000&$select=*,:id&$order=:id",
-  "",
-  "en", "[\"breach\",\"notification\",\"usa\",\"pii\"]", 86400,
-  "Washington breach notifications broken out by the category of personal data exposed.",
-  ":id");
+/* cyb-wa-breaches-pi REMOVED 2026-11-23: it read data.wa.gov padd-mby7, the
+ * dataset WA_DATA_BREACH_PERSONAL_INFO (hp3b22_breachcat.c) reads whole —
+ * this row took the first 2,000 of its 7,628 rows. One dataset under two
+ * source ids; the complete read is the one kept, now keyed id+informationtype. */
 
 VRSS(cyb_watchtowr, "cyb-watchtowr", "watchTowr Labs", "watchTowr ラボ",
   "threat-intel", "exploitation",

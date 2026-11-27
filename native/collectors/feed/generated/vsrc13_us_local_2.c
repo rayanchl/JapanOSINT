@@ -38,6 +38,13 @@ VGEO(nam_norfolk_blocked_railroad_crossing_incident_repor, "nam-norfolk-blocked-
   "en", "[\"usa\",\"va\",\"crime\",\"opendata\"]", 3600,
   "Socrata open-data feed from City of Norfolk, Virginia: Blocked Railroad Crossing Incident Reports, one JSON record per row.");
 
+/* KEEPS THE CONTENT-HASH FALLBACK DELIBERATELY — measured, changed, REVERTED.
+   The dataset publishes a documented row id and declaring it made this row
+   WORSE: 168 collisions against the fallback's 155. A streetlight outage report
+   has no stable per-record identity here, and where a record has none, hashing
+   its content separates rows that a weak id merges. Compare a candidate key
+   against the row's CURRENT loss before declaring it — the answer is the
+   opposite of the Catalonia/Colombia rows from an identical symptom. */
 VGEO(nam_norfolk_streetlights_and_outages_reports, "nam-norfolk-streetlights-and-outages-reports", "City of Norfolk, Virginia — Streetlights and Outages Reports", "City of Norfolk, Virginia — Streetlights and Outages Reports",
   "us_local", "energy",
   "https://data.norfolk.gov/resource/5qpt-tdve.geojson?$limit=400&$order=:id",

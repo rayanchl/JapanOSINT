@@ -21,25 +21,13 @@
 #include "lib/hpengine.h"
 
 static const hp_source HP3B24_JPBULK[] = {
-  { .id = "JPOD_DATAGOJP_INDEX", .name = "data.go.jp — complete dataset index",
-    .name_ja = "データカタログサイト 全データセット一覧",
-    .category = "government", .portal = "https://www.data.go.jp",
-    .record_type = "dataset-index",
-    .tags = "\"japan\",\"opendata\",\"datagojp\",\"catalogue\",\"index\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.go.jp/data/api/3/action/package_list",
-    .array_path = "result",
-    .id_keys = "value",
-    .interval = 86400,
-    .title_keys = "value",
-    .description = "Every dataset identifier held by the Japanese national open-data "
-      "portal — 18,147 of them, returned whole. This is the ONLY "
-      "endpoint on that portal that hands back its full holdings: "
-      "package_search ignores rows, start and every filter alike and "
-      "returns the same ten records whatever you ask it, so the "
-      "per-organisation and free-text forms were rejected outright. The "
-      "index is what the portal will honestly give, and it is a "
-      "complete inventory of what the state publishes." },
+  /* JPOD_DATAGOJP_INDEX REMOVED 2026-11-23: it read www.data.go.jp's
+     package_list, which 301s to data.e-gov.go.jp's — the exact read
+     JP25_JPNATGOV_EGOV_CKAN_LIST (hp3b25_jpnatgov.c) already makes, same
+     array_path and id_keys. One collection under two source ids, hidden from
+     dup-endpoint by the redirect. Its description also blamed package_search
+     for "ignoring rows, start and every filter": that was the redirect
+     dropping the query string, and the search works on the target host. */
 
   { .id = "JSTAGE_CORPUS_BULK", .name = "J-STAGE — article corpus sweep",
     .name_ja = "J-STAGE 論文コーパス",

@@ -1379,6 +1379,18 @@ typedef struct {
    * rate. Naming it keeps a reader from spending the afternoon on the wrong
    * two remedies. */
   int   unreadable_botwall;
+  /* A body whose own `<title>` says the SITE IS IN MAINTENANCE. Third remedy,
+   * third flag, and this one is "wait and re-read" rather than any change to
+   * the row — which is why it must not be folded into either of the two above.
+   * Measured on www.finmac.or.jp: one 7,249-byte page served to `/news/` and
+   * `/tokei-siryo/index_03/` at 200 and to an impossible path at 404, all three
+   * byte-identical. See hp_title_says_maintenance for why the test reads the
+   * title and not the body. */
+  int   unreadable_maintenance;
+  /* Cloudflare's `error code: 1005`, an ASN-level block. Named apart from the
+   * bot wall because it is the one refusal here with no remedy: see
+   * hp_body_refusal. */
+  int   unreadable_ipblock;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -1588,6 +1600,35 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   int whole = !strncmp(s->detail_url, "{v}", 3) &&
               (!strncmp(idbuf, "https://", 8) || !strncmp(idbuf, "http://", 7));
   char *enc = whole ? NULL : hp_urlenc(idbuf);
+  /* A value that is a site-relative PATH ("/cma-cases/some-case" — GOV.UK's
+   * search hands back each hit's `link` that way and its content API is
+   * /api/content<that path>) keeps its slashes. Encoded whole it became
+   * "content%2Fcma-cases%2F…", which is a different resource and a 404 on
+   * every hop: eight uk-govuk-search-* rows, measured 2026-11-16. Each
+   * SEGMENT is still encoded, so nothing but `/` passes through. */
+  if (enc && idbuf[0] == '/') {
+    size_t n = strlen(idbuf);
+    char *penc = malloc(n * 3 + 1);
+    if (penc) {
+      size_t j = 0;
+      const char *seg = idbuf;
+      while (*seg) {
+        const char *sl = strchr(seg, '/');
+        size_t sn = sl ? (size_t)(sl - seg) : strlen(seg);
+        char one[256];
+        if (sn >= sizeof one) sn = sizeof one - 1;
+        memcpy(one, seg, sn); one[sn] = 0;
+        char *e1 = hp_urlenc(one);
+        if (e1) { size_t el = strlen(e1); memcpy(penc + j, e1, el); j += el; free(e1); }
+        if (!sl) break;
+        penc[j++] = '/';
+        seg = sl + 1;
+      }
+      penc[j] = 0;
+      free(enc);
+      enc = penc;
+    }
+  }
   char *url = hp_expand(s->detail_url, st->vars, "v", enc ? enc : idbuf);
   free(enc);
   if (!url) return;
@@ -2322,33 +2363,190 @@ static char *hp_jsonp_inner(const char *body) {
   return out;
 }
 
+/* ── a 200 whose body is a REFUSAL rather than the data ───────────────────
+ *
+ * Two shapes, named apart because their remedies are opposite: a rate limiter
+ * (a per-host gap in core/hostgate.c, budget measured first) and a bot wall
+ * (an agent in core/host_agents.def; pacing cannot reach a wall that refuses
+ * an automated client at any rate). Both are set from the words the page
+ * carries INSTEAD of the data, never from the status, which says 200.
+ *
+ * THIS LIVED INSIDE hp_run_json AND NOWHERE ELSE, which is this tree's
+ * recurring defect rather than a new one. rule 1 records the bot-wall shape as
+ * fixed on 2026-10-20 and the rate-limit shape on 2026-10-06; both fixes went
+ * into ONE of the five mode drivers. An HP_XML row handed a challenge page
+ * found no records, filed at most an `array-path-missing` notice whose remedy
+ * says RE-POINT THE PATH, and returned 0 — the third reader sent hunting a
+ * move that never happened, which is the exact mistake those two notes exist
+ * to prevent. Measured 2026-11-03 on the 2026-10-25 sweep's largest remaining
+ * family: 15 UK parish-council `/feed` rows, all HP_XML, whose bodies were
+ * byte-identical at 33,245 bytes across 15 unrelated domains.
+ *
+ * `Just a moment` is in the list because that is what Cloudflare serves TODAY
+ * — measured the same day on bosham-pc.gov.uk and branstonparishcouncil.gov.uk,
+ * both `<title>Just a moment...</title>` — while the two spellings this list
+ * already had (`Checking your browser`, `cf-browser-verification`) are its
+ * older interstitial. So a JSON row behind current Cloudflare was getting the
+ * wrong remedy too. A wall's wording is a dated reading, like everything else
+ * in this file.
+ *
+ * The narrowness is the whole reason the test is trustworthy and must not be
+ * widened: each phrase is a vendor's own interstitial, not something a data
+ * body carries. NOT "access denied" (permit decisions and FOI logs are full of
+ * it) and NOT a bare "limit" (a legitimate parameter name, in half the URLs in
+ * this tree).
+ *
+ * A FOURTH SHAPE, AND IT IS THE ONLY ONE THAT READS ITS PHRASE OUT OF THE
+ * `<title>` RATHER THAN THE WHOLE BODY (2026-11-07). A SITE IN MAINTENANCE
+ * MODE SERVES ONE PAGE TO EVERY PATH. Measured on `www.finmac.or.jp`, the
+ * securities-ADR centre: `/news/` answers HTTP **200**,
+ * `/tokei-siryo/index_03/` answers **200**, and a path that cannot exist
+ * answers **404** — and all three bodies are the same 7,249 bytes, md5
+ * d5b3d549, `<title>メンテナンス中｜FINMAC</title>`. So the two registered rows
+ * on those paths read `rc=0 records=0` with no notice, and the identical byte
+ * count was the only hint that it was one host-level cause rather than two row
+ * bugs. The 404 control is what makes it certain: a real 404 serves the same
+ * page, so nothing about the status distinguishes a live path from a dead one
+ * while the site is down. rule 1 has met this before without naming it —
+ * `il-knesset-dates` returning "131,618 bytes of the OData service's HTML
+ * maintenance page" — and there it was only caught because the row returned
+ * non-zero.
+ *
+ * THE REMEDY IS THE OPPOSITE OF EVERY OTHER SHAPE HERE: not a gap, not an
+ * agent, not a re-point. It is to WAIT and read the row again, which is why
+ * naming it matters — a reader told "the endpoint may have moved" re-points a
+ * row whose publisher is back the next morning, and that is a validated row
+ * made unvalidated.
+ *
+ * WHY THE TITLE AND NOT THE BODY. "Maintenance" is ordinary data in this tree:
+ * road maintenance, aircraft maintenance, maintenance of a register. A
+ * substring test over the whole body would read a works register as a refusal,
+ * which is the mistake 45b already blocks for "access denied". A page whose
+ * TITLE says it is under maintenance is making the statement ABOUT ITSELF,
+ * which is exactly the "the body's own words" principle this comment opens
+ * with, sharpened to the one element that is never data. `hptest` 59-59e, with
+ * 59c the control that matters: a body carrying the word in its data and a
+ * data-shaped title stays silent. */
+/* One definition, in lib/jocore.h: the second sighting was a bespoke
+ * collector, which no engine-only test can reach (rule 4c). */
+#define hp_title_says_maintenance(b) jo_title_says_maintenance(b)
+
+/* THE ONE WORD TEST, and it takes the STATUS because one of its five shapes
+ * may only be looked for once the status has already failed. Every mode driver
+ * reaches this with a body the engine chose to parse, so they go through the
+ * `hp_body_refusal` macro below and pass 200; the refusing-status arm in
+ * hp_run passes what the server said. See jo_body_says_maintenance for why
+ * that distinction is the whole safety argument for reading the body there. */
+static void hp_body_refusal_at(hp_run_state *st, const char *body,
+                               long status) {
+  if (!body) return;
+  if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
+      jo_strcasestr(body, "too many requests"))
+    st->unreadable_ratelimit = 1;
+  else if (jo_strcasestr(body, "Pardon Our Interruption") ||
+           jo_strcasestr(body, "Just a moment") ||
+           jo_strcasestr(body, "Checking your browser") ||
+           jo_strcasestr(body, "Attention Required") ||
+           jo_strcasestr(body, "cf-browser-verification") ||
+           jo_strcasestr(body, "captcha"))
+    st->unreadable_botwall = 1;
+  else if (hp_title_says_maintenance(body))
+    st->unreadable_maintenance = 1;
+  /* The SAME finding by its second route: a maintenance notice with no
+   * <title> at all, read only because the caller already has a refusing
+   * status. jo_body_says_maintenance's comment carries the measurement (164
+   * `*.repo.nii.ac.jp` rows, one 690-byte 503) and the argument for why the
+   * body may be read here when it may not on a 200. The value is 2 rather
+   * than 1 so every notice below can say which route found it: a record that
+   * claimed "the page's own <title> says" of a body with no title would be
+   * this disclosure inventing its own evidence. */
+  else if (status >= 400 && jo_body_says_maintenance(body))
+    st->unreadable_maintenance = 2;
+  /* A FIFTH shape, and it is the one case here with NO remedy at all, which is
+   * why it is named apart from the bot wall it otherwise resembles.
+   * Cloudflare's `error code: 1005` is an ASN block — the whole datacenter
+   * range is refused before any request detail is looked at — so neither an
+   * agent nor a gap nor a browser profile reaches it. The tree has met it
+   * before: collectors/sources/cam_webcamtaxi.c records webcamtaxi.com
+   * answering "error 1005, a hard IP block, NOT a JS challenge" to cloud
+   * hosts. Measured again 2026-11-11 on machi.to: HTTP 403 with a
+   * SEVENTEEN-BYTE body, `error code: 1005`, under all four agent rungs.
+   * Telling it apart from a challenge matters because the challenge's remedy
+   * is an agent to try and this one's is "record it as unmeasurable". */
+  else if (jo_strcasestr(body, "error code: 1005") ||
+           jo_strcasestr(body, "error 1005"))
+    st->unreadable_ipblock = 1;
+}
+
+/* A body the engine chose to parse: the five mode drivers' case. */
+#define hp_body_refusal(st, body) hp_body_refusal_at((st), (body), 200)
+
+/* Is this body an HTML DOCUMENT? For every mode whose data is not HTML — JSON,
+ * XML, CSV, NDJSON — a body that is one is a redirect to a notice, a wall, or
+ * an endpoint that has stopped serving data, and never an empty result set.
+ * lib/rss_atom.c makes the same argument for the RSS collectors ("a 2xx body
+ * that is not a feed AT ALL is not an empty feed either"); this is that rule
+ * reaching the engine's own mode drivers. It is only ever consulted when the
+ * parse found NO records, so it cannot change a run that emitted anything.
+ *
+ * TWO conditions, and the second one is here because the first version of this
+ * failed its own control (hptest 58f): a body is an HTML document when it
+ * BEGINS with markup — not merely when it contains some. `ward,method` /
+ * `Ogaki,"<html>bicycle</html>"` is a CSV, and a register of web pages is an
+ * ordinary thing to publish; reading it as a refusal would discard real
+ * records, which is worse than the silence this test exists to end. A CSV
+ * never opens with `<`, a JSON body never does, and an XML document opens with
+ * `<?xml` or its root element and carries no html doctype.
+ *
+ * Only the LEADING bytes are read for the second condition, which is a
+ * correctness choice before it is a cost one — a document says what it is in
+ * its first bytes — and a cost one too, since this runs per page and these
+ * bodies reach 111 MB. 2 KB is generous for a doctype, an XML declaration and
+ * a comment ahead of the root element. */
+/* ONE stderr phrase for "this body was not readable in the row's mode", shared
+ * by every driver below, because two tools read these lines to corroborate a
+ * verdict (`audit_registry_emit.py`'s FETCH_FAILED and `audit_batch_emit.py`'s
+ * UNPARSEABLE) and four wordings would mean four patterns in each of them —
+ * the drift this whole change is about, moved one layer out into the gates.
+ * Measured: the first version of these sites printed a phrase per mode and
+ * `audit_registry_emit.py` filed 25 of 89 correctly-disclosing rows as
+ * SINK_MISMATCH, "a collector emitting under another id, or a bug".
+ *
+ * hp_run_json keeps its own historical `non-JSON body`, which both tools
+ * already match and which appears in this tree's written record; adding a
+ * second phrase there would be churn without a reader. */
+static void hp_unreadable_log(hp_run_state *st, const char *detail) {
+  fprintf(stderr, "[hp:%s] unreadable body: %s%s\n", st->s->id, detail,
+          st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
+        : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
+        : st->unreadable_maintenance == 2
+                                     ? " — the body says the SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+        : st->unreadable_maintenance ? " — the page's own <title> says the "
+                                       "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+        : st->unreadable_ipblock     ? " — it is Cloudflare 1005, an ASN block: "
+                                       "no agent or gap reaches it"
+                                     : "");
+}
+
+/* One definition, in lib/jocore.h, for the reason the maintenance tests live
+ * there: three phrase tests depend on knowing what kind of body they read, and
+ * the newest of them is consulted by a bespoke collector's path too. */
+#define hp_body_is_html(b) jo_body_is_html(b)
+
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
   cJSON *doc = jo_json_parse(jsonp ? jsonp : body);
   free(jsonp);
   if (!doc) {
-    /* A 200 that is really a refusal. Only the words a rate limiter puts in a
-     * page it serves INSTEAD of the data — not "limit", which is a legitimate
-     * parameter name and appears in half the URLs in this tree. */
-    if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
-        jo_strcasestr(body, "too many requests"))
-      st->unreadable_ratelimit = 1;
-    /* And a 200 that is really a BOT WALL. Same rule as above: only the words
-     * the wall puts in the page it serves INSTEAD of the data, and each of
-     * these is a vendor's own interstitial title rather than anything a data
-     * body would carry. Not "access denied", which is a phrase real records
-     * (permit decisions, FOI logs) do carry. */
-    else if (jo_strcasestr(body, "Pardon Our Interruption") ||
-             jo_strcasestr(body, "Checking your browser") ||
-             jo_strcasestr(body, "Attention Required") ||
-             jo_strcasestr(body, "cf-browser-verification") ||
-             jo_strcasestr(body, "captcha"))
-      st->unreadable_botwall = 1;
+    /* A 200 that is really a refusal — the shared test, see hp_body_refusal. */
+    hp_body_refusal(st, body);
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
-            st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
-          : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
-                                     : "");
+            st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
+          : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
+          : st->unreadable_maintenance ? " — the page says the SITE IS IN "
+                                         "MAINTENANCE; wait and re-read the row rather than re-pointing it"
+                                       : "");
     st->unreadable = 1;
     return st->emitted;
   }
@@ -2773,7 +2971,22 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
    * quoting is broken parses to a different set of records than the upstream
    * served, and the run reports that smaller number as the whole truth. */
   st->sh_csv_repairs += csv_quote_repairs();
+  /* An HTML page "parses" as CSV — every line becomes one unqueryable cell, so
+   * the parse CANNOT refuse it and the row would report records it does not
+   * have. Judged only for a body that is a DOCUMENT: a CSV whose cells happen
+   * to contain markup is not one, because the test wants `<!doctype html` or
+   * `<html`. An xlsx body reaching here was written by lib/xlsx.c and cannot
+   * be a web page, so it is exempt. Read BEFORE `stripped` is freed, because
+   * `body` may be pointing at it. */
+  int served_html = s->mode != HP_XLSX && hp_body_is_html(body);
+  if (served_html) hp_body_refusal(st, body);
   free(stripped);
+  if (served_html) {
+    hp_unreadable_log(st, "an HTML page, not CSV");
+    st->unreadable = 1;
+    cJSON_Delete(rows);
+    return st->emitted;
+  }
   return hp_emit_rows(st, rows);
 }
 
@@ -3321,6 +3534,14 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
     const char *dot = strrchr(tag, '.');
     if (dot && dot[1] && !strstr(body, open)) memmove(tag, dot + 1, strlen(dot + 1) + 1);
   } else if (!hp_xml_record_tag(body, tag, sizeof tag)) {
+    /* No repeated element AND the body is an HTML document: this is not an
+     * empty page, it is a page. See hp_body_is_html. */
+    if (hp_body_is_html(body)) {
+      hp_body_refusal(st, body);
+      hp_unreadable_log(st, "an HTML page, not XML");
+      st->unreadable = 1;
+      return st->emitted;
+    }
     fprintf(stderr, "[hp:%s] XML with no repeated element\n", s->id);
     return 0;
   }
@@ -3437,6 +3658,22 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
    * of them is the shape this tree keeps finding, so it is one call. */
   hp_collision_ord_free(st);
   cJSON_Delete(flats);
+  /* A declared record element that is absent from a body which is an HTML
+   * DOCUMENT is not schema drift and must not be reported as it: the remedy
+   * for drift is "re-point the path", and there is no path to re-point when
+   * the endpoint has stopped serving XML. This is checked BEFORE the
+   * path-missing notice because an HTML page repeats <div> and <script>
+   * readily, so the notice below would otherwise fire and name one of them as
+   * "the most repeated element" — a true observation and the wrong diagnosis,
+   * the Archive-It shape one engine over. The 15 UK parish `/feed` rows of the
+   * 2026-10-25 sweep are the measured case; see hp_body_refusal. */
+  if (!found && hp_body_is_html(body)) {
+    hp_body_refusal(st, body);
+    hp_unreadable_log(st, "an HTML page, not XML");
+    st->unreadable = 1;
+    st->page_records = 0;
+    return st->emitted;
+  }
   /* Shape notice (a), XML form: the declared record element is nowhere in a
    * body that DOES repeat some other element. A body with no repeated element
    * at all is an empty page, which is the walk ending normally, not drift. */
@@ -3560,6 +3797,18 @@ static int hp_run_ndjson(hp_run_state *st, const char *body) {
             s->id, st->malformed);
   if (!kept && !st->malformed)
     fprintf(stderr, "[hp:%s] ndjson: no record lines in body\n", s->id);
+
+  /* An HTML page reaches hp_run_json below as `[]`, which PARSES — so the JSON
+   * path's own refusal test can never see it, and the row would report an
+   * honest empty. Every line of the page is counted into `malformed` on the
+   * way, which is true and is not the diagnosis a reader needs. */
+  if (!kept && hp_body_is_html(body)) {
+    hp_body_refusal(st, body);
+    hp_unreadable_log(st, "an HTML page, not NDJSON");
+    st->unreadable = 1;
+    free(buf);
+    return st->emitted;
+  }
 
   int out = hp_run_json(st, buf);
   free(buf);
@@ -4219,6 +4468,19 @@ static int hp_run_html(hp_run_state *st, const char *html) {
   }
   html_label_free(&labels);
   if (max && st->emitted >= max) st->truncated = 1;
+  /* An HTML row's body IS a page, so hp_body_is_html cannot discriminate here
+   * and only the refusal's own WORDS can. A listing that matched no anchor is
+   * ordinarily an honest empty (or the `anchors-unlabelled` case below it), so
+   * `unreadable` is set only when a cause actually fired — a wall or a rate
+   * limiter is named, and a quiet listing stays silent. */
+  if (page_hits == 0) {
+    hp_body_refusal(st, html);
+    if (st->unreadable_ratelimit || st->unreadable_botwall ||
+        st->unreadable_maintenance) {
+      hp_unreadable_log(st, "a listing that matched no anchor");
+      st->unreadable = 1;
+    }
+  }
   /* Same stop signal the JSON path publishes: without it the page walk read
    * page 1 and silently dropped every later page (EU_EUIPO_TRADEMARKS and
    * CA_CIPO_TRADEMARKS both declare page_param with mode = HP_HTML), and
@@ -4615,10 +4877,28 @@ static int hp_header_is_conditional(const char *h) {
  * resource does not exist on this server" — a node that does not run the event
  * service at all (CLAUDE.md's own lesson). Keying on the status, or on the row
  * having asked for `nodata=404`, would file that dead service as a healthy
- * empty, which is the dangerous direction. */
+ * empty, which is the dangerous direction.
+ *
+ * AND IT WENT THAT DANGEROUS WAY ANYWAY, because the phrase was looked for in
+ * a WEB PAGE (2026-11-05). `JO47_IT_AUSL_MO` reads an Italian health
+ * authority's `/feed/`, which now answers **HTTP 404 with 604,031 bytes of a
+ * React 404 page** — and that bundle carries the WordPress block editor's
+ * translation table, in which sits the string `"No matching blocks"`. So
+ * `jo_strcasestr(body, "no matching")` matched an i18n key inside a
+ * half-megabyte document, and a dead feed was filed as a healthy empty: rc=0,
+ * no records, no notice, exactly what this function exists to prevent for
+ * koeri. The run line said `bytes=604031` the whole time.
+ *
+ * So the body must not be an HTML DOCUMENT. A service's declared-empty reply
+ * is its own short message — FDSN's is about sixty bytes of text, koeri's is
+ * one sentence — and no FDSN, OGC or OData service answers "nothing matched"
+ * with a web page. That is the narrowest discriminator that covers the
+ * measured cause, and it reuses hp_body_is_html rather than guessing a size
+ * ceiling nobody has measured across services. */
 static int hp_status_is_declared_empty(long status, const char *body) {
   if (status == 204) return 1;                  /* no content, by definition */
   if (status != 404 || !body) return 0;
+  if (hp_body_is_html(body)) return 0;          /* a page is not a no-data reply */
   return jo_strcasestr(body, "no matching") != NULL ||
          jo_strcasestr(body, "no data available") != NULL;
 }
@@ -5253,6 +5533,32 @@ dated_restart:;
         if (first_nodata)
           fprintf(stderr, "[hp:%s] the upstream answered HTTP %ld with its own "
                   "no-data wording: an EMPTY result, not a refusal\n", s->id, fst);
+        /* THE WORDS TEST RAN ONLY ON A NON-PARSING 200, AND A WALL DOES NOT
+         * ALWAYS PICK THAT STATUS. hp_body_refusal() reached all five mode
+         * drivers on 2026-11-05, which fixed WHERE it runs and left WHEN:
+         * every caller is a 2xx whose body would not parse. A 403 never got
+         * the test at all, so its remedy came from the status alone — "check
+         * whether the row needs a credential (key_env) or a User-Agent it is
+         * not sending".
+         *
+         * Measured 2026-11-11 against the 738 rows whose fetch-failure record
+         * carried exactly that remedy (docs/refused-403-sample-2026-11-11.tsv):
+         * they sit on 555 hosts, 40 were sampled across the whole of
+         * core/host_agents.def's own agent ladder — the engine agent, the
+         * agent without "collector", a bare JapanOSINT/1.0, the compat prefix
+         * — and **not one host was recovered by any rung**. Of the 27 that
+         * refuse every agent, **22 answer 403 with a CLOUDFLARE CHALLENGE**
+         * (`cf-mitigated: challenge`, `<title>Just a moment...</title>`), one
+         * is a 1005 ASN block and only 4 are a plain server-level 403. So the
+         * remedy the record gave was wrong for 23 of 27, and the row had
+         * already tried the agent it was being told to try.
+         *
+         * So the test runs on a refusing status too. It cannot change an
+         * honest empty: a declared no-data reply is settled above and keeps
+         * its own path, and a body with none of the words sets no flag, which
+         * leaves the status-based arms exactly as they were (hptest 60d). */
+        if (!first_nodata && fst >= 400)
+          hp_body_refusal_at(&st, hr.body, fst);
       }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
@@ -6133,7 +6439,19 @@ date_step_back:
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddStringToObject(p, "url", url ? url : "");
     cJSON_AddNumberToObject(p, "http_status", (double)first_status);
-    cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
+    /* OMITTED WHEN NO PARSE WAS ATTEMPTED, which `!st.unreadable` reported as
+     * TRUE. A mode driver only ever sees a 2xx body, so on a 503 the parser
+     * was never called — and the record said `body_parsed: true` about bytes
+     * nobody had read. Found 2026-11-12 on the `*.repo.nii.ac.jp` maintenance
+     * family, where the same record now explains what the body SAYS: a
+     * disclosure stating a thing it did not measure is rule 1's own subject,
+     * and it is worse here than anywhere because this record exists to be
+     * believed. core/sourceapi.c has modelled the third state all along
+     * (`-1 unknown`, served as JSON null) and the engine simply never produced
+     * it; audit_registry_emit.py keys on `is False`, so an absent field
+     * cannot be read as a failed parse. `hptest` 62/62b. */
+    if (first_status >= 200 && first_status < 300)
+      cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
     /* D1-bis: "the request failed at the transport level" sent a reader to
      * guess, and of 30 hosts written off that way 24 were one fixable cause.
      * Named only when there IS a TLS verdict, so a connect refusal or a
@@ -6158,14 +6476,32 @@ date_step_back:
         ? http_tls_cause_label(first_tls)
       : first_status == -1
         ? "the request failed at the transport level"
-      : first_status == 200 && st.unreadable_ratelimit
-        ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
-          "data — a refusal wearing a success status, which no status check "
-          "can see"
-      : first_status == 200 && st.unreadable_botwall
-        ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
-          "the data — a refusal wearing a success status, and one that pacing "
-          "does not reach"
+      : st.unreadable_ipblock
+        ? "the body carries Cloudflare's `error code: 1005` — an ASN-level "
+          "block, so the whole datacenter range is refused before any request "
+          "detail is looked at. Not a challenge: there is nothing to pass"
+      : st.unreadable_ratelimit
+        ? "the upstream served a RATE-LIMIT page instead of the data — a "
+          "refusal that the status alone does not show (it is often a 200, and "
+          "is read on a 4xx too since 2026-11-11)"
+      : st.unreadable_botwall
+        ? "the upstream served a BOT-WALL interstitial instead of the data — a "
+          "refusal that pacing does not reach. Measured 2026-11-11: 22 of 27 "
+          "hosts that refuse every agent answer 403 with a Cloudflare "
+          "challenge, so this is NOT only a 200-with-a-wall shape"
+      : st.unreadable_maintenance == 2
+        ? "the body states that the SITE IS IN MAINTENANCE — in its text, not "
+          "in a <title>, which is why this needed a second route into the same "
+          "finding (measured 2026-11-12 on 164 `*.repo.nii.ac.jp` rows all "
+          "answering 503 with one 690-byte notice whose whole <head> is a "
+          "<meta>). A site in that state serves ONE page to every path, so "
+          "neither the status nor the path says anything"
+      : st.unreadable_maintenance
+        ? "the body's own <title> says the SITE IS IN MAINTENANCE. A site in "
+          "that state serves ONE page to every path, so neither the status nor "
+          "the path says anything: measured on www.finmac.or.jp, two real "
+          "paths answered 200 and an impossible one answered 404 with the same "
+          "7,249 bytes, byte for byte"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -6180,20 +6516,47 @@ date_step_back:
       : first_status == 429
         ? "rate limited: give the host a per-host minimum gap in "
           "core/hostgate.c, as crates.io has"
+      : st.unreadable_ipblock
+        ? "NOTHING here reaches this: Cloudflare 1005 blocks the ASN, so no "
+          "agent, no per-host gap and no browser profile changes the answer. "
+          "Record the row as unmeasurable from this network and re-read it "
+          "from another one before treating it as the publisher's state"
+      : st.unreadable_botwall
+        ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint. "
+          "Bisect the User-Agent as core/host_agents.def's ladder does — but "
+          "read docs/refused-403-sample-2026-11-11.tsv first: over 40 hosts "
+          "and all four rungs, NOT ONE was recovered by an agent change, so "
+          "if the wall is Cloudflare's challenge expect to record the row as "
+          "unmeasurable rather than to find an agent that passes"
       : first_status == 401 || first_status == 403
-        ? "the upstream refused this client: check whether the row needs a "
-          "credential (key_env) or a User-Agent it is not sending"
+        ? "the upstream refused this client with no wall wording in the body, "
+          "which is the minority case (4 of 27 sampled): check whether the row "
+          "needs a credential (key_env) or a User-Agent it is not sending"
       : first_status == 200 && st.unreadable_ratelimit
         ? "rate limited behind a 200: give the host a per-host minimum gap in "
           "core/hostgate.c. Measure the budget before choosing one — a gap "
           "set on one reading is a guess"
+      : st.unreadable_maintenance
+        ? "WAIT AND RE-READ THE ROW. This is the one shape here whose remedy "
+          "is no change at all: do not re-point the URL, do not add a gap, do "
+          "not change the agent. A row re-pointed on this reading is a "
+          "validated row made unvalidated. Read the notice: a publisher often "
+          "prints the window, and it can be a START DATE WITH NO END — "
+          "`*.repo.nii.ac.jp` has been down since 2026-10-28 and was still "
+          "down fifteen days later, which is long enough to look like a "
+          "retirement and is not one. Check the parent site before touching "
+          "the row (www.nii.ac.jp answered 200 throughout)"
       : first_status == 200 && st.unreadable_botwall
         ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
           "the wall refuses an automated client at any rate. Bisect the "
-          "User-Agent as core/httpclient.c's UA_OVERRIDE table does — a word "
-          "in the agent is the measured cause on every host in it so far — and "
-          "if no agent clears it, record the row as unmeasurable from here "
-          "rather than guessing at a gap"
+          "User-Agent as core/host_agents.def's table does — a word in the "
+          "agent was the measured cause on the Imperva family (the table's "
+          "HA_COMPAT hosts) — but WHICH wall this is decides whether that can "
+          "work at all: over 40 Cloudflare-challenge hosts and all four rungs "
+          "of that ladder, not one was recovered by an agent change "
+          "(docs/refused-403-sample-2026-11-11.tsv). Read the body's own "
+          "wording first, and if no agent clears it, record the row as "
+          "unmeasurable from here rather than guessing at a gap"
       : first_status == 200
         ? "re-read the body by hand: the endpoint may have moved, started "
           "redirecting to an HTML page, or changed shape"
@@ -6203,10 +6566,18 @@ date_step_back:
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    if (first_status == 200 && st.unreadable_botwall)
+    if (st.unreadable_maintenance)
       snprintf(title, sizeof title,
-               "%s stored nothing: a bot wall answered 200 instead of the data",
+               "%s stored nothing: the site is in maintenance and served one "
+               "page to every path", s->id);
+    else if (st.unreadable_ipblock)
+      snprintf(title, sizeof title,
+               "%s stored nothing: Cloudflare 1005 blocks this network's ASN",
                s->id);
+    else if (st.unreadable_botwall)
+      snprintf(title, sizeof title,
+               "%s stored nothing: a bot wall answered HTTP %ld instead of the "
+               "data", s->id, first_status);
     else if (first_status == 200)
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",
@@ -6357,6 +6728,23 @@ void hp_register(const hp_source *specs, int n, source_def *defs,
               table ? table : "(table)", i, s->id ? s->id : "(no id)",
               !s->id ? "id" : "url");
       continue;
+    }
+    /* A key list is copied into hp_pick_s's 512-byte scratch before it is
+     * split, so a longer one is CUT mid-token and the row keys on whatever
+     * the cut left — no error, no notice. Found 2026-11-23 with a 553-byte
+     * FPDS composite. Said once per row at registration; the row still
+     * registers, because refusing it would be a bigger change than the
+     * finding licenses. */
+    {
+      const char *const kl[] = { s->id_keys, s->title_keys, s->date_keys,
+                                 s->link_keys };
+      static const char *const kn[] = { "id_keys", "title_keys", "date_keys",
+                                        "link_keys" };
+      for (int k = 0; k < 4; k++)
+        if (kl[k] && strlen(kl[k]) >= 512)
+          fprintf(stderr, "[hp] KEY LIST TOO LONG %s '%s': %s is %zu bytes and "
+                  "is cut at 511 — shorten it\n",
+                  table ? table : "(table)", s->id, kn[k], strlen(kl[k]));
     }
     if (g_nspecs >= g_cspecs) {
       int nc = g_cspecs ? g_cspecs * 2 : 2048;

@@ -1,0 +1,24 @@
+measure	value
+row_url_as_declared	https://service.iris.edu/fdsnws/station/1/query?net=IM&level=channel&format=xml&nodata=404
+row_url_http_status	301 -> https://service.earthscope.org/fdsnws/station/1/query?... (both formats; followed with -L; 200)
+proposed_text_url	https://service.earthscope.org/fdsnws/station/1/query?net=IM&level=channel&format=text&nodata=404
+proposed_text_url_same_host_as_row	https://service.iris.edu/fdsnws/station/1/query?net=IM&level=channel&format=text&nodata=404
+text_bytes	145887
+xml_bytes	1216681
+text_header_line	#Network | Station | Location | Channel | Latitude | Longitude | Elevation | Depth | Azimuth | Dip | SensorDescription | Scale | ScaleFreq | ScaleUnits | SampleRate | StartTime | EndTime
+text_data_lines	985 (17 pipe-delimited cells on every line; 0 malformed)
+text_distinct_whole_lines	985
+text_distinct Network+Station+Location+Channel+StartTime	985 (0 duplicate groups)
+text_distinct Network+Station+Location+Channel	584 (so StartTime is required: one line per channel EPOCH)
+text_distinct Station+Location+Channel+StartTime	985
+text_empty_Location	956 of 985 (a `+` composite joins a missing part as "", so this is safe)
+text_empty_EndTime	511 of 985 (open epochs; XML has endDate on 474 = 985-511)
+xml_Channel_elements	985 in 385 Station elements
+xml_distinct_whole_Channel_element	983 (2 byte-identical Channel elements that belong to DIFFERENT stations/epochs)
+xml_distinct parentNetwork+parentStation+locationCode+code+startDate	985
+text_keyset == xml_keyset	True (0 only-in-text, 0 only-in-xml)
+xml_fields_text_LACKS (channels carrying)	Type 871 (repeated: CONTINUOUS/GEOPHYSICAL); ClockDrift 905; CalibrationUnits.Name/.Description 861; Comment.Value 330 (+Begin/EndEffectiveTime 30); DataLogger.* 6; Sensor.Manufacturer 117; Sensor.Model 117; Sensor.SerialNumber 25; Sensor.Type 80; Sensor.@resourceId 79; Response.InstrumentSensitivity.InputUnits.Description 985; Response.InstrumentSensitivity.OutputUnits.Name/.Description 985
+text_fields_xml_Channel_LACKS	Network, Station (the parent codes - the whole gap)
+neither_carries	Station Site.Name (station-level only), Station CreationDate (present on 96 of 385 stations; the row's date_keys=CreationDate is a Station field, absent from every Channel record)
+proposal	mode HP_CSV on the text URL with csv_delim=pipe;csv_comment=#;csv_no_header=1 (the FDSN_STATION_INVENTORY shape) and id_keys=col0+col1+col2+col3+col15 -> 985 of 985; lat/lon col4/col5; date col15. Cost: the 12 XML-only field groups above are lost unless the XML row is kept beside it. Also re-point the host: service.iris.edu now 301s to service.earthscope.org
+records_covered	whole query: 985 channel epochs, one request per format, 2026-11-16

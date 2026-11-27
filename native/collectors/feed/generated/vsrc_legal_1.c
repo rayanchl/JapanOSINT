@@ -130,13 +130,24 @@ VJSON(gov_ca_legisinfo, "gov-ca-legisinfo", "LEGISinfo — Canadian Bills", "LEG
 #include "_vjson_shapes.inc"
 static void fedlex_sparql_prep(cJSON *doc) { vshape_sparql(doc, "results.bindings"); }
 
+/* QUERY REPLACED 2026-11-24. The row shipped its authoring probe,
+ * `SELECT * WHERE {?s ?p ?o} LIMIT 20`, and those twenty triples are the
+ * store's own Virtuoso system triples (virtrdf#QuadMap): it stored database
+ * plumbing as Swiss law every day. The endpoint was asked what it holds
+ * (370,398 jolux:Act among others) and this reads the 500 newest acts, one row
+ * per act (GROUP BY: an act with two German titles came back twice, 475 acts
+ * in 500 rows), with its date and German title, keyed on the act's ELI URI.
+ * Grouped on (?act ?date) and NOT on ?act with MAX(?date): that form came
+ * back with every row dated today and acts from 2000 among "the newest" —
+ * this store does not order by an aggregate alias. Measured: 500 rows, 500
+ * distinct acts, dates descending from the day of the read. */
 VJSON_PREP(gov_ch_fedlex_sparql, "gov-ch-fedlex-sparql", "Fedlex — Swiss Law Linked Data", "Fedlex スイス法令リンクトデータ",
   "legal", "gazette",
-  "https://fedlex.data.admin.ch/sparqlendpoint?query=SELECT%20*%20WHERE%20%7B%3Fs%20%3Fp%20%3Fo%7D%20LIMIT%2020&format=application%2Fsparql-results%2Bjson",
+  "https://fedlex.data.admin.ch/sparqlendpoint?query=PREFIX%20jolux%3A%20%3Chttp%3A%2F%2Fdata.legilux.public.lu%2Fresource%2Fontology%2Fjolux%23%3E%20SELECT%20%3Fact%20%3Fdate%20%28SAMPLE%28%3Ft%29%20AS%20%3Ftitle%29%20WHERE%20%7B%20%3Fact%20a%20jolux%3AAct%20%3B%20jolux%3AdateDocument%20%3Fdate%20%3B%20jolux%3AisRealizedBy%20%3Fe%20.%20%3Fe%20jolux%3Alanguage%20%3Chttp%3A%2F%2Fpublications.europa.eu%2Fresource%2Fauthority%2Flanguage%2FDEU%3E%20%3B%20jolux%3Atitle%20%3Ft%20.%20FILTER%28%3Fdate%20%3C%3D%20NOW%28%29%29%20%7D%20GROUP%20BY%20%3Fact%20%3Fdate%20ORDER%20BY%20DESC%28%3Fdate%29%20%3Fact%20LIMIT%20500&format=application%2Fsparql-results%2Bjson",
   "results.bindings",
   "de", "[\"switzerland\",\"legislation\",\"sparql\",\"linkeddata\"]", 86400,
   "SPARQL endpoint over Swiss federal law and the Official Compilation published on Fedlex.",
-  "s+p+o", fedlex_sparql_prep);
+  "act", fedlex_sparql_prep);
 
 VJSON(gov_ch_swissparl_sessions, "gov-ch-swissparl-sessions", "Swiss Parliament — Sessions OData", "スイス連邦議会 会期データ",
   "legal", "parliament",

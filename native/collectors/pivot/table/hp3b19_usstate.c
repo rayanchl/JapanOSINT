@@ -256,7 +256,14 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "lobbying-client",
     .tags = "\"us\",\"newyork\",\"lobbying\",\"ethics\",\"procurement\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/resource/8bmh-tuz3.json?$limit=1000&$order=:id",
+    .url = "https://data.ny.gov/resource/8bmh-tuz3.json?$select=*,:id&$limit=1000&$order=:id",
+    /* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+       declared no key, so it keyed on the engine's unchosen fallback (ID_FALLBACK, else the record's first scalar) —
+       8 distinct of 3,000 over the pages read, in a body holding no byte-identical
+       records. The in-page guard hid most of that, and every pair split across
+       two pages collapsed: different records lost, with rc=0.
+       Evidence for this key: every sampled row created 2019-06-05 (static since). */
+    .id_keys = ":id",
     .date_keys = "reporting_period",
     .interval = 86400,
     .page_param = "$offset",
@@ -341,7 +348,8 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"us\",\"newyork\",\"oil\",\"gas\",\"drilling\",\"wells\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.ny.gov/resource/szye-wmt3.json?$limit=1000&$select=*,:id&$order=:id",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 47,499 of 47,499, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "api_well_number",
     .interval = 86400,
     .lat_key = "surface_latitude",
     .lon_key = "surface_longitude",
@@ -1185,7 +1193,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"us\",\"washington\",\"licence\",\"construction\",\"insurance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.wa.gov/resource/ciwg-agsx.json?$limit=1000&$order=:id",
-    .id_keys = "contractorlicensenumber",
+    /* A POLICY, not a contractor: measured 2026-11-14 over 5,000 rows (5,000
+       distinct whole records). `contractorlicensenumber` alone is 4,652 — one
+       contractor holds several policies — and this five-part composite is
+       4,998, every token present on all 5,000. No compact key reaches the
+       ceiling (seven fields give 4,999), so the in-page guard still hashes the
+       last two.
+       NOT Socrata's `:id`, which reaches 5,000 and is the WRONG key here: every
+       sampled row's :created_at is the day it was read, i.e. L&I replaces this
+       dataset wholesale daily, so a row id minted at creation is new every
+       day and keying on it would re-key the whole register on each refresh. */
+    .id_keys = "contractorlicensenumber+insurancecompany+insurancepolicyno+effectivedate+expirationdate",
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1720,7 +1738,8 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.oregon.gov/resource/g77e-6bhs.json?$limit=1000&$select=*,:id&$order=:id",
     .date_keys = "orig_regis_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 56,688 of 56,688; license_number alone 45,853, one row per endorsement, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "license_number+endorsement_text",
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -2308,7 +2327,14 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "crash-record",
     .tags = "\"us\",\"delaware\",\"crash\",\"traffic\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.delaware.gov/resource/827n-m6xc.json?$limit=1000&$order=:id",
+    .url = "https://data.delaware.gov/resource/827n-m6xc.json?$select=*,:id&$limit=1000&$order=:id",
+    /* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+       declared no key, so it keyed on the engine's unchosen fallback (ID_FALLBACK, else the record's first scalar) —
+       2,993 of 3,000 over the pages read, in a body holding no byte-identical
+       records. The in-page guard hid most of that, and every pair split across
+       two pages collapsed: different records lost, with rc=0.
+       Evidence for this key: rows created on 2 days, newest 2025-06-18 (not re-created on refresh). */
+    .id_keys = ":id",
     .interval = 86400,
     .lat_key = "latitude",
     .lon_key = "longitude",

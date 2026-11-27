@@ -23,6 +23,7 @@
  * Includes csv.c directly; the harness links every object EXCEPT obj/lib/csv.o
  * and obj/main.o. See tests/unit/run.sh. */
 
+#include <assert.h>
 #include "../../lib/csv.c"
 
 static int g_fail = 0;
@@ -340,6 +341,25 @@ static void test_record_end_agrees_with_the_parser(void) {
 }
 
 int main(void) {
+  /* A UTF-8 BOM is the file's, not the first column's — in EVERY entry point.
+   * csv_parse_x had the rule since 2026-09-19; csv_parse / _d / _dc did not
+   * until 2026-11-24, so the Fed enforcement CSV's first column was stored as
+   * "\xEF\xBB\xBFEffective Date". Fails without csv_skip_bom(). */
+  {
+    const char *bom = "\xEF\xBB\xBF" "Effective Date,Name\n2020-01-01,A\n";
+    cJSON *d1 = csv_parse(bom, 1), *d2 = csv_parse_d(bom, 1, ','),
+          *d3 = csv_parse_dc(bom, 1, ',', "#");
+    cJSON *all[3] = { d1, d2, d3 };
+    for (int i = 0; i < 3; i++) {
+      cJSON *r = cJSON_GetArrayItem(all[i], 0);
+      assert(r && cJSON_GetObjectItem(r, "Effective Date"));
+      cJSON_Delete(all[i]);
+    }
+    /* control: no BOM, nothing eaten */
+    cJSON *d = csv_parse("Effective Date,Name\n2020-01-01,A\n", 1);
+    assert(cJSON_GetObjectItem(cJSON_GetArrayItem(d, 0), "Effective Date"));
+    cJSON_Delete(d);
+  }
   test_record_end_agrees_with_the_parser();
   test_bom_is_not_a_column_name();
   test_midfield_quote_is_literal();

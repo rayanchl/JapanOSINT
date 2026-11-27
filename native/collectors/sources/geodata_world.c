@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* Descriptive UA per OSM usage policy (Overpass + Nominatim both require it). */
 #define GEO_UA "User-Agent: JapanOSINT/1.0 (OSINT geospatial pivot; +https://github.com/JapanOSINT)"
@@ -346,8 +347,9 @@ static int run_wikimapia(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *key = jo_env("WIKIMAPIA_KEY");
   if (!key) {
-    fprintf(stderr, "[wikimapia_global] gated (no WIKIMAPIA_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "wikimapia_global",
+                                (const char *[]){ "WIKIMAPIA_KEY", NULL },
+                                NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);

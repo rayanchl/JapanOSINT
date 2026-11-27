@@ -1,0 +1,2 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+awc-obstacles	COLLISION	0	0	68605	43033	43033	-1	309.9	25572 of 68605 emitted records collapsed onto an already-written uid (rule 4b; 0 engine notice(s) excluded from both sides). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect

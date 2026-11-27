@@ -28,11 +28,25 @@ static char *trim(char *s) {
   return s;
 }
 
+/* Did each of the two upstreams PARSE? Zero Japanese IPs on an SSL blacklist
+ * is a perfectly honest day, so the record count can never be the
+ * discriminator here — but this row needs BOTH bodies by construction (the JP
+ * address set comes from Feodo, the rows from the SSLBL CSV), so either one
+ * failing makes zero rows guaranteed rather than honest. The channel is
+ * threatintel_collect's own `ud` pointer, so no other caller of that helper is
+ * touched: lib/threatintel.c already treats a NULL from the fetcher as the
+ * did-not-parse case, and this fetcher can never return NULL — it builds and
+ * returns `features` unconditionally — so that existing signal was unreachable
+ * from here and both failures collapsed into "no JP IP today". */
+typedef struct { int feodo_parsed, csv_parsed; } sslbl_reads;
+
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
-  (void)key; (void)ud;
+  (void)key;
+  sslbl_reads *rd = (sslbl_reads *)ud;
 
   /* 1. Build the JP IP set from Feodo JSON (country === 'JP'). */
   cJSON *feodo = feed_get_json(ctx->http, FEODO_JSON, 12000);
+  if (rd) rd->feodo_parsed = cJSON_IsArray(feodo) ? 1 : 0;
   cJSON *jp_set = cJSON_CreateObject();   /* used as a string set */
   int jp_count = 0;
   if (cJSON_IsArray(feodo)) {
@@ -55,6 +69,7 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 
   /* 2. Fetch SSLBL CSV text. */
   char *csv = feed_get_text(ctx->http, URL_IP_CSV, 12000);
+  if (rd) rd->csv_parsed = csv ? 1 : 0;
   cJSON *features = cJSON_CreateArray();
   if (csv && jp_count > 0) {
     int idx = 0;
@@ -103,7 +118,26 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = threatintel_collect(ctx, sink, NULL, NULL, run_fetch, NULL);
+  sslbl_reads rd = {0};
+  int n = threatintel_collect(ctx, sink, NULL, NULL, run_fetch, &rd);
+  /* `return n >= 0 ? 0 : -1` could only be -1 for a programming error (the
+   * helper's one negative return is a NULL fetcher pointer), so this row has
+   * reported success on every run of its life. Measured 2026-11-07: 2 requests,
+   * 2,308 bytes, 0 records — far too small for either real feed, which
+   * lib/threatintel.h records as keyless-200 as of 2026-08-01, so this is
+   * drift and not a credential gate.
+   *
+   * An honest empty is preserved exactly: both bodies parsing and no Japanese
+   * address among them returns 0, which is a normal day on this blacklist. */
+  if (!rd.feodo_parsed || !rd.csv_parsed) {
+    fprintf(stderr, "[sslbl-jp] %s%s%s did not parse — reporting a failed "
+                    "fetch, not an absence of Japanese addresses on the "
+                    "blacklist\n",
+            rd.feodo_parsed ? "" : "the Feodo JSON",
+            (!rd.feodo_parsed && !rd.csv_parsed) ? " and " : "",
+            rd.csv_parsed ? "" : "the SSLBL CSV");
+    return -1;
+  }
   return n >= 0 ? 0 : -1;
 }
 

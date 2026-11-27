@@ -1915,10 +1915,10 @@ static const hp_source HP3B19_CYBER[] = {
     .tags = "\"cert\",\"csirt\",\"caribbean\",\"advisory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://ttcsirt.gov.tt/wp-json/wp/v2/posts?per_page=50",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .body_keys = "content.rendered",
     .date_keys = "date",
-    .detail_key = "id",
-    .detail_url = "https://ttcsirt.gov.tt/wp-json/wp/v2/posts/{v}",
     .interval = 86400,
     .page_param = "offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1937,10 +1937,10 @@ static const hp_source HP3B19_CYBER[] = {
     .tags = "\"cert\",\"csirt\",\"nepal\",\"advisory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://npcert.org/wp-json/wp/v2/posts?per_page=50",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .body_keys = "content.rendered",
     .date_keys = "date",
-    .detail_key = "id",
-    .detail_url = "https://npcert.org/wp-json/wp/v2/posts/{v}",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 50,

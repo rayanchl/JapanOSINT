@@ -14,6 +14,20 @@
 
 static const hp_source HP2_NORTHAM_CA_MX[] = {
   /* ── Canada ────────────────────────────────────────────────────────────── */
+  /* `CA_MRAS_SEARCH` (hp_americas_deep.c) read this same URL with the same
+   * `array_path = "docs"` and was retired on 2026-11-05 as a double read; this
+   * row is the keeper because its key list is the longer of the two.
+   *
+   * UNMEASURED SUSPICION, written down rather than acted on: `Juri_ID` looks
+   * like a JURISDICTION id, and `,` CHOOSES rather than composes, so every
+   * company a query returns in one jurisdiction would collapse onto one uid —
+   * `Juri_ID+Company_Number` would be the fix if so. It is not changed here
+   * because `searchapi.mrasservice.ca` answers a transport failure with 0
+   * bytes from this container (two requests, 2026-11-05), so whether Juri_ID
+   * repeats across the records of one answer could not be read — and this
+   * tree's rule is that a collision is a question to measure, not a key to
+   * rewrite on inference. Re-measure from an environment that reaches the
+   * host before touching it. */
   { .id = "CA_BUSINESS_REGISTRIES", .name = "Canada — federated business registries search",
     .name_ja = "カナダ 企業登記 横断検索", .category = "government",
     .portal = "https://beta.canadasbusinessregistries.ca", .record_type = "ca-entity",

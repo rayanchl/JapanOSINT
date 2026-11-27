@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "OpenStreetMap changeset with discussion",
     .collector = "osm", .category = "civilian",
     .description = "One changeset: created_at/closed_at, open flag, changes_count split into created/modified/deleted, bbox, uid and user, tags (comment, created_by editor + version, host, imagery_used, locale) and the full comment thread with commenter uid, name and date.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"fr\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "civilian-record", .tags = "\"fr\",\"civilian\",\"batch16\"", .lang = "en",
     .url = "https://api.openstreetmap.org/api/0.6/changeset/1000000.json?include_discussion=true",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the detail answered 200 with HTML or XML, which a JSON hop cannot merge, so every hop was a request that stamped _detail_error. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "changeset.comments",
-    .detail_url = "https://api.openstreetmap.org/api/0.6/changeset/{v}/download", .detail_key = "id",
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 

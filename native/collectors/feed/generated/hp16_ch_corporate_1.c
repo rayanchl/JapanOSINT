@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "GLEIF direct-child RELATIONSHIP records",
     .collector = "ch_corporate", .category = "corporate",
     .description = "All 330 direct-subsidiary relationship edges for a parent LEI as relationship objects (start/end node, type, status, validity and accounting periods) rather than plain child records - the dated corporate-structure graph beneath a group.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/direct-child-relationships?page[size]=15",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-child-relationships?page[size]=50", .detail_key = "lei",
     .page_walk = 1,
     .page_max = 22,   /* 324 records at 15 a page, measured 2026-10-12; the 20-page default reached 300 */
     .interval = 86400, .free_tier = 1 },
@@ -28,22 +28,24 @@ static const hp_source T[] = {
   { .id = "gleif-lei-field-modifications",
     .name = "GLEIF LEI field modification history",
     .collector = "ch_corporate", .category = "corporate",
-    .description = "164 dated change events for one LEI: which field changed, from what value to what value, when. Detects quiet renames, address moves, status flips and legal-form changes - the audit trail behind a company record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "164 dated change events for one LEI: which field changed, from what value to what value, when. Detects quiet renames, address moves, status flips and legal-form changes - the audit trail behind a company record.",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/field-modifications?page[size]=20",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/field-modifications?page[size]=100", .detail_key = "lei",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-entity-names",
     .name = "GLEIF search across ALL entity names (incl. former/other)",
     .collector = "ch_corporate", .category = "corporate",
-    .description = "Searches legal name plus otherNames and transliteratedOtherNames (291 hits) - catches entities that have been renamed or that trade under a different local-script name.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Searches legal name plus otherNames and transliteratedOtherNames (291 hits) - catches entities that have been renamed or that trade under a different local-script name.",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter[entity.names]=Toyota&page[size]=10",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 30,   /* 294 records at 10 a page, measured 2026-10-12; the 20-page default reached 200 */
     .interval = 86400, .free_tier = 1 },
@@ -51,11 +53,12 @@ static const hp_source T[] = {
   { .id = "gleif-lei-filter-fulltext",
     .name = "GLEIF full-text LEI search",
     .collector = "ch_corporate", .category = "corporate",
-    .description = "Full-text search across the whole LEI record (names, addresses, other names) - 408 hits for Toyota, each a complete record. Broader recall than the exact legalName filter the tree already uses.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Full-text search across the whole LEI record (names, addresses, other names) - 408 hits for Toyota, each a complete record. Broader recall than the exact legalName filter the tree already uses.",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter[fulltext]=Toyota&page[size]=10",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 42,   /* 415 records at 10 a page, measured 2026-10-12; the 20-page default reached 200 */
     .interval = 86400, .free_tier = 1 },
@@ -74,11 +77,12 @@ static const hp_source T[] = {
   { .id = "gleif-lei-filter-lapsed",
     .name = "GLEIF LEIs with LAPSED registration",
     .collector = "ch_corporate", .category = "corporate",
-    .description = "1,191,703 entities that stopped renewing their LEI - full records. A lapsed LEI on an entity still doing regulated business is a due-diligence signal, and the set is a ready-made watchlist.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "1,191,703 entities that stopped renewing their LEI - full records. A lapsed LEI on an entity still doing regulated business is a due-diligence signal, and the set is a ready-made watchlist.",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter[registration.status]=LAPSED&page[size]=10",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_resume = 1,   /* 1,208,986 records, measured 2026-10-12: read over a cycle, 10~ pages a run */
     .interval = 86400, .free_tier = 1 },
@@ -98,11 +102,12 @@ static const hp_source T[] = {
   { .id = "gleif-lei-filter-owns",
     .name = "GLEIF reverse ownership lookup (filter[owns])",
     .collector = "ch_corporate", .category = "corporate",
-    .description = "Given a LEI, returns the LEI records of entities that OWN it (2 owners for the probe) as full records. Reverse of the parent hop and the cheapest way to walk upward through an opaque holding chain.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Given a LEI, returns the LEI records of entities that OWN it (2 owners for the probe) as full records. Reverse of the parent hop and the cheapest way to walk upward through an opaque holding chain.",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter[owns]=5493001KJTIIGC8Y1R12&page[size]=10",
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

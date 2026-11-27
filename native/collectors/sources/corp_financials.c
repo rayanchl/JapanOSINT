@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- UFOCatch: Atom feed of EDINET filings (LIVE, keyless) ---------------- */
 static int run_ufocatch(const source_ctx *ctx, intel_sink *sink) {
@@ -74,7 +75,9 @@ static int run_ufocatch(const source_ctx *ctx, intel_sink *sink) {
 static int run_buffett(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("BUFFETT_CODE_TOKEN");
-  if (!key) { fprintf(stderr, "[buffett-code] gated (no BUFFETT_CODE_TOKEN)\n"); return 0; }
+  if (!key) { return jo_needs_credential(sink, ctx->source_id, "buffett-code",
+                              (const char *[]){ "BUFFETT_CODE_TOKEN", NULL },
+                              NULL, NULL); }
   /* API keys on a 4-digit TSE ticker; skip non-ticker queries. */
   int dig = 1, n = 0; for (const char *c = ctx->entity; *c; c++, n++) if (!isdigit((unsigned char)*c)) dig = 0;
   if (!(dig && n == 4)) { fprintf(stderr, "[buffett-code] entity not a ticker\n"); return 0; }
@@ -110,7 +113,9 @@ static int run_buffett(const source_ctx *ctx, intel_sink *sink) {
 static int run_shikiho(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;
   if (!ctx->entity || !*ctx->entity) return -1;
-  if (!jo_env("SHIKIHO_API_KEY")) { fprintf(stderr, "[shikiho] gated (no SHIKIHO_API_KEY, paid)\n"); return 0; }
+  if (!jo_env("SHIKIHO_API_KEY")) { return jo_needs_credential(sink, ctx->source_id, "shikiho",
+                              (const char *[]){ "SHIKIHO_API_KEY", NULL },
+                              NULL, "paid"); }
   /* Paid product without a public REST contract; wire the real endpoint once a
    * subscription/key is provisioned. Honest empty until then. */
   fprintf(stderr, "[shikiho] key present but endpoint not provisioned\n");

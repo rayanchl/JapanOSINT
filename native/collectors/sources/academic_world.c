@@ -21,8 +21,11 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *AW_UA =
-  "User-Agent: JapanOSINT/1.0 (mailto:osint@example.org)";
+/* Was a User-Agent carrying mailto:osint@example.org — an address nobody
+ * reads, announced as a contact route. The contact address is the
+ * deployment's ($JO_CONTACT_MAILTO, core/httpclient.c); this header only
+ * states what we accept, and the engine's own agent identifies us. */
+static const char *AW_UA = "Accept: application/json";
 
 /* Author-list joiner with NO cap (LIB-20). The arXiv, PubMed and OpenLibrary
  * emitters kept the first 20 authors in a 1,024-byte buffer and dropped the

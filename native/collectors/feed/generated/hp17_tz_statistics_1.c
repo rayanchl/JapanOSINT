@@ -22,6 +22,19 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.dhsprogram.com/rest/dhs/indicators/{v}?f=json", .detail_key = "IndicatorId",
     .page_walk = 1,
+    /* page_max 10 + page_resume, MEASURED 2026-11-14: this row read ONE page
+       of 100 until `perpage` joined lib/jsonlist.c's PAGERS (its RecordCount is
+       in the tens of thousands). The detail budget is a COUNT (1,000) or a
+       CLOCK (120 s), and here the clock bites first: at 10 pages a run made
+       788 hops and stamped 212 records `_detail_pending`, which a cycle never
+       revisits. 7 x 100 fits the clock, so every record a run stores is
+       deepened and the collection is read over a cycle. */
+    .page_max = 7,
+    .page_resume = 1,
+    /* DataId is the API's own observation id (whole-country readings: 4,092,
+       13,057 and 38,088, all distinct). Undeclared, the uid came from whatever
+       the merged detail envelope offered ID_FALLBACK: 205 of 1,000 collapsed. */
+    .id_keys = "DataId",
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-ihsn-tz",
